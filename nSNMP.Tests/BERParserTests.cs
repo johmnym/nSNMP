@@ -1,11 +1,13 @@
-﻿using nSNMP.SMI;
+﻿using System.IO;
+using System.Linq;
+using nSNMP.SMI;
+using nSNMP.SMI.X690;
 using Xunit;
 
 namespace nSNMP.Tests
 {
     public class BERParserTests
     {
-
         [Fact]
         public void CanParseBerTypeInteger()
         {
@@ -74,6 +76,34 @@ namespace nSNMP.Tests
             BERClass actual = BERParser.ParseClass(data);
 
             Assert.Equal(BERClass.Private, actual);
+        }
+
+        [Fact]
+        public void CanParseShortFormLength()
+        {
+            byte[] message = SnmpMessageFactory.CreateMessage();
+
+            var stream = new MemoryStream(message);
+
+            stream.ReadByte();
+
+            int length = BERParser.ParseLengthOfNextDataField(stream);
+
+            Assert.Equal(70, length);
+        }
+
+        [Fact]
+        public void CanParseLongFormLength()
+        {
+            byte[] largeMessage = SnmpMessageFactory.CreateLargeMessage();
+
+            var stream = new MemoryStream(largeMessage);
+
+            stream.ReadByte();
+
+            int length = BERParser.ParseLengthOfNextDataField(stream);
+
+            Assert.Equal(134, length);
         }
     }
 }

@@ -10,6 +10,6 @@ namespace nSNMP.SMI.Message
         }
 
         public ObjectIdentifier ObjectIdentifier { get; set; }
-        public DataType Value { get; set; }
+        public SimpleDataType Value { get; set; }
     }
 }

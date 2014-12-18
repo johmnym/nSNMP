@@ -39,9 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SimpleDataType.cs" />
     <Compile Include="SMIDataFactory.cs" />
-    <Compile Include="DataType.cs" />
-    <Compile Include="BERParser.cs" />
     <Compile Include="Message\Error.cs" />
     <Compile Include="Message\ErrorIndex.cs" />
     <Compile Include="Message\RequestId.cs" />
@@ -58,6 +57,8 @@
     <Compile Include="V1\DataTypes\SimpleDataTypes\Null.cs" />
     <Compile Include="V1\DataTypes\SimpleDataTypes\ObjectIdentifier.cs" />
     <Compile Include="V1\DataTypes\SimpleDataTypes\OctetString.cs" />
+    <Compile Include="X690\BERClass.cs" />
+    <Compile Include="X690\BERParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="V2\DataTypes\" />

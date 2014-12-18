@@ -1,9 +1,7 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 
-namespace nSNMP.SMI
+namespace nSNMP.SMI.X690
 {
     public static class BERParser
     {
@@ -14,6 +12,13 @@ namespace nSNMP.SMI
             return (SnmpDataType) tagNumber;
         }
 
+        public static SnmpDataType ParseType(MemoryStream stream)
+        {
+            var data = (byte)stream.ReadByte();
+            
+            return ParseType(data);
+        }
+
         public static BERClass ParseClass(byte data)
         {
             int classValue = data & 192;
@@ -21,10 +26,17 @@ namespace nSNMP.SMI
             return (BERClass) classValue;
         }
 
-        public static int ParseLength(byte[] data)
+        public static byte[] ParseDataField(MemoryStream stream, int length)
         {
-            var stream = new MemoryStream(data) {Position = 1};
+            var buffer = new byte[length];
 
+            stream.Read(buffer, (int)stream.Position, length);
+
+            return buffer;
+        }
+
+        public static int ParseLengthOfNextDataField(MemoryStream stream)
+        {
             var firstLengthOctet = (byte) stream.ReadByte();
 
             if (LengthIsInShortForm(firstLengthOctet))
@@ -32,26 +44,20 @@ namespace nSNMP.SMI
                 return firstLengthOctet;
             }
 
-            var list = new List<byte> {firstLengthOctet};
+            int length = 0;
 
-            var length = 0;
-
-            var numberOfLengthOctets = firstLengthOctet & 0x7f;
+            int numberOfLengthOctets = firstLengthOctet & 0x7f;
             
-            for (var octetIndex = 0; octetIndex < numberOfLengthOctets; octetIndex++)
+            for (int octetIndex = 0; octetIndex < numberOfLengthOctets; octetIndex++)
             {
-                var octet = stream.ReadByte();
+                var nextByte = (byte)stream.ReadByte();
 
-                if (octet == -1)
+                if (nextByte == -1)
                 {
                     throw new Exception("BER end of file");
                 }
 
-                var nextByte = (byte)octet;
-
                 length = (length << 8) + nextByte;
-                
-                list.Add(nextByte);
             }
 
             return length;
@@ -61,13 +67,5 @@ namespace nSNMP.SMI
         {
             return (firstLengthOctet & 0x80) == 0;
         }
-    }
-
-    public enum BERClass
-    {
-        Universal = 0,
-        Application = 64,
-        ContextSpecific = 128,
-        Private = 192
     }
 }

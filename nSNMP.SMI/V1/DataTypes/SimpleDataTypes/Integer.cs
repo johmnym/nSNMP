@@ -1,7 +1,7 @@
 ﻿
 namespace nSNMP.SMI.V1.DataTypes.SimpleDataTypes
 {
-    public class Integer : DataType
+    public class Integer : SimpleDataType
     {
         public Integer( byte[] data) : base(data)
         {

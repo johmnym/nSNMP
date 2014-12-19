@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IntegerTests.cs" />
+    <Compile Include="ObjectIdentifierTests.cs" />
     <Compile Include="OctetStringTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SnmpMessageFactory.cs" />

@@ -4,7 +4,7 @@ namespace nSNMP.SMI.Message
 {
     public class RequestId : Integer
     {
-        public RequestId(SnmpDataType type, byte[] data) : base(data)
+        public RequestId(byte[] data) : base(data)
         {
         }
     }

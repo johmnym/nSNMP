@@ -2,7 +2,7 @@
 using nSNMP.SMI.V1.DataTypes.SimpleDataTypes;
 using Xunit;
 
-namespace nSNMP.Tests
+namespace nSNMP.Tests.SMI.V1.DataTypes.SimpleDataTypes
 {
     public class OctetStringTests
     {

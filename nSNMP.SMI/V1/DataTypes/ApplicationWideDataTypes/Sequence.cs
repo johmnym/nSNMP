@@ -1,14 +1,17 @@
-﻿namespace nSNMP.SMI.V1.DataTypes.ApplicationWideDataTypes
+﻿using System.Collections.Generic;
+
+namespace nSNMP.SMI.V1.DataTypes.ApplicationWideDataTypes
 {
     public class Sequence : IDataType
     {
-        public Sequence(SnmpDataType type, byte[] data)
+        private List<IDataType> _elements;
+        private byte[] _data;
+ 
+        public Sequence(byte[] data)
         {
+            _data = data;
+            _elements = new List<IDataType>();
         }
 
-        public SimpleDataType Create(byte[] data)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

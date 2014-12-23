@@ -4,11 +4,11 @@ namespace nSNMP.SMI.Message
 {
     public class Error : Integer
     {
-        public Error(SnmpDataType type, byte[] data) : base(data)
+        public Error(byte[] data) : base(data)
         {
         }
 
-        //public ErrorCodes ErrorCode { get { return (ErrorCodes) Value; } }
+        public ErrorCodes ErrorCode { get { return (ErrorCodes) Value; } }
     }
 
     public enum ErrorCodes

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 
 namespace nSNMP.SMI.V1.DataTypes.SimpleDataTypes
@@ -40,16 +39,18 @@ namespace nSNMP.SMI.V1.DataTypes.SimpleDataTypes
             }
         }
 
-        public static ObjectIdentifier Create(string data)
+        public static uint[] ConvertToUIntArray(string data)
         {
             if (data == null)
             {
                 throw new ArgumentNullException();
             }
 
-            var parts = data.Split(new[] { '.' });
+            string trimStart = data.TrimStart('.');
 
-            var result = new List<byte>();
+            var parts = trimStart.Split(new[] { '.' });
+
+            var result = new List<uint>();
             
             foreach (var s in parts)
             {
@@ -57,7 +58,7 @@ namespace nSNMP.SMI.V1.DataTypes.SimpleDataTypes
                 
                 if (uint.TryParse(s, out temp))
                 {
-                    result.Add(Convert.ToByte(temp));
+                    result.Add(temp);
                 }
                 else
                 {
@@ -65,7 +66,44 @@ namespace nSNMP.SMI.V1.DataTypes.SimpleDataTypes
                 }
             }
 
-            return new ObjectIdentifier(result.ToArray());
+            return result.ToArray();
+        }
+
+        public static ObjectIdentifier Create(string oid)
+        {
+            uint[] array = ConvertToUIntArray(oid);
+
+            return Create(array);
+        }
+
+        public static ObjectIdentifier Create(uint[] oid)
+        {
+            var temp = new List<byte>();
+
+            var first = (byte)((40 * oid[0]) + oid[1]);
+            
+            temp.Add(first);
+            
+            for (var i = 2; i < oid.Length; i++)
+            {
+                temp.AddRange(ConvertToBytes(oid[i]));
+            }
+
+            return new ObjectIdentifier(temp.ToArray());
+        }
+
+        private static IEnumerable<byte> ConvertToBytes(uint subIdentifier)
+        {
+            var result = new List<byte> { (byte)(subIdentifier & 0x7F) };
+            
+            while ((subIdentifier = subIdentifier >> 7) > 0)
+            {
+                result.Add((byte)((subIdentifier & 0x7F) | 0x80));
+            }
+
+            result.Reverse();
+            
+            return result;
         }
 
         public override string ToString()

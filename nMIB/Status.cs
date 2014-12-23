@@ -1,4 +1,4 @@
-﻿namespace nSNMP.SMI
+﻿namespace nSNMP.MIB
 {
     public enum Status
     {

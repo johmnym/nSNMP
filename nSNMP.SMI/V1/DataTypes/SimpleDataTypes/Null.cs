@@ -1,6 +1,14 @@
 ﻿namespace nSNMP.SMI.V1.DataTypes.SimpleDataTypes
 {
-    class Null
+    public class Null : SimpleDataType
     {
+        public Null(byte[] data) : base(data)
+        {
+        }
+
+        public override string ToString()
+        {
+            return "NULL";
+        }
     }
 }

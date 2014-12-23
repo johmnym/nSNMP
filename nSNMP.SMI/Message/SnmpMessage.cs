@@ -31,7 +31,7 @@ namespace nSNMP.SMI.Message
 
         private static string ReadCommintyString(MemoryStream stream)
         {
-            var data = (OctetString) SMIDataFactory.Create(stream);
+            var data = (OctetString)SMIDataFactory.Create(stream);
 
             return data.ToString();
         }

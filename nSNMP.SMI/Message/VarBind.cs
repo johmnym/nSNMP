@@ -5,11 +5,11 @@ namespace nSNMP.SMI.Message
 {
     public class VarBind : Sequence
     {
-        public VarBind(SnmpDataType type, byte[] data) : base(type, data)
+        public VarBind(byte[] data) : base(data)
         {
         }
 
         public ObjectIdentifier ObjectIdentifier { get; set; }
-        public SimpleDataType Value { get; set; }
+        public IDataType Value { get; set; }
     }
 }

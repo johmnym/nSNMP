@@ -2,7 +2,7 @@
 
 namespace nSNMP.SMI.Message
 {
-    public class SnmpPdu
+    public class GetRequestSnmpPdu
     {
         public RequestId RequestId { get; set; }
         public Error Error { get; set; }

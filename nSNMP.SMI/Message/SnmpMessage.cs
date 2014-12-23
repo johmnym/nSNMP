@@ -1,54 +1,65 @@
 ﻿using System.IO;
+using nSNMP.SMI.V1.DataTypes.ApplicationWideDataTypes;
 using nSNMP.SMI.V1.DataTypes.SimpleDataTypes;
 
 namespace nSNMP.SMI.Message
 {
-    public class SnmpMessage : SimpleDataType
+    public class SnmpMessage : Sequence
     {
-        public Version Version { get; set; }
-        public string CommunityString { get; set; }
-        public SnmpPdu PDU { get; set; }
+        public Version Version { get { return (Version) Elements[0]; }}
+        public OctetString CommunityString { get { return (OctetString) Elements[1]; } }
+        public GetResponseSnmpPdu Pdu { get { return (GetResponseSnmpPdu) Elements[2]; } }
 
-        private SnmpMessage(byte[] data) : base(data)
+        public SnmpMessage(byte[] data) : base(data)
         {
-            PDU = new SnmpPdu();
+            
         }
 
         public static SnmpMessage Create(byte[] data)
         {
             if (data == null) return null;
 
-            var stream = new MemoryStream(data);
+            SnmpMessage message;
 
-            var message = new SnmpMessage(data);
+            using (var stream = new MemoryStream(data))
+            {
+                message = ReadSnmpMesasge(stream);
+            }
 
-            message.Version = ReadVersion(stream);
+            using (var stream = new MemoryStream(message.Data))
+            {
+                message.Elements.Add(ReadVersion(stream));
 
-            message.CommunityString = ReadCommintyString(stream);
+                message.Elements.Add(ReadCommintyString(stream));
+
+                message.Elements.Add(ReadPdu(stream));
+            }
 
             return message;
         }
 
-        private static string ReadCommintyString(MemoryStream stream)
+        private static SnmpMessage ReadSnmpMesasge(MemoryStream stream)
         {
-            var data = (OctetString)SMIDataFactory.Create(stream);
+            var sequence = (Sequence) SMIDataFactory.Create(stream);
 
-            return data.ToString();
+            return sequence.ToSnmpMessage();
+        }
+
+        private static GetResponseSnmpPdu ReadPdu(MemoryStream stream)
+        {
+            return (GetResponseSnmpPdu) SMIDataFactory.Create(stream);
+        }
+
+        private static OctetString ReadCommintyString(MemoryStream stream)
+        {
+            return (OctetString) SMIDataFactory.Create(stream);
         }
 
         private static Version ReadVersion(MemoryStream stream)
         {
             var data = (Integer)SMIDataFactory.Create(stream);
 
-            return (Version) data.Value;
+            return new Version(data.Data);
         }
-    }
-
-    public enum Version
-    {
-        none = 0,
-        V1 = 1,
-        V2 = 2,
-        V3 = 3
     }
 }

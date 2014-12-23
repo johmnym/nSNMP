@@ -1,10 +1,9 @@
 ﻿using System.IO;
-using System.Linq;
 using nSNMP.SMI;
 using nSNMP.SMI.X690;
 using Xunit;
 
-namespace nSNMP.Tests
+namespace nSNMP.Tests.SMI.X690
 {
     public class BERParserTests
     {

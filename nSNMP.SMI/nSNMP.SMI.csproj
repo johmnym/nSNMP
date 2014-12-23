@@ -39,19 +39,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComplexDataType.cs" />
+    <Compile Include="IDataType.cs" />
+    <Compile Include="Message\SnmpPdu.cs" />
+    <Compile Include="Message\SnmpVersion.cs" />
+    <Compile Include="Message\VarbindList.cs" />
+    <Compile Include="Message\Version.cs" />
     <Compile Include="SimpleDataType.cs" />
     <Compile Include="SMIDataFactory.cs" />
     <Compile Include="Message\Error.cs" />
     <Compile Include="Message\ErrorIndex.cs" />
     <Compile Include="Message\RequestId.cs" />
     <Compile Include="Message\SnmpMessage.cs" />
-    <Compile Include="Message\SnmpPdu.cs" />
-    <Compile Include="Message\VarBind.cs" />
+    <Compile Include="Message\GetResponseSnmpPdu.cs" />
+    <Compile Include="Message\Varbind.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Access.cs" />
     <Compile Include="SnmpDataType.cs" />
-    <Compile Include="Status.cs" />
-    <Compile Include="TabularObject.cs" />
     <Compile Include="V1\DataTypes\ApplicationWideDataTypes\Sequence.cs" />
     <Compile Include="V1\DataTypes\SimpleDataTypes\Integer.cs" />
     <Compile Include="V1\DataTypes\SimpleDataTypes\Null.cs" />

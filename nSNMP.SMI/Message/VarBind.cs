@@ -3,13 +3,13 @@ using nSNMP.SMI.V1.DataTypes.SimpleDataTypes;
 
 namespace nSNMP.SMI.Message
 {
-    public class VarBind : Sequence
+    public class Varbind : Sequence
     {
-        public VarBind(byte[] data) : base(data)
+        public Varbind(byte[] data) : base(data)
         {
         }
 
-        public ObjectIdentifier ObjectIdentifier { get; set; }
-        public IDataType Value { get; set; }
+        public ObjectIdentifier ObjectIdentifier { get { return (ObjectIdentifier) Elements[0]; } }
+        public IDataType Value { get { return Elements[1]; } }
     }
 }

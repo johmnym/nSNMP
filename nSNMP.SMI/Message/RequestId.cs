@@ -6,6 +6,7 @@ namespace nSNMP.SMI.Message
     {
         public RequestId(byte[] data) : base(data)
         {
+
         }
     }
 }

@@ -1,12 +1,9 @@
-﻿using System.IO;
-
+﻿
 namespace nSNMP.SMI
 {
     public abstract class SimpleDataType : IDataType
     {  
-        protected byte[] Data;
-
-        public MemoryStream DataStream { get { return new MemoryStream(Data); } }
+        public byte[] Data;
 
         protected SimpleDataType(byte[] data)
         {

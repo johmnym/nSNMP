@@ -7,9 +7,7 @@ namespace nSNMP.SMI.X690
     {
         public static SnmpDataType ParseType(byte data)
         {
-            int tagNumber = data & 0x3F; //63
-            
-            return (SnmpDataType) tagNumber;
+            return (SnmpDataType) data;
         }
 
         public static SnmpDataType ParseType(MemoryStream stream)
@@ -30,7 +28,7 @@ namespace nSNMP.SMI.X690
         {
             var buffer = new byte[length];
 
-            stream.Read(buffer, (int)stream.Position, length);
+            stream.Read(buffer, 0, length);
 
             return buffer;
         }

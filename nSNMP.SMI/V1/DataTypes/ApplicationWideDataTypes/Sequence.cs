@@ -1,17 +1,20 @@
 ﻿using System.Collections.Generic;
+using nSNMP.SMI.Message;
 
 namespace nSNMP.SMI.V1.DataTypes.ApplicationWideDataTypes
 {
-    public class Sequence : IDataType
+    public class Sequence : ComplexDataType
     {
-        private List<IDataType> _elements;
-        private byte[] _data;
+        public List<IDataType> Elements { get; private set; }
  
-        public Sequence(byte[] data)
+        public Sequence(byte[] data) : base(data)
         {
-            _data = data;
-            _elements = new List<IDataType>();
+            Elements = new List<IDataType>();
         }
 
+        public SnmpMessage ToSnmpMessage()
+        {
+            return new SnmpMessage(Data);
+        }
     }
 }

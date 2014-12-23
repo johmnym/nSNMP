@@ -1,10 +1,14 @@
-﻿namespace nSNMP.SMI.Message
+﻿using nSNMP.SMI.V1.DataTypes.SimpleDataTypes;
+
+namespace nSNMP.SMI.Message
 {
-    public enum Version
+    public class Version : Integer
     {
-        none = 0,
-        V1 = 1,
-        V2 = 2,
-        V3 = 3
+        public Version(byte[] data) : base(data)
+        {
+        }
+
+        public SnmpVersion SnmpVersion { get { return (SnmpVersion) Value; } }
+
     }
 }

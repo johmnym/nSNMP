@@ -34,8 +34,8 @@ namespace nSNMP.SMI
                 case SnmpDataType.Sequence:
                     return new Sequence(data);
 
-                case SnmpDataType.GetRequestPDU:
-                    return new GetRequestSnmpPdu(data);
+                case SnmpDataType.GetResponsePDU:
+                    return GetResponseSnmpPdu.Create(data);
 
                 default: throw new Exception();
             }

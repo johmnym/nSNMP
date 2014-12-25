@@ -4,8 +4,17 @@ namespace nSNMP.SMI.Message
 {
     public class VarbindList : Sequence
     {
-        public VarbindList(byte[] data) : base(data)
+        protected VarbindList(byte[] data) : base(data)
         {
+        }
+
+        public new static VarbindList Create(byte[] data)
+        {
+            var varbindList = new VarbindList(data);
+
+            varbindList.Initialize();
+
+            return varbindList;
         }
     }
 }

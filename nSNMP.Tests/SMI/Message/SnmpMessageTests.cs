@@ -1,4 +1,5 @@
-﻿using nSNMP.SMI.Message;
+﻿using nSNMP.SMI;
+using nSNMP.SMI.Message;
 using Xunit;
 
 namespace nSNMP.Tests.SMI.Message
@@ -10,7 +11,7 @@ namespace nSNMP.Tests.SMI.Message
         {
             byte[] data = SnmpMessageFactory.CreateMessage();
 
-            SnmpMessage message = SnmpMessage.Create(data);
+            SnmpMessage message = SMIDataFactory.CreateSnmpMessage(data);
         }
     }
 }

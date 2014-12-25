@@ -50,11 +50,6 @@ namespace nSNMP.SMI.X690
             {
                 var nextByte = (byte)stream.ReadByte();
 
-                if (nextByte == -1)
-                {
-                    throw new Exception("BER end of file");
-                }
-
                 length = (length << 8) + nextByte;
             }
 

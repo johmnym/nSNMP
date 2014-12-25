@@ -9,10 +9,27 @@ namespace nSNMP.SMI
 {
     public static class SMIDataFactory
     {
+        public static SnmpMessage CreateSnmpMessage(byte[] data)
+        {
+            using (var stream = new MemoryStream(data))
+            {
+                SnmpDataType type = BERParser.ParseType(stream);
+
+                if (type != SnmpDataType.Sequence) throw new Exception();
+
+                return (SnmpMessage)Create(stream, SnmpDataType.SnmpMessage);
+            }
+        }
+
         public static IDataType Create(MemoryStream dataStream)
         {
             SnmpDataType type = BERParser.ParseType(dataStream);
 
+            return Create(dataStream, type);
+        }
+
+        public static IDataType Create(MemoryStream dataStream, SnmpDataType type)
+        {
             int length = BERParser.ParseLengthOfNextDataField(dataStream);
 
             byte[] data = BERParser.ParseDataField(dataStream, length);
@@ -32,13 +49,20 @@ namespace nSNMP.SMI
                     return new ObjectIdentifier(data);
 
                 case SnmpDataType.Sequence:
-                    return new Sequence(data);
+                    return Sequence.Create(data);
 
                 case SnmpDataType.GetResponsePDU:
                     return GetResponseSnmpPdu.Create(data);
 
+                case SnmpDataType.SnmpMessage:
+                    return SnmpMessage.Create(data);
+
+                case SnmpDataType.VarbindsList:
+                    return VarbindList.Create(data);
+
                 default: throw new Exception();
             }
         }
+
     }
 }

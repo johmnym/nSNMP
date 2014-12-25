@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using nSNMP.SMI.Message;
+using System.IO;
 
 namespace nSNMP.SMI.V1.DataTypes.ApplicationWideDataTypes
 {
@@ -7,14 +7,31 @@ namespace nSNMP.SMI.V1.DataTypes.ApplicationWideDataTypes
     {
         public List<IDataType> Elements { get; private set; }
  
-        public Sequence(byte[] data) : base(data)
+        protected Sequence(byte[] data) : base(data)
         {
             Elements = new List<IDataType>();
         }
 
-        public SnmpMessage ToSnmpMessage()
+        public static Sequence Create(byte[] data)
         {
-            return new SnmpMessage(Data);
+            var sequence = new Sequence(data);
+
+            sequence.Initialize();
+
+            return sequence;
+        }
+
+        protected void Initialize()
+        {
+            using (var dataStream = new MemoryStream(Data))
+            {
+                while (dataStream.Position < Data.Length)
+                {
+                    IDataType item = SMIDataFactory.Create(dataStream);
+
+                    Elements.Add(item);
+                }
+            }
         }
     }
 }

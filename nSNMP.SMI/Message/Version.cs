@@ -10,5 +10,9 @@ namespace nSNMP.SMI.Message
 
         public SnmpVersion SnmpVersion { get { return (SnmpVersion) Value; } }
 
+        public static Version Create(Integer integer)
+        {
+            return new Version(integer.Data);
+        }
     }
 }

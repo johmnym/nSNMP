@@ -1,5 +1,6 @@
-﻿using nSNMP.SMI.V1.DataTypes.ApplicationWideDataTypes;
-using nSNMP.SMI.V1.DataTypes.SimpleDataTypes;
+﻿using nSNMP.SMI.DataTypes;
+using nSNMP.SMI.DataTypes.V1.Constructed;
+using nSNMP.SMI.DataTypes.V1.Primitive;
 
 namespace nSNMP.SMI.Message
 {

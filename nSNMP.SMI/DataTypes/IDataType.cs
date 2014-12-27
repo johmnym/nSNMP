@@ -1,7 +1,7 @@
-namespace nSNMP.SMI
+
+namespace nSNMP.SMI.DataTypes
 {
     public interface IDataType
     {
-        
     }
 }

@@ -1,26 +1,28 @@
-﻿using nSNMP.SMI.V1.DataTypes.ApplicationWideDataTypes;
-using nSNMP.SMI.V1.DataTypes.SimpleDataTypes;
+﻿using nSNMP.SMI.DataTypes.V1.Constructed;
+using nSNMP.SMI.DataTypes.V1.Primitive;
+
 namespace nSNMP.SMI.Message
 {
-    public class SnmpMessage : Sequence
+    public class SnmpMessage
     {
-        public Version Version { get { return Version.Create((Integer) Elements[0]); }}
-        public OctetString CommunityString { get { return (OctetString) Elements[1]; } }
-        public GetResponseSnmpPdu Pdu { get { return (GetResponseSnmpPdu) Elements[2]; } }
+        private readonly Sequence _message;
+        
+        public Version Version { get { return Version.Create((Integer) _message.Elements[0]); }}
+        public OctetString CommunityString { get { return (OctetString) _message.Elements[1]; } }
+        public Pdu Pdu { get { return (GetResponse) _message.Elements[2]; } }
 
-        public SnmpMessage(byte[] data) : base(data)
+        private SnmpMessage(Sequence message)
         {
-            
+            _message = message;
         }
 
-        public new static SnmpMessage Create(byte[] data)
+        public static SnmpMessage Create(byte[] data)
         {
-            var message = new SnmpMessage(data);
-
-            message.Initialize();
+            var sequence = (Sequence)SMIDataFactory.Create(data);
+            
+            var message = new SnmpMessage(sequence);
 
             return message;
         }
-
     }
 }

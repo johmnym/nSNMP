@@ -1,4 +1,4 @@
-﻿using nSNMP.SMI.V1.DataTypes.SimpleDataTypes;
+﻿using nSNMP.SMI.DataTypes.V1.Primitive;
 using Xunit;
 
 namespace nSNMP.Tests.SMI.V1.DataTypes.SimpleDataTypes

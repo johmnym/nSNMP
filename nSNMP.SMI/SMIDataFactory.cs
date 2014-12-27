@@ -1,23 +1,20 @@
 ﻿using System;
 using System.IO;
+using nSNMP.SMI.DataTypes;
+using nSNMP.SMI.DataTypes.V1.Constructed;
+using nSNMP.SMI.DataTypes.V1.Primitive;
 using nSNMP.SMI.Message;
-using nSNMP.SMI.V1.DataTypes.ApplicationWideDataTypes;
-using nSNMP.SMI.V1.DataTypes.SimpleDataTypes;
 using nSNMP.SMI.X690;
 
 namespace nSNMP.SMI
 {
     public static class SMIDataFactory
     {
-        public static SnmpMessage CreateSnmpMessage(byte[] data)
+        public static IDataType Create(byte[] data)
         {
-            using (var stream = new MemoryStream(data))
+            using (var dataStream = new MemoryStream(data))
             {
-                SnmpDataType type = BERParser.ParseType(stream);
-
-                if (type != SnmpDataType.Sequence) throw new Exception();
-
-                return (SnmpMessage)Create(stream, SnmpDataType.SnmpMessage);
+                return Create(dataStream);
             }
         }
 
@@ -25,11 +22,6 @@ namespace nSNMP.SMI
         {
             SnmpDataType type = BERParser.ParseType(dataStream);
 
-            return Create(dataStream, type);
-        }
-
-        public static IDataType Create(MemoryStream dataStream, SnmpDataType type)
-        {
             int length = BERParser.ParseLengthOfNextDataField(dataStream);
 
             byte[] data = BERParser.ParseDataField(dataStream, length);
@@ -52,13 +44,7 @@ namespace nSNMP.SMI
                     return Sequence.Create(data);
 
                 case SnmpDataType.GetResponsePDU:
-                    return GetResponseSnmpPdu.Create(data);
-
-                case SnmpDataType.SnmpMessage:
-                    return SnmpMessage.Create(data);
-
-                case SnmpDataType.VarbindsList:
-                    return VarbindList.Create(data);
+                    return GetResponse.Create(data);
 
                 default: throw new Exception();
             }

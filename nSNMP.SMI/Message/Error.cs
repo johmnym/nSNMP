@@ -1,4 +1,4 @@
-﻿using nSNMP.SMI.V1.DataTypes.SimpleDataTypes;
+﻿using nSNMP.SMI.DataTypes.V1.Primitive;
 
 namespace nSNMP.SMI.Message
 {

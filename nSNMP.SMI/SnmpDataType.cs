@@ -14,9 +14,5 @@ namespace nSNMP.SMI
         GetRequestPDU = 0xA0,
         GetResponsePDU = 0xA2,
         SetRequestPDU = 0xA3,
-
-        //Message
-        SnmpMessage = 10000,
-        VarbindsList = 11000,
     }
 }

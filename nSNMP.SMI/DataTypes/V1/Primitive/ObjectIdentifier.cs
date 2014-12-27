@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace nSNMP.SMI.V1.DataTypes.SimpleDataTypes
+namespace nSNMP.SMI.DataTypes.V1.Primitive
 {
-    public class ObjectIdentifier : SimpleDataType
+    public class ObjectIdentifier : PrimitiveDataType
     {
         public ObjectIdentifier(byte[] data) : base(data)
         {

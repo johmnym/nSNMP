@@ -1,4 +1,4 @@
-﻿using nSNMP.SMI.V1.DataTypes.SimpleDataTypes;
+﻿using nSNMP.SMI.DataTypes.V1.Primitive;
 using Xunit;
 
 namespace nSNMP.Tests.SMI.V1.DataTypes.SimpleDataTypes
@@ -19,6 +19,15 @@ namespace nSNMP.Tests.SMI.V1.DataTypes.SimpleDataTypes
         public void CanDecodeObjectIdentifierWithLargeSegment()
         {
             const string actual = ".1.2.840.113549.1.1.5";
+
+            var oid = ObjectIdentifier.Create(actual);
+
+            Assert.Equal(actual, oid.ToString());
+        }        
+        [Fact]
+        public void CanDecodeObjectIdentifierWithMaxValueSegment()
+        {
+            const string actual = ".1.2.840.113549.1.4294967295";
 
             var oid = ObjectIdentifier.Create(actual);
 

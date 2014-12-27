@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
 
-namespace nSNMP.SMI.V1.DataTypes.SimpleDataTypes
+namespace nSNMP.SMI.DataTypes.V1.Primitive
 {
-    public class OctetString : SimpleDataType
+    public class OctetString : PrimitiveDataType
     {
         public OctetString(byte[] data) : base(data)
         {

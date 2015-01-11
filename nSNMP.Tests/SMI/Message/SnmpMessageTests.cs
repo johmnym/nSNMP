@@ -1,4 +1,4 @@
-﻿using nSNMP.SMI.Message;
+﻿using nSNMP.Message;
 using Xunit;
 
 namespace nSNMP.Tests.SMI.Message

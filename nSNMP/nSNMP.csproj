@@ -39,12 +39,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PDUs\Get.cs" />
-    <Compile Include="PDUs\GetBulk.cs" />
-    <Compile Include="PDUs\GetNext.cs" />
-    <Compile Include="PDUs\PDU.cs" />
-    <Compile Include="PDUs\Set.cs" />
+    <Compile Include="Message\GetRequest.cs" />
+    <Compile Include="Message\GetResponse.cs" />
+    <Compile Include="Message\Pdu.cs" />
+    <Compile Include="Message\SnmpMessage.cs" />
+    <Compile Include="Message\SnmpVersion.cs" />
+    <Compile Include="Message\Version.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PDUDataFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nSNMP.SMI\nSNMP.SMI.csproj">
+      <Project>{b4bb1db7-0fe6-493b-b4e7-827ed8066aa1}</Project>
+      <Name>nSNMP.SMI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

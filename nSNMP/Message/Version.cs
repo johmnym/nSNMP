@@ -1,6 +1,6 @@
 ﻿using nSNMP.SMI.DataTypes.V1.Primitive;
 
-namespace nSNMP.SMI.Message
+namespace nSNMP.Message
 {
     public class Version : Integer
     {

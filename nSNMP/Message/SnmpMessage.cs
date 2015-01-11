@@ -1,7 +1,8 @@
-﻿using nSNMP.SMI.DataTypes.V1.Constructed;
+﻿using nSNMP.SMI;
+using nSNMP.SMI.DataTypes.V1.Constructed;
 using nSNMP.SMI.DataTypes.V1.Primitive;
 
-namespace nSNMP.SMI.Message
+namespace nSNMP.Message
 {
     public class SnmpMessage
     {
@@ -18,7 +19,7 @@ namespace nSNMP.SMI.Message
 
         public static SnmpMessage Create(byte[] data)
         {
-            var sequence = (Sequence)SMIDataFactory.Create(data);
+            var sequence = (Sequence)PDUDataFactory.Create(data);
             
             var message = new SnmpMessage(sequence);
 

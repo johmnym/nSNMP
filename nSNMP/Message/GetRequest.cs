@@ -1,5 +1,5 @@
 ﻿
-namespace nSNMP.SMI.Message
+namespace nSNMP.Message
 {
     public class GetRequest : Pdu
     {

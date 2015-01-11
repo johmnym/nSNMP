@@ -1,14 +1,13 @@
 ﻿using System;
 using System.IO;
+using nSNMP.Message;
 using nSNMP.SMI;
 using nSNMP.SMI.DataTypes;
-using nSNMP.SMI.DataTypes.V1.Constructed;
-using nSNMP.SMI.DataTypes.V1.Primitive;
 using nSNMP.SMI.X690;
 
 namespace nSNMP
 {
-    public static class SMIDataFactory
+    public static class PDUDataFactory
     {
         public static IDataType Create(byte[] data)
         {
@@ -28,20 +27,11 @@ namespace nSNMP
 
             switch (type)
             {
-                case SnmpDataType.Integer:
-                    return new Integer(data);
+                case SnmpDataType.GetResponsePDU:
+                    return GetResponse.Create(data);
 
-                case SnmpDataType.OctetString:
-                    return new OctetString(data);
-
-                case SnmpDataType.Null:
-                    return new Null(data);
-
-                case SnmpDataType.ObjectIdentifier:
-                    return new ObjectIdentifier(data);
-
-                case SnmpDataType.Sequence:
-                    return Sequence.Create(data);
+                case SnmpDataType.GetRequestPDU:
+                    return GetRequest.Create(data);
 
                 default: throw new Exception();
             }

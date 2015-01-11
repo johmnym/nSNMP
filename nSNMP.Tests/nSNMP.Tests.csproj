@@ -54,9 +54,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\nMIB\nSNMP.MIB.csproj">
+      <Project>{e5370993-6350-4675-9245-f22e3988242b}</Project>
+      <Name>nSNMP.MIB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\nSNMP.SMI\nSNMP.SMI.csproj">
       <Project>{B4BB1DB7-0FE6-493B-B4E7-827ED8066AA1}</Project>
       <Name>nSNMP.SMI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\nSNMP\nSNMP.csproj">
+      <Project>{45588599-0a0c-4d51-b4f3-3c8b7dfa59b5}</Project>
+      <Name>nSNMP</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

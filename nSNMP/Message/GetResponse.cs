@@ -1,4 +1,4 @@
-﻿namespace nSNMP.SMI.Message
+﻿namespace nSNMP.Message
 {
     public class GetResponse : Pdu
     {

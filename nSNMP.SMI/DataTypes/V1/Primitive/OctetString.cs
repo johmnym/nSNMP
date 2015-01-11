@@ -10,6 +10,15 @@ namespace nSNMP.SMI.DataTypes.V1.Primitive
             SetDefaultEncoding();
         }
 
+        public static OctetString Create(string content)
+        {
+            var encoding = Encoding.GetEncoding("ASCII");
+            
+            byte[] data = encoding.GetBytes(content);
+
+            return new OctetString(data);
+        }
+
         public string Value
         {
             get

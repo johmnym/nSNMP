@@ -42,6 +42,7 @@
     <Compile Include="DataTypes\ConstructedDataType.cs" />
     <Compile Include="DataTypes\IDataType.cs" />
     <Compile Include="DataTypes\PrimitiveDataType.cs" />
+    <Compile Include="Message\GetRequest.cs" />
     <Compile Include="Message\Pdu.cs" />
     <Compile Include="Message\SnmpVersion.cs" />
     <Compile Include="Message\Version.cs">

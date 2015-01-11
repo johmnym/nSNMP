@@ -1,6 +1,4 @@
-﻿using nSNMP.SMI;
-using nSNMP.SMI.DataTypes.V1.Constructed;
-using nSNMP.SMI.Message;
+﻿using nSNMP.SMI.Message;
 using Xunit;
 
 namespace nSNMP.Tests.SMI.Message
@@ -22,7 +20,15 @@ namespace nSNMP.Tests.SMI.Message
         {
             byte[] data = SnmpMessageFactory.CreateLargeMessage();
 
-            var message = (Sequence)SMIDataFactory.Create(data);
+            var message = SnmpMessage.Create(data);
+        }
+
+        [Fact]
+        public void CanParseRequestMessage()
+        {
+            byte[] data = SnmpMessageFactory.CreateRequestMessage();
+
+            var message = SnmpMessage.Create(data);
         }
     }
 }

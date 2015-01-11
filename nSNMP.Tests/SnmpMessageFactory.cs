@@ -226,5 +226,51 @@ namespace nSNMP.Tests
 
             return data;
         }
+
+        public static Byte[] CreateRequestMessage(){
+            var data = new Byte[41];
+            data[0] = (byte)48;
+            data[1] = (byte)39;
+            data[2] = (byte)2;
+            data[3] = (byte)1;
+            data[4] = (byte)0;
+            data[5] = (byte)4;
+            data[6] = (byte)6;
+            data[7] = (byte)112;
+            data[8] = (byte)117;
+            data[9] = (byte)98;
+            data[10] = (byte)108;
+            data[11] = (byte)105;
+            data[12] = (byte)99;
+            data[13] = (byte)160;
+            data[14] = (byte)26;
+            data[15] = (byte)2;
+            data[16] = (byte)4;
+            data[17] = (byte)107;
+            data[18] = (byte)174;
+            data[19] = (byte)53;
+            data[20] = (byte)144;
+            data[21] = (byte)2;
+            data[22] = (byte)1;
+            data[23] = (byte)0;
+            data[24] = (byte)2;
+            data[25] = (byte)1;
+            data[26] = (byte)0;
+            data[27] = (byte)48;
+            data[28] = (byte)12;
+            data[29] = (byte)48;
+            data[30] = (byte)10;
+            data[31] = (byte)6;
+            data[32] = (byte)6;
+            data[33] = (byte)43;
+            data[34] = (byte)6;
+            data[35] = (byte)1;
+            data[36] = (byte)2;
+            data[37] = (byte)1;
+            data[38] = (byte)1;
+            data[39] = (byte)5;
+            data[40] = (byte)0;
+            return data;
+}
     }
 }

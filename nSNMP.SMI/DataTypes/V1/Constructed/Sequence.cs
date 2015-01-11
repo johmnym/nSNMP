@@ -7,6 +7,11 @@ namespace nSNMP.SMI.DataTypes.V1.Constructed
         {
         }
 
+        protected Sequence() : base(null)
+        {
+            
+        }
+
         public static Sequence Create(byte[] data)
         {
             var sequence = new Sequence(data);
@@ -14,6 +19,11 @@ namespace nSNMP.SMI.DataTypes.V1.Constructed
             sequence.Initialize();
 
             return sequence;
+        }
+
+        public void Add(IDataType element)
+        {
+            Elements.Add(element);
         }
     }
 }

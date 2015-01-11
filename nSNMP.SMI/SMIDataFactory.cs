@@ -46,6 +46,9 @@ namespace nSNMP.SMI
                 case SnmpDataType.GetResponsePDU:
                     return GetResponse.Create(data);
 
+                case SnmpDataType.GetRequestPDU:
+                    return GetRequest.Create(data);
+
                 default: throw new Exception();
             }
         }

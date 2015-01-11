@@ -6,6 +6,8 @@
         {
         }
 
+        public Null() : base(null) { }
+
         public string Value { get { return "NULL"; } }
 
 

@@ -9,7 +9,7 @@ namespace nSNMP.SMI.Message
         
         public Version Version { get { return Version.Create((Integer) _message.Elements[0]); }}
         public OctetString CommunityString { get { return (OctetString) _message.Elements[1]; } }
-        public Pdu Pdu { get { return (GetResponse) _message.Elements[2]; } }
+        public Pdu Pdu { get { return (Pdu) _message.Elements[2]; } }
 
         private SnmpMessage(Sequence message)
         {

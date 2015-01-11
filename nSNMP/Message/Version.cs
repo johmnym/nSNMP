@@ -14,5 +14,12 @@ namespace nSNMP.Message
         {
             return new Version(integer.Data);
         }
+
+        public new static Version Create(int value)
+        {
+            byte[] data = Encode(value);
+
+            return new Version(data);
+        }
     }
 }

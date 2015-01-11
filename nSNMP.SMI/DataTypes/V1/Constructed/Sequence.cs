@@ -7,7 +7,7 @@ namespace nSNMP.SMI.DataTypes.V1.Constructed
         {
         }
 
-        protected Sequence() : base(null)
+        public Sequence() : base(null)
         {
             
         }

@@ -34,7 +34,7 @@ namespace nSNMP.SMI.DataTypes.V1.Primitive
             return value;
         }
 
-        private static byte[] Encode(int value)
+        protected static byte[] Encode(int value)
         {
             return GetRawBytes(BitConverter.GetBytes(value), value < 0);
         }

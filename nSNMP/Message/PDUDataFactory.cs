@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
-using nSNMP.Message;
 using nSNMP.SMI;
 using nSNMP.SMI.DataTypes;
 using nSNMP.SMI.X690;
 
-namespace nSNMP
+namespace nSNMP.Message
 {
     public static class PDUDataFactory
     {

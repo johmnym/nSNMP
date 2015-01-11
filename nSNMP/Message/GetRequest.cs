@@ -3,8 +3,13 @@ namespace nSNMP.Message
 {
     public class GetRequest : Pdu
     {
-        public GetRequest(byte[] data) : base(data)
+        private GetRequest(byte[] data) : base(data)
         {
+        }
+
+        public GetRequest() : base(null)
+        {
+            
         }
 
         public static GetRequest Create(byte[] data)

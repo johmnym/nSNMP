@@ -1,5 +1,6 @@
 ﻿using nSNMP.SMI.DataTypes.V1.Constructed;
 using nSNMP.SMI.DataTypes.V1.Primitive;
+using nSNMP.SMI.PDUs;
 
 namespace nSNMP.Message
 {
@@ -7,10 +8,10 @@ namespace nSNMP.Message
     {
         private readonly Sequence _message;
         
-        public Version Version 
-        { 
-            get { return Version.Create((Integer) _message.Elements[0]); } 
-            set { _message.Elements[0] = value; }
+        public SnmpVersion Version 
+        {
+            get { return (SnmpVersion)(int)(Integer)_message.Elements[0]; } 
+            set { _message.Elements[0] = Integer.Create((int)value); }
         }
 
         public OctetString CommunityString
@@ -19,9 +20,9 @@ namespace nSNMP.Message
             set { _message.Elements[1] = value; }
         }
 
-        public Pdu Pdu
+        public PDU PDU
         {
-            get { return (Pdu) _message.Elements[2]; }
+            get { return (PDU) _message.Elements[2]; }
             set { _message.Elements[2] = value; }
         }
 
@@ -37,7 +38,7 @@ namespace nSNMP.Message
 
         public static SnmpMessage Create(byte[] data)
         {
-            var sequence = (Sequence)PDUDataFactory.Create(data);
+            var sequence = (Sequence)SMIDataFactory.Create(data);
             
             var message = new SnmpMessage(sequence);
 

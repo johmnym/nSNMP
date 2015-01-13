@@ -4,6 +4,7 @@ using nSNMP.SMI;
 using nSNMP.SMI.DataTypes;
 using nSNMP.SMI.DataTypes.V1.Constructed;
 using nSNMP.SMI.DataTypes.V1.Primitive;
+using nSNMP.SMI.PDUs;
 using nSNMP.SMI.X690;
 
 namespace nSNMP
@@ -42,6 +43,12 @@ namespace nSNMP
 
                 case SnmpDataType.Sequence:
                     return Sequence.Create(data);
+
+                case SnmpDataType.GetResponsePDU:
+                    return GetResponse.Create(data);
+
+                case SnmpDataType.GetRequestPDU:
+                    return GetRequest.Create(data);
 
                 default: throw new Exception();
             }

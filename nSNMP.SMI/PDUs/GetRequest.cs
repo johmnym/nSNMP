@@ -1,7 +1,7 @@
 ﻿
-namespace nSNMP.Message
+namespace nSNMP.SMI.PDUs
 {
-    public class GetRequest : Pdu
+    public class GetRequest : PDU
     {
         private GetRequest(byte[] data) : base(data)
         {

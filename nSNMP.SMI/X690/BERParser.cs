@@ -16,13 +16,6 @@ namespace nSNMP.SMI.X690
             return ParseType(data);
         }
 
-        public static BERClass ParseClass(byte data)
-        {
-            int classValue = data & 192;
-
-            return (BERClass) classValue;
-        }
-
         public static byte[] ParseDataField(MemoryStream stream, int length)
         {
             var buffer = new byte[length];

@@ -1,6 +1,7 @@
 ﻿
 using nSNMP.SMI.DataTypes.V1.Constructed;
 using nSNMP.SMI.DataTypes.V1.Primitive;
+using nSNMP.SMI.PDUs;
 
 namespace nSNMP.Message
 {
@@ -8,23 +9,10 @@ namespace nSNMP.Message
     {
         private SnmpMessage _message;
 
-        public MessageFactory Create(PduType type)
+        public MessageFactory CreateGetRequest()
         {
-            _message = new SnmpMessage();
+            _message = new SnmpMessage {PDU = new GetRequest()};
 
-            switch (type)
-            {
-                case PduType.GetRequest:
-                    _message.Pdu = new GetRequest();
-                    break;
-                case PduType.GetResponse:
-                    _message.Pdu = new GetResponse();
-                    break;
-                default:
-                    _message.Pdu = new GetRequest();
-                    break;
-            }
-            
             return this;
         }
 
@@ -32,16 +20,14 @@ namespace nSNMP.Message
         {
             _message = new SnmpMessage();
 
-            _message.Pdu = new GetRequest();
+            _message.PDU = new GetRequest();
 
             return this;
         }
 
         public MessageFactory WithVersion(SnmpVersion version)
         {
-            var integer = Version.Create((int) version);
-
-            _message.Version = integer;
+            _message.Version = version;
 
             return this;
         }
@@ -57,7 +43,7 @@ namespace nSNMP.Message
 
         public MessageFactory WithVarbind(Sequence varbind)
         {
-            _message.Pdu.VarbindList.Add(varbind);
+            _message.PDU.VarbindList.Add(varbind);
 
             return this;
         }

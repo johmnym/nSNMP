@@ -1,6 +1,7 @@
-﻿namespace nSNMP.Message
+﻿
+namespace nSNMP.SMI.PDUs
 {
-    public class GetResponse : Pdu
+    public class GetResponse : PDU
     {
         private GetResponse(byte[] data) : base(data)
         {

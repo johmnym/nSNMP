@@ -271,6 +271,56 @@ namespace nSNMP.Tests
             data[39] = (byte)5;
             data[40] = (byte)0;
             return data;
-}
+        }
+
+        public static byte[] CreateSequence()
+        {
+            var data = new Byte[43];
+            data[0] = (byte)48;
+            data[1] = (byte)41;
+            data[2] = (byte)6;
+            data[3] = (byte)8;
+            data[4] = (byte)43;
+            data[5] = (byte)6;
+            data[6] = (byte)1;
+            data[7] = (byte)2;
+            data[8] = (byte)1;
+            data[9] = (byte)1;
+            data[10] = (byte)1;
+            data[11] = (byte)0;
+            data[12] = (byte)4;
+            data[13] = (byte)29;
+            data[14] = (byte)72;
+            data[15] = (byte)80;
+            data[16] = (byte)32;
+            data[17] = (byte)69;
+            data[18] = (byte)84;
+            data[19] = (byte)72;
+            data[20] = (byte)69;
+            data[21] = (byte)82;
+            data[22] = (byte)78;
+            data[23] = (byte)69;
+            data[24] = (byte)84;
+            data[25] = (byte)32;
+            data[26] = (byte)77;
+            data[27] = (byte)85;
+            data[28] = (byte)76;
+            data[29] = (byte)84;
+            data[30] = (byte)73;
+            data[31] = (byte)45;
+            data[32] = (byte)69;
+            data[33] = (byte)78;
+            data[34] = (byte)86;
+            data[35] = (byte)73;
+            data[36] = (byte)82;
+            data[37] = (byte)79;
+            data[38] = (byte)78;
+            data[39] = (byte)77;
+            data[40] = (byte)69;
+            data[41] = (byte)78;
+            data[42] = (byte)84;
+
+            return data;
+        }
     }
 }

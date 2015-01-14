@@ -1,7 +1,8 @@
-﻿using nSNMP.SMI.DataTypes.V1.Primitive;
+﻿using System;
+using nSNMP.SMI.DataTypes.V1.Primitive;
 using Xunit;
 
-namespace nSNMP.Tests.SMI.V1.DataTypes.SimpleDataTypes
+namespace nSNMP.Tests.nSNMP.SMI.DataTypes.V1.Primitive
 {
     public class IntegerTests
     {
@@ -59,6 +60,36 @@ namespace nSNMP.Tests.SMI.V1.DataTypes.SimpleDataTypes
             var actual = new Integer(intData);
 
             Assert.Equal(-2, actual.Value);
+        }
+
+        [Fact]
+        public void CanCreateIntegerFromInt()
+        {
+            const int expected = 23;
+
+            var actual = Integer.Create(expected);
+
+            Assert.Equal(expected, actual.Value);
+        }
+
+        [Fact]
+        public void CanCreateIntegerFromNegativeInt()
+        {
+            const int expected = -8;
+
+            var actual = Integer.Create(expected);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void CanCreateIntegerFromLargeInt()
+        {
+            const int expected = Int32.MaxValue;
+
+            var actual = Integer.Create(expected);
+
+            Assert.Equal(expected, actual);
         }
     }
 }

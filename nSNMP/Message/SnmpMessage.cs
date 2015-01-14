@@ -1,4 +1,5 @@
-﻿using nSNMP.SMI.DataTypes.V1.Constructed;
+﻿using nSNMP.SMI;
+using nSNMP.SMI.DataTypes.V1.Constructed;
 using nSNMP.SMI.DataTypes.V1.Primitive;
 using nSNMP.SMI.PDUs;
 

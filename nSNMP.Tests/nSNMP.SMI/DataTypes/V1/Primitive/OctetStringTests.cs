@@ -2,7 +2,7 @@
 using nSNMP.SMI.DataTypes.V1.Primitive;
 using Xunit;
 
-namespace nSNMP.Tests.SMI.V1.DataTypes.SimpleDataTypes
+namespace nSNMP.Tests.nSNMP.SMI.DataTypes.V1.Primitive
 {
     public class OctetStringTests
     {
@@ -28,6 +28,16 @@ namespace nSNMP.Tests.SMI.V1.DataTypes.SimpleDataTypes
             var octetString = new OctetString(data);
 
             Assert.NotEqual(str, octetString.ToString());
+        }
+
+        [Fact]
+        public void CanCreateOctetStringFromString()
+        {
+            const string expected = "This is a string";
+
+            var actual = OctetString.Create(expected);
+
+            Assert.Equal(expected, actual.ToString());
         }
 
     }

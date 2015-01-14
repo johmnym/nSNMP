@@ -1,7 +1,7 @@
 ﻿using nSNMP.Message;
 using Xunit;
 
-namespace nSNMP.Tests.SMI.Message
+namespace nSNMP.Tests.nSNMP.Message
 {
     public class SnmpMessageTests
     {

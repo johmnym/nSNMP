@@ -3,7 +3,7 @@ using nSNMP.SMI;
 using nSNMP.SMI.X690;
 using Xunit;
 
-namespace nSNMP.Tests.SMI.X690
+namespace nSNMP.Tests.nSNMP.SMI.X690
 {
     public class BERParserTests
     {

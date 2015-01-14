@@ -5,8 +5,8 @@ using System.Collections.Generic;
 namespace nSNMP.SMI.DataTypes
 {
     public abstract class PrimitiveDataType : IDataType
-    {  
-        public byte[] Data;
+    {
+        public byte[] Data { get; private set; }
 
         protected PrimitiveDataType(byte[] data)
         {

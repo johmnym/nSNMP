@@ -5,6 +5,8 @@ namespace nSNMP.SMI.DataTypes.V1.Primitive
 {
     public class OctetString : PrimitiveDataType
     {
+        private Encoding _encoding;
+
         public OctetString(byte[] data) : base(data)
         {
             SetDefaultEncoding();
@@ -23,20 +25,18 @@ namespace nSNMP.SMI.DataTypes.V1.Primitive
         {
             get
             {
-                if (Encoding == null)
+                if (_encoding == null)
                 {
                     throw new Exception();
                 }
 
-                return Encoding.GetString(Data, 0, Data.Length);
+                return _encoding.GetString(Data, 0, Data.Length);
             }
         }
 
-        public Encoding Encoding { get; set; }
-
-        public void SetDefaultEncoding()
+        private void SetDefaultEncoding()
         {
-            Encoding = Encoding.GetEncoding("ASCII");
+            _encoding = Encoding.GetEncoding("ASCII");
         }
 
         public override string ToString()

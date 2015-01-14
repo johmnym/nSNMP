@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
-using nSNMP.SMI;
 using nSNMP.SMI.DataTypes;
 using nSNMP.SMI.DataTypes.V1.Constructed;
 using nSNMP.SMI.DataTypes.V1.Primitive;
 using nSNMP.SMI.PDUs;
 using nSNMP.SMI.X690;
 
-namespace nSNMP
+namespace nSNMP.SMI
 {
     public static class SMIDataFactory
     {

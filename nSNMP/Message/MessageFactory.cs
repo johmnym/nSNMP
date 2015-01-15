@@ -11,16 +11,7 @@ namespace nSNMP.Message
 
         public MessageFactory CreateGetRequest()
         {
-            _message = new SnmpMessage {PDU = new GetRequest()};
-
-            return this;
-        }
-
-        public MessageFactory Create()
-        {
-            _message = new SnmpMessage();
-
-            _message.PDU = new GetRequest();
+            _message = new SnmpMessage { PDU = new GetRequest() };
 
             return this;
         }
@@ -46,6 +37,11 @@ namespace nSNMP.Message
             _message.PDU.VarbindList.Add(varbind);
 
             return this;
+        }
+
+        public SnmpMessage Message()
+        {
+            return _message;
         }
     }
 

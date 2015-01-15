@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="nSNMP.SMI\DataTypes\V1\Constructed\SequenceTests.cs" />
+    <Compile Include="nSNMP\Message\MessageFactoryTests.cs" />
     <Compile Include="nSNMP\Message\SnmpMessageTests.cs" />
     <Compile Include="nSNMP.SMI\DataTypes\V1\Primitive\IntegerTests.cs" />
     <Compile Include="nSNMP.SMI\DataTypes\V1\Primitive\ObjectIdentifierTests.cs" />

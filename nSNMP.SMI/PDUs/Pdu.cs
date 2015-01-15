@@ -1,35 +1,40 @@
-﻿using nSNMP.SMI.DataTypes;
+﻿using System.IO;
+using nSNMP.SMI.DataTypes;
 using nSNMP.SMI.DataTypes.V1.Constructed;
 using nSNMP.SMI.DataTypes.V1.Primitive;
 
 namespace nSNMP.SMI.PDUs
 {
-    public abstract class PDU : ConstructedDataType
+    public abstract class PDU : IDataType
     {
-        protected PDU(byte[] data) : base(data)
+        protected PDU()
         {
-
+            
         }
 
-        protected PDU() : base(null)
+        protected PDU(byte[] data)
         {
-            VarbindList = new Sequence();
+            Data = data;
         }
 
-        public Integer RequestId
-        {
-            get { return (Integer) Elements[0]; }
-            set { Elements[0] = value; }
-        }
+        public byte[] Data { get; private set; }
 
-        public Integer Error { get { return (Integer)Elements[1]; } }
-        
-        public Integer ErrorIndex { get { return (Integer)Elements[2]; } }
+        public Integer RequestId { get; set; }
 
-        public Sequence VarbindList
+        public Integer Error { get; set; }
+
+        public Integer ErrorIndex { get; set; }
+
+        public Sequence VarbindList { get; set; }
+
+        protected void Initialize()
         {
-            get { return (Sequence)Elements[3]; }
-            private set { Elements[3] = value; }
+            var dataStream = new MemoryStream(Data);
+
+            RequestId = (Integer)SMIDataFactory.Create(dataStream);
+            Error = (Integer)SMIDataFactory.Create(dataStream);
+            ErrorIndex = (Integer)SMIDataFactory.Create(dataStream);
+            VarbindList = (Sequence)SMIDataFactory.Create(dataStream);
         }
     }
 }

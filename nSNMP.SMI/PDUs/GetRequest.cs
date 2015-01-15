@@ -7,9 +7,8 @@ namespace nSNMP.SMI.PDUs
         {
         }
 
-        public GetRequest() : base(null)
+        public GetRequest()
         {
-            
         }
 
         public static GetRequest Create(byte[] data)

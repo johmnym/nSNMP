@@ -34,7 +34,10 @@ namespace nSNMP.Message
 
         public SnmpMessage()
         {
-            
+            _message = new Sequence();
+            _message.Add(null);
+            _message.Add(null);
+            _message.Add(null);
         }
 
         public static SnmpMessage Create(byte[] data)

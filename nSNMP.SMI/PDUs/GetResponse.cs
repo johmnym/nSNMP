@@ -7,7 +7,7 @@ namespace nSNMP.SMI.PDUs
         {
         }
 
-        public GetResponse() : base(null)
+        public GetResponse()
         {
             
         }

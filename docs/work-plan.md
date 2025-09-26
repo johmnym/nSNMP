@@ -2,9 +2,9 @@
 
 This document tracks the implementation progress toward the full nSNMP specification outlined in `specs.md`.
 
-## Current Status: Milestone 4 (Agent v1/v2c) - ✅ COMPLETED
+## Current Status: Milestone 5 (Agent v3 + VACM) - ✅ COMPLETED
 
-The current codebase represents a **complete SNMP Agent implementation** with full UDP server, provider model, and production-ready v1/v2c agent functionality including GET, SET, GET-NEXT, and GET-BULK support.
+The current codebase represents a **complete SNMP Agent implementation** with full UDP server, provider model, and production-ready v1/v2c/v3 agent functionality including GET, SET, GET-NEXT, and GET-BULK support. Includes complete SNMPv3 USM security and VACM access control per RFC 3414 and RFC 3415.
 
 ---
 
@@ -220,14 +220,23 @@ The current codebase represents a **complete SNMP Agent implementation** with fu
   - Proper error handling and security reporting
   - Message correlation and response generation
 
+- [x] **VACM (View-based Access Control Model) Implementation**
+  - `VacmProcessor` implementing RFC 3415 access control logic
+  - `VacmGroup` for security-to-group mappings (community strings and V3 users)
+  - `VacmView` for OID subtree access control with optional bit masking
+  - `VacmAccess` entries defining read/write/notify permissions per group and context
+  - Complete integration with both V3 (USM) and v1/v2c (community-based) requests
+  - Default VACM configuration for common use cases
+  - Per-OID access control validation for all SNMP operations
+
 ### ✅ Final Status:
 - **232 tests passing** - Complete Agent v1/v2c/v3 functionality verified
 - **Full SNMPv3 USM agent implementation** supporting all security levels
 - **Production-ready server-side V3 support** with complete message processing
 - **RFC 3414 compliant** USM implementation for agents
+- **RFC 3415 compliant** VACM implementation for access control
+- **Complete M5 implementation** with both USM security and VACM access control
 - **Seamless integration** with existing agent infrastructure
-
-**Note**: Basic VACM (View-based Access Control) implementation deferred to future milestone as core USM functionality is complete and production-ready.
 
 ---
 

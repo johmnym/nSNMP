@@ -12,7 +12,7 @@ namespace nSNMP.Message
 
         public static Version Create(Integer integer)
         {
-            return new Version(integer.Data);
+            return new Version(integer.Data ?? Array.Empty<byte>());
         }
 
         public new static Version Create(int value)

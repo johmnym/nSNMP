@@ -7,7 +7,7 @@ namespace nSNMP.Message
 {
     public class MessageFactory
     {
-        private SnmpMessage _message;
+        private SnmpMessage? _message;
 
         public MessageFactory CreateGetRequest()
         {
@@ -18,6 +18,7 @@ namespace nSNMP.Message
 
         public MessageFactory WithVersion(SnmpVersion version)
         {
+            if (_message == null) throw new InvalidOperationException();
             _message.Version = version;
 
             return this;
@@ -25,6 +26,7 @@ namespace nSNMP.Message
 
         public MessageFactory WithCommunity(string community)
         {
+            if (_message == null) throw new InvalidOperationException();
             var communityString = OctetString.Create(community);
 
             _message.CommunityString = communityString;
@@ -34,6 +36,9 @@ namespace nSNMP.Message
 
         public MessageFactory WithVarbind(Sequence varbind)
         {
+            if (_message == null) throw new InvalidOperationException();
+            if (_message.PDU == null) throw new InvalidOperationException();
+            if (_message.PDU.VarbindList == null) throw new InvalidOperationException();
             _message.PDU.VarbindList.Add(varbind);
 
             return this;
@@ -41,6 +46,7 @@ namespace nSNMP.Message
 
         public SnmpMessage Message()
         {
+            if (_message == null) throw new InvalidOperationException();
             return _message;
         }
     }

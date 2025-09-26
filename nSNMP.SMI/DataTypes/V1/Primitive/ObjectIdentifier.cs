@@ -15,6 +15,7 @@ namespace nSNMP.SMI.DataTypes.V1.Primitive
         {
             get
             {
+                if (Data == null) return Array.Empty<uint>();
                 var oid = new List<uint>();
                 oid.Add((uint) Data[0] / 40);
                 oid.Add((uint) Data[0] % 40);

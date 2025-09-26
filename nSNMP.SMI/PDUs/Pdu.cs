@@ -17,18 +17,19 @@ namespace nSNMP.SMI.PDUs
             Data = data;
         }
 
-        public byte[] Data { get; private set; }
+        public byte[]? Data { get; private set; }
 
-        public Integer RequestId { get; set; }
+        public Integer? RequestId { get; set; }
 
-        public Integer Error { get; set; }
+        public Integer? Error { get; set; }
 
-        public Integer ErrorIndex { get; set; }
+        public Integer? ErrorIndex { get; set; }
 
-        public Sequence VarbindList { get; set; }
+        public Sequence? VarbindList { get; set; } = new Sequence();
 
         protected void Initialize()
         {
+            if (Data == null) return;
             var dataStream = new MemoryStream(Data);
 
             RequestId = (Integer)SMIDataFactory.Create(dataStream);

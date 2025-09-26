@@ -18,15 +18,10 @@ namespace nSNMP.Tests.nSNMP.Message
                 .WithVarbind(Varbind.Create(".1.3.6.1.4.1.56"))
                 .Message();
 
+            Assert.NotNull(message.CommunityString);
             Assert.Equal("public", message.CommunityString.Value);
         }
 
-        [Fact]
-        public void Test()
-        {
-            var list = new List<int>(3);
 
-            list.Insert(2, 2);
-        }
     }
 }

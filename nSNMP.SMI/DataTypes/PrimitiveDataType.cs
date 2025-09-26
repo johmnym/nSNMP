@@ -6,9 +6,9 @@ namespace nSNMP.SMI.DataTypes
 {
     public abstract class PrimitiveDataType : IDataType
     {
-        public byte[] Data { get; private set; }
+        public byte[]? Data { get; private set; }
 
-        protected PrimitiveDataType(byte[] data)
+        protected PrimitiveDataType(byte[]? data)
         {
             Data = data;
         }

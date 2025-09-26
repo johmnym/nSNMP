@@ -24,6 +24,7 @@ namespace nSNMP.SMI.DataTypes.V1.Primitive
 
         private int Decode()
         {
+            if (Data == null) return 0;
             var value = ((Data[0] & 0x80) == 0x80) ? -1 : 0;
 
             for (var j = 0; j < Data.Length; j++)

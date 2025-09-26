@@ -5,11 +5,11 @@ namespace nSNMP.SMI.DataTypes
 {
     public abstract class ConstructedDataType : IDataType
     {
-        public byte[] Data { get; private set; }
+        public byte[]? Data { get; private set; }
 
         public List<IDataType> Elements { get; protected set; }
 
-        protected ConstructedDataType(byte[] data)
+        protected ConstructedDataType(byte[]? data)
         {
             Data = data;
             Elements = new List<IDataType>();
@@ -17,6 +17,11 @@ namespace nSNMP.SMI.DataTypes
 
         protected void Initialize()
         {
+            if (Data == null)
+            {
+                return;
+            }
+
             using (var dataStream = new MemoryStream(Data))
             {
                 while (dataStream.Position < Data.Length)

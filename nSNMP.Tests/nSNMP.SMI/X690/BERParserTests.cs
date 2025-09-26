@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System;
 using nSNMP.SMI;
 using nSNMP.SMI.X690;
 using Xunit;
@@ -10,43 +10,45 @@ namespace nSNMP.Tests.nSNMP.SMI.X690
         [Fact]
         public void CanParseBerTypeInteger()
         {
-            byte data = 2;
+            ReadOnlyMemory<byte> memory = new byte[] { 2, 0 };
 
-            SnmpDataType actual = BERParser.ParseType(data);
+            SnmpDataType actual = BERParser.ParseType(ref memory);
 
             Assert.Equal(SnmpDataType.Integer, actual);
+            Assert.Equal(1, memory.Length);
         }
 
         [Fact]
         public void CanParseBerTypeOctetString()
         {
-            byte data = 4;
+            ReadOnlyMemory<byte> memory = new byte[] { 4, 0 };
 
-            SnmpDataType actual = BERParser.ParseType(data);
+            SnmpDataType actual = BERParser.ParseType(ref memory);
 
             Assert.Equal(SnmpDataType.OctetString, actual);
+            Assert.Equal(1, memory.Length);
         }
 
         [Fact]
         public void CanParseBerTypeSequence()
         {
-            byte data = 48;
+            ReadOnlyMemory<byte> memory = new byte[] { 48, 0 };
 
-            SnmpDataType actual = BERParser.ParseType(data);
+            SnmpDataType actual = BERParser.ParseType(ref memory);
 
             Assert.Equal(SnmpDataType.Sequence, actual);
+            Assert.Equal(1, memory.Length);
         }
 
         [Fact]
         public void CanParseShortFormLength()
         {
             byte[] message = SnmpMessageFactory.CreateMessage();
+            ReadOnlyMemory<byte> memory = new ReadOnlyMemory<byte>(message);
 
-            var stream = new MemoryStream(message);
+            BERParser.ParseType(ref memory); // Consume the type byte
 
-            stream.ReadByte();
-
-            int length = BERParser.ParseLengthOfNextDataField(stream);
+            int length = BERParser.ParseLengthOfNextDataField(ref memory);
 
             Assert.Equal(70, length);
         }
@@ -55,12 +57,11 @@ namespace nSNMP.Tests.nSNMP.SMI.X690
         public void CanParseLongFormLength()
         {
             byte[] largeMessage = SnmpMessageFactory.CreateLargeMessage();
+            ReadOnlyMemory<byte> memory = new ReadOnlyMemory<byte>(largeMessage);
 
-            var stream = new MemoryStream(largeMessage);
+            BERParser.ParseType(ref memory); // Consume the type byte
 
-            stream.ReadByte();
-
-            int length = BERParser.ParseLengthOfNextDataField(stream);
+            int length = BERParser.ParseLengthOfNextDataField(ref memory);
 
             Assert.Equal(134, length);
         }

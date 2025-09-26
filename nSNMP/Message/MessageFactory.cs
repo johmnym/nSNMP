@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+using nSNMP.SMI.DataTypes;
 using nSNMP.SMI.DataTypes.V1.Constructed;
 using nSNMP.SMI.DataTypes.V1.Primitive;
 using nSNMP.SMI.PDUs;
@@ -7,47 +9,46 @@ namespace nSNMP.Message
 {
     public class MessageFactory
     {
-        private SnmpMessage? _message;
+        private SnmpVersion? _version;
+        private string? _community;
+        private PDU? _pdu;
+        private readonly List<Sequence> _varbinds = new();
 
         public MessageFactory CreateGetRequest()
         {
-            _message = new SnmpMessage { PDU = new GetRequest() };
-
+            _pdu = new GetRequest();
             return this;
         }
 
         public MessageFactory WithVersion(SnmpVersion version)
         {
-            if (_message == null) throw new InvalidOperationException();
-            _message.Version = version;
-
+            _version = version;
             return this;
         }
 
         public MessageFactory WithCommunity(string community)
         {
-            if (_message == null) throw new InvalidOperationException();
-            var communityString = OctetString.Create(community);
-
-            _message.CommunityString = communityString;
-
+            _community = community;
             return this;
         }
 
         public MessageFactory WithVarbind(Sequence varbind)
         {
-            if (_message == null) throw new InvalidOperationException();
-            if (_message.PDU == null) throw new InvalidOperationException();
-            if (_message.PDU.VarbindList == null) throw new InvalidOperationException();
-            _message.PDU.VarbindList.Add(varbind);
-
+            _varbinds.Add(varbind);
             return this;
         }
 
         public SnmpMessage Message()
         {
-            if (_message == null) throw new InvalidOperationException();
-            return _message;
+            var varbindList = new Sequence(_varbinds);
+
+            var pdu = _pdu switch
+            {
+                GetRequest => new GetRequest(null, null, null, null, varbindList),
+                _ => _pdu
+            };
+
+            return new SnmpMessage(_version, OctetString.Create(_community ?? string.Empty), pdu);
         }
     }
 
@@ -55,13 +56,10 @@ namespace nSNMP.Message
     {
         public static Sequence Create(string oid)
         {
-            var varbind = new Sequence();
-
             var objectId = ObjectIdentifier.Create(oid);
-            varbind.Add(objectId);
-            varbind.Add(new Null());
-
-            return varbind;
+            var nullValue = new Null();
+            
+            return new Sequence(new IDataType[] { objectId, nullValue });
         }
     }
 }

@@ -1,33 +1,52 @@
-﻿using System.IO;
+﻿using System;
 
 namespace nSNMP.SMI.X690
 {
     public static class BERParser
     {
-        public static SnmpDataType ParseType(byte data)
+        public static SnmpDataType ParseType(ref ReadOnlyMemory<byte> memory)
         {
-            return (SnmpDataType) data;
+            if (memory.IsEmpty)
+            {
+                throw new ArgumentException("Cannot parse type from empty memory.");
+            }
+
+            var type = (SnmpDataType)memory.Span[0];
+            memory = memory.Slice(1);
+            return type;
         }
 
-        public static SnmpDataType ParseType(MemoryStream stream)
+        public static ReadOnlyMemory<byte> ParseDataField(ref ReadOnlyMemory<byte> memory, int length)
         {
-            var data = (byte)stream.ReadByte();
-            
-            return ParseType(data);
+            if (length < 0)
+            {
+                throw new ArgumentException($"Invalid data field length: {length}", nameof(length));
+            }
+
+            if (length == 0)
+            {
+                return ReadOnlyMemory<byte>.Empty;
+            }
+
+            if (length > memory.Length)
+            {
+                throw new ArgumentException("Not enough data in memory to parse field.");
+            }
+
+            var data = memory.Slice(0, length);
+            memory = memory.Slice(length);
+            return data;
         }
 
-        public static byte[] ParseDataField(MemoryStream stream, int length)
+        public static int ParseLengthOfNextDataField(ref ReadOnlyMemory<byte> memory)
         {
-            var buffer = new byte[length];
+            if (memory.IsEmpty)
+            {
+                throw new ArgumentException("Cannot parse length from empty memory.");
+            }
 
-            stream.Read(buffer, 0, length);
-
-            return buffer;
-        }
-
-        public static int ParseLengthOfNextDataField(MemoryStream stream)
-        {
-            var firstLengthOctet = (byte) stream.ReadByte();
+            byte firstLengthOctet = memory.Span[0];
+            memory = memory.Slice(1);
 
             if (LengthIsInShortForm(firstLengthOctet))
             {
@@ -35,16 +54,19 @@ namespace nSNMP.SMI.X690
             }
 
             int length = 0;
-
             int numberOfLengthOctets = firstLengthOctet & 0x7f;
-            
-            for (int octetIndex = 0; octetIndex < numberOfLengthOctets; octetIndex++)
-            {
-                var nextByte = (byte)stream.ReadByte();
 
-                length = (length << 8) + nextByte;
+            if (numberOfLengthOctets > memory.Length)
+            {
+                throw new ArgumentException("Not enough data in memory to parse length.");
             }
 
+            for (int i = 0; i < numberOfLengthOctets; i++)
+            {
+                length = (length << 8) + memory.Span[i];
+            }
+
+            memory = memory.Slice(numberOfLengthOctets);
             return length;
         }
 

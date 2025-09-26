@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Text;
+using nSNMP.SMI.X690;
 
 namespace nSNMP.SMI.DataTypes.V1.Primitive
 {
-    public class OctetString : PrimitiveDataType
+    public record OctetString(byte[]? Data) : PrimitiveDataType(Data)
     {
-        public OctetString(byte[]? data) : base(data)
-        {
-        }
-
         public static OctetString Create(string content)
         {
             var encoding = Encoding.GetEncoding("ASCII");
@@ -34,6 +31,12 @@ namespace nSNMP.SMI.DataTypes.V1.Primitive
         public override string ToString()
         {
             return Value;
+        }
+
+        public override byte[] ToBytes()
+        {
+            var data = Data ?? Array.Empty<byte>();
+            return BEREncoder.EncodeTLV((byte)SnmpDataType.OctetString, data);
         }
     }
 }

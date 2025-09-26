@@ -1,13 +1,10 @@
-﻿using nSNMP.SMI.DataTypes.V1.Primitive;
+﻿using System;
+using nSNMP.SMI.DataTypes.V1.Primitive;
 
 namespace nSNMP.Message
 {
-    public class Version : Integer
+    public record Version(byte[]? Data) : Integer(Data)
     {
-        public Version(byte[] data) : base(data)
-        {
-        }
-
         public SnmpVersion SnmpVersion { get { return (SnmpVersion) Value; } }
 
         public static Version Create(Integer integer)

@@ -4,15 +4,9 @@ using System.Collections.Generic;
 
 namespace nSNMP.SMI.DataTypes
 {
-    public abstract class PrimitiveDataType : IDataType
+    public abstract record PrimitiveDataType(byte[]? Data) : IDataType
     {
-        public byte[]? Data { get; private set; }
-
-        protected PrimitiveDataType(byte[]? data)
-        {
-            Data = data;
-        }
-
+        public abstract byte[] ToBytes();
         protected static byte[] GetRawBytes(IEnumerable<byte> data, bool negative)
         {
             if (data == null)

@@ -1,19 +1,20 @@
-﻿namespace nSNMP.SMI.DataTypes.V1.Primitive
+﻿using nSNMP.SMI.X690;
+
+namespace nSNMP.SMI.DataTypes.V1.Primitive
 {
-    public class Null : PrimitiveDataType
+    public record Null() : PrimitiveDataType((byte[]?)null)
     {
-        public Null(byte[] data) : base(data)
-        {
-        }
-
-        public Null() : base(null) { }
-
         public string Value { get { return "NULL"; } }
 
 
         public override string ToString()
         {
             return Value;
+        }
+
+        public override byte[] ToBytes()
+        {
+            return BEREncoder.EncodeTLV((byte)SnmpDataType.Null, System.Array.Empty<byte>());
         }
     }
 }

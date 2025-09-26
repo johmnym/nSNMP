@@ -1,15 +1,11 @@
 ﻿
 using System;
+using nSNMP.SMI.X690;
 
 namespace nSNMP.SMI.DataTypes.V1.Primitive
 {
-    public class Integer : PrimitiveDataType
+    public record Integer(byte[] Data) : PrimitiveDataType(Data)
     {
-        public Integer(byte[] data) : base(data)
-        {
-
-        }
-
         public static Integer Create(int value)
         {
             byte[] data = Encode(value);
@@ -43,6 +39,12 @@ namespace nSNMP.SMI.DataTypes.V1.Primitive
         public static implicit operator int(Integer integer)
         {
             return integer.Value;
+        }
+
+        public override byte[] ToBytes()
+        {
+            var valueBytes = BEREncoder.EncodeInteger(Value);
+            return BEREncoder.EncodeTLV((byte)SnmpDataType.Integer, valueBytes);
         }
     }
 }

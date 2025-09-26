@@ -1,29 +1,37 @@
 ﻿
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using nSNMP.SMI.X690;
+
 namespace nSNMP.SMI.DataTypes.V1.Constructed
 {
-    public class Sequence : ConstructedDataType
+    public record Sequence(byte[]? Data, IReadOnlyList<IDataType> Elements) : ConstructedDataType(Data)
     {
-        protected Sequence(byte[] data) : base(data)
-        {
-        }
+        public override IReadOnlyList<IDataType> Elements { get; } = Elements;
 
-        public Sequence() : base(null)
+        public Sequence(IReadOnlyList<IDataType> elements) : this(null, elements)
         {
-            
         }
 
         public static Sequence Create(byte[] data)
         {
-            var sequence = new Sequence(data);
+            var elements = new List<IDataType>();
+            ReadOnlyMemory<byte> memory = new ReadOnlyMemory<byte>(data);
 
-            sequence.Initialize();
+            while (!memory.IsEmpty)
+            {
+                elements.Add(SMIDataFactory.Create(ref memory));
+            }
 
-            return sequence;
+            return new Sequence(data, elements);
         }
 
-        public void Add(IDataType element)
+        public override byte[] ToBytes()
         {
-            Elements.Add(element);
+            // Encode all child elements and concatenate
+            var childBytes = Elements.SelectMany(element => element.ToBytes()).ToArray();
+            return BEREncoder.EncodeTLV((byte)SnmpDataType.Sequence, childBytes);
         }
     }
 }

@@ -1,52 +1,40 @@
-﻿using nSNMP.SMI;
+using System.Collections.Generic;
+using nSNMP.SMI;
+using nSNMP.SMI.DataTypes;
 using nSNMP.SMI.DataTypes.V1.Constructed;
 using nSNMP.SMI.DataTypes.V1.Primitive;
 using nSNMP.SMI.PDUs;
 
 namespace nSNMP.Message
 {
-    public class SnmpMessage
+    public record SnmpMessage(SnmpVersion? Version, OctetString? CommunityString, PDU? PDU)
     {
-        private readonly Sequence _message;
-        
-        public SnmpVersion? Version 
-        {
-            get { return (SnmpVersion)(int)(Integer)_message.Elements[0]; } 
-            set { _message.Elements[0] = Integer.Create((int)value!); }
-        }
-
-        public OctetString? CommunityString
-        {
-            get { return (OctetString) _message.Elements[1]; }
-            set { _message.Elements[1] = value!; }
-        }
-
-        public PDU? PDU
-        {
-            get { return (PDU) _message.Elements[2]; }
-            set { _message.Elements[2] = value!; }
-        }
-
-        private SnmpMessage(Sequence message)
-        {
-            _message = message;
-        }
-
-        public SnmpMessage()
-        {
-            _message = new Sequence();
-            _message.Add(default!);
-            _message.Add(default!);
-            _message.Add(default!);
-        }
+        public SnmpMessage() : this(null, null, null) { }
 
         public static SnmpMessage Create(byte[] data)
         {
             var sequence = (Sequence)SMIDataFactory.Create(data);
-            
-            var message = new SnmpMessage(sequence);
 
-            return message;
+            var version = (SnmpVersion)(int)(Integer)sequence.Elements[0];
+            var communityString = (OctetString)sequence.Elements[1];
+            var pdu = (PDU)sequence.Elements[2];
+
+            return new SnmpMessage(version, communityString, pdu);
+        }
+
+        public Sequence ToSequence()
+        {
+            var elements = new List<IDataType>();
+            elements.Add(Integer.Create((int)Version!));
+            elements.Add(CommunityString!);
+            elements.Add(PDU!);
+
+            return new Sequence(elements);
+        }
+
+        public byte[] ToBytes()
+        {
+            return ToSequence().ToBytes();
         }
     }
 }

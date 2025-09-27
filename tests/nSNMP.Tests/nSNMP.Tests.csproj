@@ -9,11 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0" />
-    <PackageReference Include="xunit" Version="2.7.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.7">
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -27,6 +27,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\nSNMP.Core\nSNMP.Core.csproj" />
     <ProjectReference Include="..\..\src\nSNMP.SMI\nSNMP.SMI.csproj" />
+    <ProjectReference Include="..\..\src\nSNMP.MIB\nSNMP.MIB.csproj" />
+    <ProjectReference Include="..\..\src\nSNMP.Abstractions\nSNMP.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\nSNMP.Extensions\nSNMP.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

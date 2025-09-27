@@ -5,13 +5,13 @@ on:
     branches: [ main, master, develop ]
     paths:
       - 'src/**'
-      - 'tests.integration/**'
+      - 'tests/nSNMP.Integration.Tests/**'
       - '.github/workflows/integration-tests.yml'
   pull_request:
     branches: [ main, master ]
     paths:
       - 'src/**'
-      - 'tests.integration/**'
+      - 'tests/nSNMP.Integration.Tests/**'
       - '.github/workflows/integration-tests.yml'
   workflow_dispatch:
     inputs:
@@ -89,20 +89,20 @@ jobs:
 
     - name: Restore dependencies
       run: |
-        dotnet restore tests.integration/Testbed.sln
+        dotnet restore tests/nSNMP.Integration.Tests/Testbed.sln
 
     - name: Build integration tests
       run: |
-        dotnet build tests.integration/Testbed.sln --configuration Release --no-restore
+        dotnet build tests/nSNMP.Integration.Tests/Testbed.sln --configuration Release --no-restore
 
     - name: Validate test scenarios
       run: |
-        cd tests.integration
+        cd tests/nSNMP.Integration.Tests
         dotnet run --project nSNMP.Integration.Tests --configuration Release -- validate --scenario-dir ./Scenarios
 
     - name: List available scenarios
       run: |
-        cd tests.integration
+        cd tests/nSNMP.Integration.Tests
         dotnet run --project nSNMP.Integration.Tests --configuration Release -- list --scenario-dir ./Scenarios
 
     - name: Create output directory
@@ -111,9 +111,9 @@ jobs:
     - name: Run integration tests
       id: integration_tests
       run: |
-        cd tests.integration
+        cd tests/nSNMP.Integration.Tests
         dotnet run --project nSNMP.Integration.Tests --configuration Release -- run \
-          --output-dir "../${{ env.INTEGRATION_OUTPUT_DIRECTORY }}" \
+          --output-dir "../../${{ env.INTEGRATION_OUTPUT_DIRECTORY }}" \
           --scenario-dir ./Scenarios \
           ${{ env.INTEGRATION_RUN_PRINTER_TESTS == 'false' && '--skip-printer' || '' }} \
           ${{ env.INTEGRATION_RUN_MIB2_TESTS == 'false' && '--skip-mib2' || '' }} \
@@ -236,14 +236,14 @@ jobs:
 
     - name: Build integration tests
       run: |
-        dotnet build tests.integration/Testbed.sln --configuration Release
+        dotnet build tests/nSNMP.Integration.Tests/Testbed.sln --configuration Release
 
     - name: Run specific test suite
       run: |
         mkdir -p matrix-results/${{ matrix.suite }}
-        cd tests.integration
+        cd tests/nSNMP.Integration.Tests
         dotnet run --project nSNMP.Integration.Tests --configuration Release -- run-suite ${{ matrix.suite }} \
-          --output-dir "../matrix-results/${{ matrix.suite }}" \
+          --output-dir "../../matrix-results/${{ matrix.suite }}" \
           --scenario-dir ./Scenarios \
           --verbose
 

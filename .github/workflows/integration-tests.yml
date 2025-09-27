@@ -14,35 +14,10 @@ on:
       - 'tests/nSNMP.Integration.Tests/**'
       - '.github/workflows/integration-tests.yml'
   workflow_dispatch:
-    inputs:
-      run_printer_tests:
-        description: 'Run Printer MIB tests'
-        required: false
-        default: 'true'
-        type: boolean
-      run_mib2_tests:
-        description: 'Run MIB-II tests'
-        required: false
-        default: 'true'
-        type: boolean
-      run_trap_tests:
-        description: 'Run Trap/Inform tests'
-        required: false
-        default: 'true'
-        type: boolean
-      run_network_tests:
-        description: 'Run Network Impairment tests'
-        required: false
-        default: 'true'
-        type: boolean
 
 env:
   DOTNET_VERSION: '9.0.x'
   INTEGRATION_OUTPUT_DIRECTORY: 'integration-test-results'
-  INTEGRATION_RUN_PRINTER_TESTS: ${{ github.event.inputs.run_printer_tests || 'true' }}
-  INTEGRATION_RUN_MIB2_TESTS: ${{ github.event.inputs.run_mib2_tests || 'true' }}
-  INTEGRATION_RUN_TRAP_TESTS: ${{ github.event.inputs.run_trap_tests || 'true' }}
-  INTEGRATION_RUN_NETWORK_TESTS: ${{ github.event.inputs.run_network_tests || 'true' }}
 
 jobs:
   integration-tests:
@@ -95,16 +70,6 @@ jobs:
       run: |
         dotnet build tests/nSNMP.Integration.Tests/Testbed.sln --configuration Release --no-restore
 
-    - name: Validate test scenarios
-      run: |
-        cd tests/nSNMP.Integration.Tests
-        dotnet run --project nSNMP.Integration.Tests --configuration Release -- validate --scenario-dir ./Scenarios
-
-    - name: List available scenarios
-      run: |
-        cd tests/nSNMP.Integration.Tests
-        dotnet run --project nSNMP.Integration.Tests --configuration Release -- list --scenario-dir ./Scenarios
-
     - name: Create output directory
       run: mkdir -p ${{ env.INTEGRATION_OUTPUT_DIRECTORY }}
 
@@ -112,14 +77,10 @@ jobs:
       id: integration_tests
       run: |
         cd tests/nSNMP.Integration.Tests
-        dotnet run --project nSNMP.Integration.Tests --configuration Release -- run \
-          --output-dir "../../${{ env.INTEGRATION_OUTPUT_DIRECTORY }}" \
-          --scenario-dir ./Scenarios \
-          ${{ env.INTEGRATION_RUN_PRINTER_TESTS == 'false' && '--skip-printer' || '' }} \
-          ${{ env.INTEGRATION_RUN_MIB2_TESTS == 'false' && '--skip-mib2' || '' }} \
-          ${{ env.INTEGRATION_RUN_TRAP_TESTS == 'false' && '--skip-traps' || '' }} \
-          ${{ env.INTEGRATION_RUN_NETWORK_TESTS == 'false' && '--skip-network' || '' }} \
-          --verbose
+        dotnet test nSNMP.Integration.Tests.csproj --configuration Release \
+          --logger trx --results-directory "../../${{ env.INTEGRATION_OUTPUT_DIRECTORY }}" \
+          --logger "junit;LogFilePath=../../${{ env.INTEGRATION_OUTPUT_DIRECTORY }}/TEST-integration-results.xml" \
+          --verbosity normal
       continue-on-error: true
 
     - name: Upload test results
@@ -153,39 +114,28 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const fs = require('fs');
-          const path = require('path');
+          const comment = `## 🧪 Integration Test Results
 
-          const summaryPath = path.join('${{ env.INTEGRATION_OUTPUT_DIRECTORY }}', 'TestSummary.md');
+          Integration tests have completed. Check the workflow results and artifacts for detailed information.
 
-          if (fs.existsSync(summaryPath)) {
-            const summary = fs.readFileSync(summaryPath, 'utf8');
+          <details>
+          <summary>📋 Test Configuration</summary>
 
-            const comment = `## 🧪 Integration Test Results
+          - **Framework**: .NET 9.0 with xUnit
+          - **Runner**: GitHub Actions on \`ubuntu-latest\`
+          - **Commit**: ${{ github.sha }}
+          - **Test Status**: ${{ steps.integration_tests.outcome }}
 
-            ${summary}
+          </details>
 
-            <details>
-            <summary>📋 Test Configuration</summary>
+          📊 [View detailed results in artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
 
-            - **Printer Tests**: ${{ env.INTEGRATION_RUN_PRINTER_TESTS }}
-            - **MIB-II Tests**: ${{ env.INTEGRATION_RUN_MIB2_TESTS }}
-            - **Trap Tests**: ${{ env.INTEGRATION_RUN_TRAP_TESTS }}
-            - **Network Tests**: ${{ env.INTEGRATION_RUN_NETWORK_TESTS }}
-            - **Runner**: GitHub Actions on \`ubuntu-latest\`
-            - **Commit**: ${{ github.sha }}
-
-            </details>
-
-            📊 [View detailed results in artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
-          }
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
 
     - name: Cleanup Docker resources
       if: always()
@@ -209,13 +159,13 @@ jobs:
   integration-tests-matrix:
     name: Integration Tests (Matrix)
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_network_tests == 'true'
+    if: github.event_name == 'workflow_dispatch'
     timeout-minutes: 30
 
     strategy:
       fail-fast: false
       matrix:
-        suite: [printer, mib2, traps, network]
+        suite: [SnmpCommunication, SnmpErrorHandling, Snmpv3Security, SimpleSnmpAgent]
 
     steps:
     - name: Checkout code
@@ -242,10 +192,11 @@ jobs:
       run: |
         mkdir -p matrix-results/${{ matrix.suite }}
         cd tests/nSNMP.Integration.Tests
-        dotnet run --project nSNMP.Integration.Tests --configuration Release -- run-suite ${{ matrix.suite }} \
-          --output-dir "../../matrix-results/${{ matrix.suite }}" \
-          --scenario-dir ./Scenarios \
-          --verbose
+        dotnet test nSNMP.Integration.Tests.csproj --configuration Release \
+          --filter "FullyQualifiedName~${{ matrix.suite }}" \
+          --logger trx --results-directory "../../matrix-results/${{ matrix.suite }}" \
+          --logger "junit;LogFilePath=../../matrix-results/${{ matrix.suite }}/TEST-${{ matrix.suite }}-results.xml" \
+          --verbosity normal
 
     - name: Upload suite results
       uses: actions/upload-artifact@v4

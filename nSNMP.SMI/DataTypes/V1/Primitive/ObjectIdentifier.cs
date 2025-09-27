@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using nSNMP.SMI.X690;
+using nSNMP.SMI.Optimization;
 
 namespace nSNMP.SMI.DataTypes.V1.Primitive
 {
@@ -70,7 +71,9 @@ namespace nSNMP.SMI.DataTypes.V1.Primitive
 
         public static ObjectIdentifier Create(string oid)
         {
-            uint[] array = ConvertToUIntArray(oid);
+            // Intern the input string early for memory efficiency
+            var internedOid = OidInterning.Intern(oid);
+            uint[] array = ConvertToUIntArray(internedOid);
 
             return Create(array);
         }
@@ -130,13 +133,14 @@ namespace nSNMP.SMI.DataTypes.V1.Primitive
             }
 
             var result = new StringBuilder();
-            
+
             foreach (uint section in oid)
             {
                 result.Append(".").Append(section.ToString(CultureInfo.InvariantCulture));
             }
 
-            return result.ToString();
+            var oidString = result.ToString();
+            return OidInterning.Intern(oidString);
         }
 
         public override byte[] ToBytes()

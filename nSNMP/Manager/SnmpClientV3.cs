@@ -1,10 +1,12 @@
 using System.Net;
+using nSNMP.Logging;
 using nSNMP.Message;
 using nSNMP.Security;
 using nSNMP.SMI.DataTypes;
 using nSNMP.SMI.DataTypes.V1.Constructed;
 using nSNMP.SMI.DataTypes.V1.Primitive;
 using nSNMP.SMI.PDUs;
+using nSNMP.Telemetry;
 using nSNMP.Transport;
 
 namespace nSNMP.Manager
@@ -18,17 +20,19 @@ namespace nSNMP.Manager
         private readonly IPEndPoint _endpoint;
         private readonly V3Credentials _credentials;
         private readonly TimeSpan _timeout;
+        private readonly ISnmpLogger _logger;
         private EngineParameters? _engineParameters;
         private int _messageId;
         private bool _disposed;
 
-        public SnmpClientV3(IPEndPoint endpoint, V3Credentials credentials, TimeSpan? timeout = null, IUdpChannel? transport = null)
+        public SnmpClientV3(IPEndPoint endpoint, V3Credentials credentials, TimeSpan? timeout = null, IUdpChannel? transport = null, ISnmpLogger? logger = null)
         {
             _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
             _credentials = credentials ?? throw new ArgumentNullException(nameof(credentials));
             _credentials.Validate();
             _timeout = timeout ?? TimeSpan.FromSeconds(5);
             _transport = transport ?? new UdpChannel();
+            _logger = logger ?? NullSnmpLogger.Instance;
         }
 
         /// <summary>
@@ -66,8 +70,38 @@ namespace nSNMP.Manager
         /// </summary>
         public async Task DiscoverEngineAsync(CancellationToken cancellationToken = default)
         {
-            var discovery = new EngineDiscovery(_endpoint, _transport);
-            _engineParameters = await discovery.DiscoverAsync(_timeout, cancellationToken);
+            var startTime = DateTime.UtcNow;
+            var operation = "ENGINE_DISCOVERY";
+
+            // Start telemetry activity
+            using var activity = SnmpTelemetry.StartActivity(operation, _endpoint.ToString(), userName: _credentials.UserName);
+
+            try
+            {
+                _logger.LogSecurityOperation(operation, _credentials.UserName, _credentials.SecurityLevel.ToString(), false);
+
+                var discovery = new EngineDiscovery(_endpoint, _transport);
+                _engineParameters = await discovery.DiscoverAsync(_timeout, cancellationToken);
+
+                var elapsed = DateTime.UtcNow - startTime;
+                _logger.LogSecurityOperation(operation, _credentials.UserName, _credentials.SecurityLevel.ToString(), true);
+                _logger.LogPerformance(operation, elapsed);
+
+                // Record telemetry
+                SnmpTelemetry.RecordSecurityOperation(operation, _credentials.UserName, _credentials.SecurityLevel.ToString(), elapsed, true);
+                SnmpTelemetry.SetActivitySuccess(activity);
+            }
+            catch (Exception ex)
+            {
+                var elapsed = DateTime.UtcNow - startTime;
+                _logger.LogError(operation, ex, $"Engine discovery failed for {_endpoint}");
+
+                // Record telemetry for error
+                SnmpTelemetry.RecordSecurityOperation(operation, _credentials.UserName, _credentials.SecurityLevel.ToString(), elapsed, false);
+                SnmpTelemetry.SetActivityError(activity, ex);
+
+                throw;
+            }
         }
 
         /// <summary>

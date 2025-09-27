@@ -49,26 +49,36 @@ namespace nSNMP.Security
         /// </summary>
         private static byte[] GenerateKu(string password, AuthProtocol authProtocol)
         {
-            var passwordBytes = Encoding.UTF8.GetBytes(password);
+            using var passwordBytes = CryptographicHelpers.SecureStringToBytes(password);
             var extendedPassword = new byte[1048576]; // 1MB buffer
 
-            // Extend password to 1MB by repeating
-            for (int i = 0; i < extendedPassword.Length; i++)
+            try
             {
-                extendedPassword[i] = passwordBytes[i % passwordBytes.Length];
-            }
+                // Extend password to 1MB by repeating
+                for (int i = 0; i < extendedPassword.Length; i++)
+                {
+                    extendedPassword[i] = passwordBytes.Data[i % passwordBytes.Length];
+                }
 
-            // Hash the extended password
-            return authProtocol switch
+                // Hash the extended password
+                byte[] hash = authProtocol switch
+                {
+                    AuthProtocol.MD5 => MD5.HashData(extendedPassword),
+                    AuthProtocol.SHA1 => SHA1.HashData(extendedPassword),
+                    AuthProtocol.SHA224 => SHA256.HashData(extendedPassword).Take(28).ToArray(), // Truncated SHA-256
+                    AuthProtocol.SHA256 => SHA256.HashData(extendedPassword),
+                    AuthProtocol.SHA384 => SHA384.HashData(extendedPassword),
+                    AuthProtocol.SHA512 => SHA512.HashData(extendedPassword),
+                    _ => throw new NotSupportedException($"Authentication protocol {authProtocol} not supported")
+                };
+
+                return hash;
+            }
+            finally
             {
-                AuthProtocol.MD5 => MD5.HashData(extendedPassword),
-                AuthProtocol.SHA1 => SHA1.HashData(extendedPassword),
-                AuthProtocol.SHA224 => SHA256.HashData(extendedPassword).Take(28).ToArray(), // Truncated SHA-256
-                AuthProtocol.SHA256 => SHA256.HashData(extendedPassword),
-                AuthProtocol.SHA384 => SHA384.HashData(extendedPassword),
-                AuthProtocol.SHA512 => SHA512.HashData(extendedPassword),
-                _ => throw new NotSupportedException($"Authentication protocol {authProtocol} not supported")
-            };
+                // Always securely clear the extended password buffer
+                CryptographicHelpers.SecureClear(extendedPassword);
+            }
         }
 
         /// <summary>
@@ -79,20 +89,30 @@ namespace nSNMP.Security
             // Kul = H(Ku || engineID || Ku)
             var buffer = new byte[ku.Length + engineId.Length + ku.Length];
 
-            Array.Copy(ku, 0, buffer, 0, ku.Length);
-            Array.Copy(engineId, 0, buffer, ku.Length, engineId.Length);
-            Array.Copy(ku, 0, buffer, ku.Length + engineId.Length, ku.Length);
-
-            return authProtocol switch
+            try
             {
-                AuthProtocol.MD5 => MD5.HashData(buffer),
-                AuthProtocol.SHA1 => SHA1.HashData(buffer),
-                AuthProtocol.SHA224 => SHA256.HashData(buffer).Take(28).ToArray(),
-                AuthProtocol.SHA256 => SHA256.HashData(buffer),
-                AuthProtocol.SHA384 => SHA384.HashData(buffer),
-                AuthProtocol.SHA512 => SHA512.HashData(buffer),
-                _ => throw new NotSupportedException($"Authentication protocol {authProtocol} not supported")
-            };
+                Array.Copy(ku, 0, buffer, 0, ku.Length);
+                Array.Copy(engineId, 0, buffer, ku.Length, engineId.Length);
+                Array.Copy(ku, 0, buffer, ku.Length + engineId.Length, ku.Length);
+
+                byte[] hash = authProtocol switch
+                {
+                    AuthProtocol.MD5 => MD5.HashData(buffer),
+                    AuthProtocol.SHA1 => SHA1.HashData(buffer),
+                    AuthProtocol.SHA224 => SHA256.HashData(buffer).Take(28).ToArray(),
+                    AuthProtocol.SHA256 => SHA256.HashData(buffer),
+                    AuthProtocol.SHA384 => SHA384.HashData(buffer),
+                    AuthProtocol.SHA512 => SHA512.HashData(buffer),
+                    _ => throw new NotSupportedException($"Authentication protocol {authProtocol} not supported")
+                };
+
+                return hash;
+            }
+            finally
+            {
+                // Always securely clear the buffer containing key material
+                CryptographicHelpers.SecureClear(buffer);
+            }
         }
 
         /// <summary>
@@ -118,7 +138,7 @@ namespace nSNMP.Security
         }
 
         /// <summary>
-        /// Verify authentication digest
+        /// Verify authentication digest using constant-time comparison to prevent timing attacks
         /// </summary>
         public static bool VerifyDigest(byte[] message, byte[] key, byte[] providedDigest, AuthProtocol authProtocol)
         {
@@ -126,7 +146,9 @@ namespace nSNMP.Security
                 return providedDigest.Length == 0;
 
             var calculatedDigest = CalculateDigest(message, key, authProtocol);
-            return calculatedDigest.SequenceEqual(providedDigest);
+
+            // Use constant-time comparison to prevent timing attacks
+            return CryptographicHelpers.ConstantTimeHashEquals(calculatedDigest, providedDigest);
         }
 
         /// <summary>

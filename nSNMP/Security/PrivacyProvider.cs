@@ -72,22 +72,33 @@ namespace nSNMP.Security
 
             // IV = ivSalt XOR salt
             var iv = new byte[8];
-            for (int i = 0; i < 8; i++)
+
+            try
             {
-                iv[i] = (byte)(ivSalt[i] ^ salt[i]);
+                for (int i = 0; i < 8; i++)
+                {
+                    iv[i] = (byte)(ivSalt[i] ^ salt[i]);
+                }
+
+                // Encrypt using DES-CFB
+                using var des = DES.Create();
+                des.Mode = CipherMode.CFB;
+                des.Padding = PaddingMode.None;
+                des.Key = desKey;
+                des.IV = iv;
+
+                using var encryptor = des.CreateEncryptor();
+                var encrypted = encryptor.TransformFinalBlock(data, 0, data.Length);
+
+                return (encrypted, salt);
             }
-
-            // Encrypt using DES-CFB
-            using var des = DES.Create();
-            des.Mode = CipherMode.CFB;
-            des.Padding = PaddingMode.None;
-            des.Key = desKey;
-            des.IV = iv;
-
-            using var encryptor = des.CreateEncryptor();
-            var encrypted = encryptor.TransformFinalBlock(data, 0, data.Length);
-
-            return (encrypted, salt);
+            finally
+            {
+                // Securely clear sensitive key material
+                CryptographicHelpers.SecureClear(desKey);
+                CryptographicHelpers.SecureClear(ivSalt);
+                CryptographicHelpers.SecureClear(iv);
+            }
         }
 
         /// <summary>
@@ -112,19 +123,30 @@ namespace nSNMP.Security
 
             // IV = ivSalt XOR salt
             var iv = new byte[8];
-            for (int i = 0; i < 8; i++)
+
+            try
             {
-                iv[i] = (byte)(ivSalt[i] ^ salt[i]);
+                for (int i = 0; i < 8; i++)
+                {
+                    iv[i] = (byte)(ivSalt[i] ^ salt[i]);
+                }
+
+                using var des = DES.Create();
+                des.Mode = CipherMode.CFB;
+                des.Padding = PaddingMode.None;
+                des.Key = desKey;
+                des.IV = iv;
+
+                using var decryptor = des.CreateDecryptor();
+                return decryptor.TransformFinalBlock(encryptedData, 0, encryptedData.Length);
             }
-
-            using var des = DES.Create();
-            des.Mode = CipherMode.CFB;
-            des.Padding = PaddingMode.None;
-            des.Key = desKey;
-            des.IV = iv;
-
-            using var decryptor = des.CreateDecryptor();
-            return decryptor.TransformFinalBlock(encryptedData, 0, encryptedData.Length);
+            finally
+            {
+                // Securely clear sensitive key material
+                CryptographicHelpers.SecureClear(desKey);
+                CryptographicHelpers.SecureClear(ivSalt);
+                CryptographicHelpers.SecureClear(iv);
+            }
         }
 
         /// <summary>
@@ -147,21 +169,31 @@ namespace nSNMP.Security
             RandomNumberGenerator.Fill(salt);
 
             var iv = new byte[16];
-            BitConverter.GetBytes(engineBoots).CopyTo(iv, 0);
-            BitConverter.GetBytes(engineTime).CopyTo(iv, 4);
-            salt.CopyTo(iv, 8);
 
-            // Encrypt using AES-CFB
-            using var aes = Aes.Create();
-            aes.Mode = CipherMode.CFB;
-            aes.Padding = PaddingMode.None;
-            aes.Key = aesKey;
-            aes.IV = iv;
+            try
+            {
+                BitConverter.GetBytes(engineBoots).CopyTo(iv, 0);
+                BitConverter.GetBytes(engineTime).CopyTo(iv, 4);
+                salt.CopyTo(iv, 8);
 
-            using var encryptor = aes.CreateEncryptor();
-            var encrypted = encryptor.TransformFinalBlock(data, 0, data.Length);
+                // Encrypt using AES-CFB
+                using var aes = Aes.Create();
+                aes.Mode = CipherMode.CFB;
+                aes.Padding = PaddingMode.None;
+                aes.Key = aesKey;
+                aes.IV = iv;
 
-            return (encrypted, salt);
+                using var encryptor = aes.CreateEncryptor();
+                var encrypted = encryptor.TransformFinalBlock(data, 0, data.Length);
+
+                return (encrypted, salt);
+            }
+            finally
+            {
+                // Securely clear sensitive key material
+                CryptographicHelpers.SecureClear(aesKey);
+                CryptographicHelpers.SecureClear(iv);
+            }
         }
 
         /// <summary>
@@ -186,18 +218,28 @@ namespace nSNMP.Security
 
             // Reconstruct IV = engineBoots + engineTime + salt
             var iv = new byte[16];
-            BitConverter.GetBytes(engineBoots).CopyTo(iv, 0);
-            BitConverter.GetBytes(engineTime).CopyTo(iv, 4);
-            salt.CopyTo(iv, 8);
 
-            using var aes = Aes.Create();
-            aes.Mode = CipherMode.CFB;
-            aes.Padding = PaddingMode.None;
-            aes.Key = aesKey;
-            aes.IV = iv;
+            try
+            {
+                BitConverter.GetBytes(engineBoots).CopyTo(iv, 0);
+                BitConverter.GetBytes(engineTime).CopyTo(iv, 4);
+                salt.CopyTo(iv, 8);
 
-            using var decryptor = aes.CreateDecryptor();
-            return decryptor.TransformFinalBlock(encryptedData, 0, encryptedData.Length);
+                using var aes = Aes.Create();
+                aes.Mode = CipherMode.CFB;
+                aes.Padding = PaddingMode.None;
+                aes.Key = aesKey;
+                aes.IV = iv;
+
+                using var decryptor = aes.CreateDecryptor();
+                return decryptor.TransformFinalBlock(encryptedData, 0, encryptedData.Length);
+            }
+            finally
+            {
+                // Securely clear sensitive key material
+                CryptographicHelpers.SecureClear(aesKey);
+                CryptographicHelpers.SecureClear(iv);
+            }
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using nSNMP.SMI.Configuration;
 
 namespace nSNMP.SMI.X690
 {
@@ -10,6 +11,11 @@ namespace nSNMP.SMI.X690
         /// </summary>
         public static byte[] EncodeTLV(byte tag, ReadOnlySpan<byte> value)
         {
+            if (MemoryOptimizationSettings.UseArrayPooling)
+            {
+                return PooledBEREncoder.EncodeTLV(tag, value);
+            }
+
             var lengthBytes = EncodeLength(value.Length);
             var result = new byte[1 + lengthBytes.Length + value.Length];
 
@@ -25,6 +31,11 @@ namespace nSNMP.SMI.X690
         /// </summary>
         public static byte[] EncodeLength(int length)
         {
+            if (MemoryOptimizationSettings.UseArrayPooling)
+            {
+                return PooledBEREncoder.EncodeLength(length);
+            }
+
             if (length < 0)
                 throw new ArgumentException("Length cannot be negative", nameof(length));
 
@@ -62,6 +73,11 @@ namespace nSNMP.SMI.X690
         /// </summary>
         public static byte[] EncodeInteger(int value)
         {
+            if (MemoryOptimizationSettings.UseArrayPooling)
+            {
+                return PooledBEREncoder.EncodeInteger(value);
+            }
+
             if (value == 0)
                 return new byte[] { 0x00 };
 
@@ -92,6 +108,11 @@ namespace nSNMP.SMI.X690
         /// </summary>
         public static byte[] EncodeInteger64(long value)
         {
+            if (MemoryOptimizationSettings.UseArrayPooling)
+            {
+                return PooledBEREncoder.EncodeInteger64(value);
+            }
+
             if (value == 0)
                 return new byte[] { 0x00 };
 
@@ -122,6 +143,11 @@ namespace nSNMP.SMI.X690
         /// </summary>
         public static byte[] EncodeOID(ReadOnlySpan<uint> subIds)
         {
+            if (MemoryOptimizationSettings.UseArrayPooling)
+            {
+                return PooledBEREncoder.EncodeOID(subIds);
+            }
+
             if (subIds.Length < 2)
                 throw new ArgumentException("OID must have at least 2 sub-identifiers", nameof(subIds));
 

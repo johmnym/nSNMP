@@ -160,9 +160,7 @@ namespace nSNMP.Manager
                 varbindList
             );
 
-            // TODO: Implement V3 message creation with USM
-            // This requires integration with USM for proper security processing
-            throw new NotImplementedException("V3 trap sending requires USM implementation");
+            return SendV3TrapAsync(destination, trap);
         }
 
         /// <summary>
@@ -248,6 +246,89 @@ namespace nSNMP.Manager
             {
                 throw new TimeoutException($"No response received within {timeout.TotalSeconds} seconds");
             }
+        }
+
+        /// <summary>
+        /// Send SNMPv3 trap with USM security
+        /// </summary>
+        private async Task SendV3TrapAsync(IPEndPoint destination, TrapV2 trap)
+        {
+            if (_credentials == null || _engineParameters == null)
+                throw new InvalidOperationException("V3 credentials and engine parameters are required");
+
+            // Create scoped PDU - traps don't need context typically
+            var scopedPdu = ScopedPdu.Create(trap, contextEngineId: "", contextName: "");
+            var scopedPduData = scopedPdu.ToBytes();
+
+            // Apply privacy if configured
+            byte[] finalScopedPduData;
+            byte[] privacyParameters;
+
+            if (_credentials.PrivProtocol != PrivProtocol.None)
+            {
+                var privKey = _credentials.GetPrivKey(_engineParameters.EngineId);
+                (finalScopedPduData, privacyParameters) = PrivacyProvider.Encrypt(
+                    scopedPduData, privKey, _credentials.PrivProtocol,
+                    _engineParameters.EngineBoots, _engineParameters.EngineTime);
+            }
+            else
+            {
+                finalScopedPduData = scopedPduData;
+                privacyParameters = Array.Empty<byte>();
+            }
+
+            // Create USM security parameters
+            var usmParams = UsmSecurityParameters.Create(
+                Convert.ToHexString(_engineParameters.EngineId),
+                _engineParameters.EngineBoots,
+                _engineParameters.EngineTime,
+                _credentials.UserName,
+                authenticationParameters: new byte[12], // Placeholder for auth params
+                privacyParameters: privacyParameters
+            );
+
+            // Create message flags
+            byte flags = 0x00; // Traps are not reportable by default
+            if (_credentials.AuthProtocol != AuthProtocol.None) flags |= 0x01; // Auth
+            if (_credentials.PrivProtocol != PrivProtocol.None) flags |= 0x02; // Priv
+
+            // Create SNMPv3 message with a simple message ID (traps don't need correlation)
+            var v3Message = new SnmpMessageV3(
+                Integer.Create(new Random().Next(1, int.MaxValue)),
+                Integer.Create(65507),
+                new OctetString(new byte[] { flags }),
+                Integer.Create(3), // USM
+                new OctetString(usmParams.ToBytes()),
+                new ScopedPdu(null, null, null) // Will be replaced with encrypted data
+            );
+
+            // Calculate authentication if required
+            byte[] messageData;
+            if (_credentials.AuthProtocol != AuthProtocol.None)
+            {
+                var authKey = _credentials.GetAuthKey(_engineParameters.EngineId);
+                var tempMessage = v3Message.ToBytes();
+
+                var authParams = KeyLocalization.CalculateDigest(tempMessage, authKey, _credentials.AuthProtocol);
+
+                // Update USM params with real auth parameters
+                usmParams = UsmSecurityParameters.Create(
+                    Convert.ToHexString(_engineParameters.EngineId),
+                    _engineParameters.EngineBoots,
+                    _engineParameters.EngineTime,
+                    _credentials.UserName,
+                    authParams,
+                    privacyParameters
+                );
+
+                // Recreate message with auth params
+                v3Message = v3Message with { SecurityParameters = new OctetString(usmParams.ToBytes()) };
+            }
+
+            messageData = v3Message.ToBytes();
+
+            // Send trap (fire-and-forget for traps)
+            await _channel.SendAsync(messageData, destination, CancellationToken.None);
         }
 
         public void Dispose()

@@ -1,10 +1,12 @@
 using System.Net;
+using nSNMP.Logging;
 using nSNMP.Message;
 using nSNMP.SMI;
 using nSNMP.SMI.DataTypes;
 using nSNMP.SMI.DataTypes.V1.Constructed;
 using nSNMP.SMI.DataTypes.V1.Primitive;
 using nSNMP.SMI.PDUs;
+using nSNMP.Telemetry;
 using nSNMP.Transport;
 
 namespace nSNMP.Manager
@@ -19,16 +21,18 @@ namespace nSNMP.Manager
         private readonly SnmpVersion _version;
         private readonly string _community;
         private readonly TimeSpan _timeout;
+        private readonly ISnmpLogger _logger;
         private int _requestId;
         private bool _disposed;
 
-        public SnmpClient(IPEndPoint endpoint, SnmpVersion version = SnmpVersion.V2c, string community = "public", TimeSpan? timeout = null, IUdpChannel? transport = null)
+        public SnmpClient(IPEndPoint endpoint, SnmpVersion version = SnmpVersion.V2c, string community = "public", TimeSpan? timeout = null, IUdpChannel? transport = null, ISnmpLogger? logger = null)
         {
             _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
             _version = version;
             _community = community ?? throw new ArgumentNullException(nameof(community));
             _timeout = timeout ?? TimeSpan.FromSeconds(5);
             _transport = transport ?? new UdpChannel();
+            _logger = logger ?? NullSnmpLogger.Instance;
         }
 
         /// <summary>
@@ -56,13 +60,54 @@ namespace nSNMP.Manager
             if (oids == null || oids.Length == 0)
                 throw new ArgumentException("At least one OID must be specified", nameof(oids));
 
-            var varbinds = oids.Select(oid => new Sequence(new IDataType[] { oid, new Null() })).ToArray();
-            var varbindList = new Sequence(varbinds);
+            var startTime = DateTime.UtcNow;
+            var operation = "GET";
 
-            var request = new GetRequest(null, Integer.Create(GetNextRequestId()), Integer.Create(0), Integer.Create(0), varbindList);
-            var response = await SendRequestAsync(request);
+            // Start telemetry activity
+            using var activity = SnmpTelemetry.StartActivity(operation, _endpoint.ToString(), _community);
 
-            return ParseVarBinds(response);
+            try
+            {
+                // Log the request
+                foreach (var oid in oids)
+                {
+                    _logger.LogRequest(operation, oid.ToString(), _community, _timeout);
+                }
+
+                var varbinds = oids.Select(oid => new Sequence(new IDataType[] { oid, new Null() })).ToArray();
+                var varbindList = new Sequence(varbinds);
+
+                var request = new GetRequest(null, Integer.Create(GetNextRequestId()), Integer.Create(0), Integer.Create(0), varbindList);
+                var response = await SendRequestAsync(request);
+
+                var results = ParseVarBinds(response);
+                var elapsed = DateTime.UtcNow - startTime;
+
+                // Log successful responses
+                foreach (var result in results)
+                {
+                    _logger.LogResponse(operation, result.OidString, result.Value, elapsed);
+                }
+
+                _logger.LogPerformance(operation, elapsed, results.Length);
+
+                // Record telemetry
+                SnmpTelemetry.RecordRequest(operation, _endpoint.ToString(), elapsed, results.Length);
+                SnmpTelemetry.SetActivitySuccess(activity, results.Length);
+
+                return results;
+            }
+            catch (Exception ex)
+            {
+                var elapsed = DateTime.UtcNow - startTime;
+                _logger.LogError(operation, ex, $"Failed to get {oids.Length} OIDs from {_endpoint}");
+
+                // Record telemetry for error
+                SnmpTelemetry.RecordError(operation, _endpoint.ToString(), elapsed, ex.GetType().Name);
+                SnmpTelemetry.SetActivityError(activity, ex);
+
+                throw;
+            }
         }
 
         /// <summary>

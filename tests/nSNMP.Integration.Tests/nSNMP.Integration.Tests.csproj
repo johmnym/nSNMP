@@ -39,6 +39,9 @@
 
     <!-- Network utilities -->
     <PackageReference Include="System.Net.NetworkInformation" Version="4.3.0" />
+
+    <!-- JUnit XML Test Logger -->
+    <PackageReference Include="JunitXml.TestLogger" Version="4.0.254" />
   </ItemGroup>
 
   <ItemGroup>

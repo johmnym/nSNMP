@@ -6,7 +6,7 @@ version: '3.8'
 services:
   # Basic MIB-II device
   snmp-mib2-basic:
-    image: snmpsim/snmpsim:latest
+    image: tandrup/snmpsim:latest
     container_name: snmp-mib2-basic
     ports:
       - "1161:161/udp"
@@ -31,7 +31,7 @@ services:
 
   # Monochrome printer
   snmp-printer-mono:
-    image: snmpsim/snmpsim:latest
+    image: tandrup/snmpsim:latest
     container_name: snmp-printer-mono
     ports:
       - "1162:161/udp"
@@ -56,7 +56,7 @@ services:
 
   # Color printer with SNMPv3
   snmp-printer-color:
-    image: snmpsim/snmpsim:latest
+    image: tandrup/snmpsim:latest
     container_name: snmp-printer-color
     ports:
       - "1163:161/udp"
@@ -86,7 +86,7 @@ services:
 
   # Device with oversized responses
   snmp-too-big:
-    image: snmpsim/snmpsim:latest
+    image: tandrup/snmpsim:latest
     container_name: snmp-too-big
     ports:
       - "1164:161/udp"
@@ -111,7 +111,7 @@ services:
 
   # NET-SNMP tools for trap testing
   net-snmp-tools:
-    image: net-snmp/net-snmp:latest
+    image: weldpua2008/net-snmp:latest
     container_name: net-snmp-tools
     command: ["tail", "-f", "/dev/null"]
     volumes:

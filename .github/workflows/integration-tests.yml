@@ -57,7 +57,8 @@ jobs:
     - name: Pull required Docker images
       run: |
         echo "Pulling SNMP simulator images..."
-        docker pull snmpsim/snmpsim:latest || echo "snmpsim image not available, will build if needed"
+        docker pull tandrup/snmpsim:latest || echo "snmpsim image not available, will build if needed"
+        docker pull weldpua2008/net-snmp:latest || echo "net-snmp image not available, will build if needed"
         docker pull gaiaadm/pumba:latest || echo "pumba image not available, will build if needed"
         echo "Docker images status:"
         docker images

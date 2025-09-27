@@ -67,12 +67,12 @@ jobs:
     - name: Run unit tests
       id: unit_tests
       run: |
-        dotnet test tests/nSNMP.Core.Tests/nSNMP.Core.Tests.csproj --configuration Release --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-core-results.xml" --collect:"XPlat Code Coverage" --settings coverlet.runsettings --verbosity normal
-        dotnet test tests/nSNMP.Abstractions.Tests/nSNMP.Abstractions.Tests.csproj --configuration Release --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-abstractions-results.xml" --collect:"XPlat Code Coverage" --settings coverlet.runsettings --verbosity normal
-        dotnet test tests/nSNMP.SMI.Tests/nSNMP.SMI.Tests.csproj --configuration Release --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-smi-results.xml" --collect:"XPlat Code Coverage" --settings coverlet.runsettings --verbosity normal
-        dotnet test tests/nSNMP.Extensions.Tests/nSNMP.Extensions.Tests.csproj --configuration Release --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-extensions-results.xml" --collect:"XPlat Code Coverage" --settings coverlet.runsettings --verbosity normal
-        dotnet test tests/nSNMP.MIB.Tests/nSNMP.MIB.Tests.csproj --configuration Release --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-mib-results.xml" --collect:"XPlat Code Coverage" --settings coverlet.runsettings --verbosity normal
-        dotnet test tests/nSNMP.Tests/nSNMP.Tests.csproj --configuration Release --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-general-results.xml" --collect:"XPlat Code Coverage" --settings coverlet.runsettings --verbosity normal
+        dotnet test tests/nSNMP.Core.Tests/nSNMP.Core.Tests.csproj --configuration Release --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-core-results.xml" --collect:"XPlat Code Coverage" --settings coverlet.runsettings /p:CoverletOutput=../../${{ env.TEST_OUTPUT_DIRECTORY }}/ /p:CoverletOutputFormat=cobertura /p:CollectCoverage=true --verbosity normal
+        dotnet test tests/nSNMP.Abstractions.Tests/nSNMP.Abstractions.Tests.csproj --configuration Release --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-abstractions-results.xml" --collect:"XPlat Code Coverage" --settings coverlet.runsettings /p:CoverletOutput=../../${{ env.TEST_OUTPUT_DIRECTORY }}/ /p:CoverletOutputFormat=cobertura /p:CollectCoverage=true --verbosity normal
+        dotnet test tests/nSNMP.SMI.Tests/nSNMP.SMI.Tests.csproj --configuration Release --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-smi-results.xml" --collect:"XPlat Code Coverage" --settings coverlet.runsettings /p:CoverletOutput=../../${{ env.TEST_OUTPUT_DIRECTORY }}/ /p:CoverletOutputFormat=cobertura /p:CollectCoverage=true --verbosity normal
+        dotnet test tests/nSNMP.Extensions.Tests/nSNMP.Extensions.Tests.csproj --configuration Release --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-extensions-results.xml" --collect:"XPlat Code Coverage" --settings coverlet.runsettings /p:CoverletOutput=../../${{ env.TEST_OUTPUT_DIRECTORY }}/ /p:CoverletOutputFormat=cobertura /p:CollectCoverage=true --verbosity normal
+        dotnet test tests/nSNMP.MIB.Tests/nSNMP.MIB.Tests.csproj --configuration Release --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-mib-results.xml" --collect:"XPlat Code Coverage" --settings coverlet.runsettings /p:CoverletOutput=../../${{ env.TEST_OUTPUT_DIRECTORY }}/ /p:CoverletOutputFormat=cobertura /p:CollectCoverage=true --verbosity normal
+        dotnet test tests/nSNMP.Tests/nSNMP.Tests.csproj --configuration Release --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-general-results.xml" --collect:"XPlat Code Coverage" --settings coverlet.runsettings /p:CoverletOutput=../../${{ env.TEST_OUTPUT_DIRECTORY }}/ /p:CoverletOutputFormat=cobertura /p:CollectCoverage=true --verbosity normal
       shell: pwsh
       continue-on-error: true
 
@@ -89,7 +89,7 @@ jobs:
       if: always()
       with:
         name: coverage-${{ matrix.os }}
-        path: ${{ env.TEST_OUTPUT_DIRECTORY }}/**/coverage.cobertura.xml
+        path: ${{ env.TEST_OUTPUT_DIRECTORY }}/*.cobertura.xml
         retention-days: 7
 
     - name: Publish test results
@@ -137,7 +137,7 @@ jobs:
     - name: Generate coverage report
       run: |
         reportgenerator \
-          -reports:"coverage-reports/**/coverage.cobertura.xml" \
+          -reports:"coverage-reports/**/*.cobertura.xml" \
           -targetdir:"coverage-html" \
           -reporttypes:"Html;Cobertura;lcov" \
           -verbosity:Info

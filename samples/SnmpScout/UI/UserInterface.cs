@@ -200,6 +200,7 @@ public class UserInterface
                 .AddChoices(new[]
                 {
                     "🔄 Refresh Device Info",
+                    "📊 Bandwidth Monitor",
                     "🔍 SNMP Walk (Advanced)",
                     "🔙 Back to Device List",
                     "🏠 Main Menu"
@@ -209,6 +210,10 @@ public class UserInterface
         {
             case "🔄 Refresh Device Info":
                 await RefreshDeviceAsync(device);
+                await ShowDeviceDetailsAsync(device);
+                break;
+            case "📊 Bandwidth Monitor":
+                await ShowBandwidthMonitorAsync(device);
                 await ShowDeviceDetailsAsync(device);
                 break;
             case "🔍 SNMP Walk (Advanced)":
@@ -465,5 +470,118 @@ public class UserInterface
 
         AnsiConsole.Write(Align.Center(panel));
         AnsiConsole.WriteLine();
+    }
+
+    private async Task ShowBandwidthMonitorAsync(NetworkDevice device)
+    {
+        var monitor = new BandwidthMonitor();
+        var running = true;
+        var updateCount = 0;
+
+        AnsiConsole.Clear();
+        AnsiConsole.MarkupLine($"[bold blue]📊 Bandwidth Monitor: {device.DisplayName}[/]");
+        AnsiConsole.MarkupLine("[dim]Real-time network interface monitoring - Press any key to stop[/]");
+        AnsiConsole.WriteLine();
+
+        // Start monitoring in background
+        var monitoringTask = Task.Run(async () =>
+        {
+            while (running)
+            {
+                try
+                {
+                    var stats = await monitor.GetInterfaceStatsAsync(device);
+                    if (stats.Any())
+                    {
+                        updateCount++;
+                        DisplayBandwidthStats(stats, updateCount);
+                    }
+                    await Task.Delay(3000); // Update every 3 seconds
+                }
+                catch
+                {
+                    // Continue monitoring even if there are errors
+                }
+            }
+        });
+
+        // Wait for user input to stop
+        var inputTask = Task.Run(() => Console.ReadKey());
+        await Task.WhenAny(inputTask, Task.Delay(60000)); // Stop after 1 minute max
+
+        running = false;
+        await monitoringTask;
+
+        AnsiConsole.Clear();
+        AnsiConsole.MarkupLine("[green]📊 Bandwidth monitoring stopped.[/]");
+        AnsiConsole.MarkupLine("[dim]Press any key to return to device details...[/]");
+        Console.ReadKey();
+    }
+
+    private void DisplayBandwidthStats(List<NetworkInterfaceStats> stats, int updateCount)
+    {
+        AnsiConsole.Clear();
+        AnsiConsole.MarkupLine($"[bold blue]📊 Bandwidth Monitor - Update #{updateCount}[/]");
+        AnsiConsole.MarkupLine($"[dim]Last updated: {DateTime.Now:HH:mm:ss} - Press any key to stop[/]");
+        AnsiConsole.WriteLine();
+
+        var table = new Table();
+        table.Border(TableBorder.Rounded);
+        table.BorderColor(Color.Blue);
+        table.Title("[bold blue]📊 Interface Statistics[/]");
+
+        table.AddColumn("[bold]Interface[/]");
+        table.AddColumn("[bold]Throughput In[/]");
+        table.AddColumn("[bold]Throughput Out[/]");
+        table.AddColumn("[bold]Utilization[/]");
+        table.AddColumn("[bold]Packets/sec[/]");
+        table.AddColumn("[bold]Errors/sec[/]");
+
+        for (int i = 0; i < stats.Count; i++)
+        {
+            var stat = stats[i];
+            var interfaceIndex = i + 1;
+
+            // Color code utilization
+            var utilizationColor = stat.TotalUtilizationPercent switch
+            {
+                > 80 => "red",
+                > 60 => "yellow",
+                > 30 => "green",
+                _ => "dim"
+            };
+
+            // Format throughput values
+            var inThroughput = BandwidthMonitor.FormatThroughput(stat.InThroughputBps);
+            var outThroughput = BandwidthMonitor.FormatThroughput(stat.OutThroughputBps);
+            var utilization = $"[{utilizationColor}]{stat.TotalUtilizationPercent:F1}%[/]";
+            var packetsPerSec = $"{stat.InPacketsPerSecond:F0}↓ / {stat.OutPacketsPerSecond:F0}↑";
+            var errorsPerSec = $"{stat.InErrorRate:F2}↓ / {stat.OutErrorRate:F2}↑";
+
+            table.AddRow(
+                $"eth{interfaceIndex}",
+                $"[green]{inThroughput}[/]",
+                $"[cyan]{outThroughput}[/]",
+                utilization,
+                packetsPerSec,
+                errorsPerSec
+            );
+        }
+
+        AnsiConsole.Write(table);
+
+        // Show summary stats
+        var totalInThroughput = stats.Sum(s => s.InThroughputBps);
+        var totalOutThroughput = stats.Sum(s => s.OutThroughputBps);
+        var avgUtilization = stats.Any() ? stats.Average(s => s.TotalUtilizationPercent) : 0;
+
+        AnsiConsole.WriteLine();
+        var summaryPanel = new Panel(
+            $"[bold]Total Throughput:[/] [green]{BandwidthMonitor.FormatThroughput(totalInThroughput)}[/] ↓ / [cyan]{BandwidthMonitor.FormatThroughput(totalOutThroughput)}[/] ↑\n" +
+            $"[bold]Average Utilization:[/] {avgUtilization:F1}%\n" +
+            $"[bold]Active Interfaces:[/] {stats.Count}"
+        ).Header("[bold yellow]📈 Summary[/]").BorderColor(Color.Yellow);
+
+        AnsiConsole.Write(summaryPanel);
     }
 }

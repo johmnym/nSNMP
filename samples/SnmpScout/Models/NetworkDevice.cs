@@ -121,5 +121,18 @@ public class NetworkInterfaceStats
     public long PacketsOut { get; set; }
     public long ErrorsIn { get; set; }
     public long ErrorsOut { get; set; }
+    public long DiscardsIn { get; set; }
+    public long DiscardsOut { get; set; }
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+
+    // Calculated bandwidth metrics
+    public double InUtilizationPercent { get; set; }
+    public double OutUtilizationPercent { get; set; }
+    public double TotalUtilizationPercent { get; set; }
+    public double InThroughputBps { get; set; }
+    public double OutThroughputBps { get; set; }
+    public double InPacketsPerSecond { get; set; }
+    public double OutPacketsPerSecond { get; set; }
+    public double InErrorRate { get; set; }
+    public double OutErrorRate { get; set; }
 }

@@ -7,6 +7,7 @@ namespace SnmpScout;
 
 public class SnmpScoutApp
 {
+    
     private readonly NetworkScanner _scanner;
     private readonly DeviceManager _deviceManager;
     private readonly UserInterface _ui;

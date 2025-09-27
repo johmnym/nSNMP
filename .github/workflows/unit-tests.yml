@@ -7,6 +7,7 @@ on:
       - 'src/**'
       - 'tests/**'
       - '!tests/nSNMP.Integration.Tests/**'
+      - '!tests/nSNMP.InteropTests/**'
       - '!tests/nSNMP.Benchmarks/**'
       - '!tests/nSNMP.Fuzz/**'
       - '.github/workflows/unit-tests.yml'
@@ -16,6 +17,7 @@ on:
       - 'src/**'
       - 'tests/**'
       - '!tests/nSNMP.Integration.Tests/**'
+      - '!tests/nSNMP.InteropTests/**'
       - '!tests/nSNMP.Benchmarks/**'
       - '!tests/nSNMP.Fuzz/**'
       - '.github/workflows/unit-tests.yml'
@@ -59,24 +61,19 @@ jobs:
       run: dotnet build nSNMP.sln --configuration Release --no-restore
 
     - name: Create output directory
-      run: |
-        if [ "${{ runner.os }}" = "Windows" ]; then
-          mkdir ${{ env.TEST_OUTPUT_DIRECTORY }}
-        else
-          mkdir -p ${{ env.TEST_OUTPUT_DIRECTORY }}
-        fi
-      shell: bash
+      run: New-Item -ItemType Directory -Force -Path ${{ env.TEST_OUTPUT_DIRECTORY }}
+      shell: pwsh
 
     - name: Run unit tests
       id: unit_tests
       run: |
-        dotnet test nSNMP.sln --configuration Release --no-build \
-          --filter "Category!=Integration" \
-          --logger trx --results-directory ${{ env.TEST_OUTPUT_DIRECTORY }} \
-          --logger "junit;LogFilePath=${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-unit-results.xml" \
-          --collect:"XPlat Code Coverage" \
-          --settings coverlet.runsettings \
-          --verbosity normal
+        dotnet test tests/nSNMP.Core.Tests/nSNMP.Core.Tests.csproj --configuration Release --no-build --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-core-results.xml" --collect:"XPlat Code Coverage" --verbosity normal
+        dotnet test tests/nSNMP.Abstractions.Tests/nSNMP.Abstractions.Tests.csproj --configuration Release --no-build --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-abstractions-results.xml" --collect:"XPlat Code Coverage" --verbosity normal
+        dotnet test tests/nSNMP.SMI.Tests/nSNMP.SMI.Tests.csproj --configuration Release --no-build --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-smi-results.xml" --collect:"XPlat Code Coverage" --verbosity normal
+        dotnet test tests/nSNMP.Extensions.Tests/nSNMP.Extensions.Tests.csproj --configuration Release --no-build --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-extensions-results.xml" --collect:"XPlat Code Coverage" --verbosity normal
+        dotnet test tests/nSNMP.MIB.Tests/nSNMP.MIB.Tests.csproj --configuration Release --no-build --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-mib-results.xml" --collect:"XPlat Code Coverage" --verbosity normal
+        dotnet test tests/nSNMP.Tests/nSNMP.Tests.csproj --configuration Release --no-build --logger trx --results-directory ../../${{ env.TEST_OUTPUT_DIRECTORY }} --logger "junit;LogFilePath=../../${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-general-results.xml" --collect:"XPlat Code Coverage" --verbosity normal
+      shell: pwsh
       continue-on-error: true
 
     - name: Upload test results
@@ -107,13 +104,13 @@ jobs:
     - name: Check test results
       if: always()
       run: |
-        if [ "${{ steps.unit_tests.outcome }}" != "success" ]; then
-          echo "❌ Unit tests failed on ${{ matrix.os }}"
+        if ("${{ steps.unit_tests.outcome }}" -ne "success") {
+          Write-Host "❌ Unit tests failed on ${{ matrix.os }}"
           exit 1
-        else
-          echo "✅ Unit tests passed on ${{ matrix.os }}"
-        fi
-      shell: bash
+        } else {
+          Write-Host "✅ Unit tests passed on ${{ matrix.os }}"
+        }
+      shell: pwsh
 
   # Job for code coverage reporting (Linux only for simplicity)
   coverage:

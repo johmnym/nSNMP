@@ -1,21 +1,21 @@
 <testsuites>
-  <testsuite name="nSNMP.Abstractions.Tests.dll" tests="8" skipped="0" failures="0" errors="0" time="0.014800500000000001" timestamp="2025-09-27T19:48:19" hostname="tigger" id="0" package="nSNMP.Abstractions.Tests.dll">
+  <testsuite name="nSNMP.Abstractions.Tests.dll" tests="8" skipped="0" failures="0" errors="0" time="0.0096179" timestamp="2025-09-27T19:55:09" hostname="tigger" id="0" package="nSNMP.Abstractions.Tests.dll">
     <properties />
-    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="ErrorStatus_ShouldHaveCorrectValues" time="0.0070833" />
-    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="SnmpVersion_ShouldHaveCorrectValues" time="0.0000432" />
-    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="PrivProtocol_ShouldHaveCorrectValues" time="0.0000329" />
-    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="SecurityLevel_ShouldHaveCorrectValues" time="0.0000254" />
-    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="PduType_ShouldHaveCorrectValues" time="0.0000424" />
-    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="MibAccess_ShouldHaveAllValues" time="0.0022970" />
-    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="MibStatus_ShouldHaveAllValues" time="0.0051828" />
-    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="AuthProtocol_ShouldHaveCorrectValues" time="0.0000935" />
+    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="ErrorStatus_ShouldHaveCorrectValues" time="0.0048248" />
+    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="SnmpVersion_ShouldHaveCorrectValues" time="0.0000381" />
+    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="PrivProtocol_ShouldHaveCorrectValues" time="0.0000337" />
+    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="SecurityLevel_ShouldHaveCorrectValues" time="0.0000256" />
+    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="PduType_ShouldHaveCorrectValues" time="0.0000423" />
+    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="MibAccess_ShouldHaveAllValues" time="0.0022365" />
+    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="MibStatus_ShouldHaveAllValues" time="0.0023752" />
+    <testcase classname="nSNMP.Abstractions.Tests.CoreModelsTests" name="AuthProtocol_ShouldHaveCorrectValues" time="0.0000417" />
     <system-out>
 Test Framework Informational Messages:
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 9.0.9)
-[xUnit.net 00:00:00.21]   Discovering: nSNMP.Abstractions.Tests
-[xUnit.net 00:00:00.25]   Discovered:  nSNMP.Abstractions.Tests
-[xUnit.net 00:00:00.25]   Starting:    nSNMP.Abstractions.Tests
-[xUnit.net 00:00:00.31]   Finished:    nSNMP.Abstractions.Tests
+[xUnit.net 00:00:00.07]   Discovering: nSNMP.Abstractions.Tests
+[xUnit.net 00:00:00.10]   Discovered:  nSNMP.Abstractions.Tests
+[xUnit.net 00:00:00.10]   Starting:    nSNMP.Abstractions.Tests
+[xUnit.net 00:00:00.17]   Finished:    nSNMP.Abstractions.Tests
 </system-out>
     <system-err></system-err>
   </testsuite>

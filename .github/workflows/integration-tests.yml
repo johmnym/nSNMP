@@ -1,0 +1,246 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [ main, master, develop ]
+    paths:
+      - 'src/**'
+      - 'tests.integration/**'
+      - '.github/workflows/integration-tests.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'src/**'
+      - 'tests.integration/**'
+      - '.github/workflows/integration-tests.yml'
+  workflow_dispatch:
+    inputs:
+      run_printer_tests:
+        description: 'Run Printer MIB tests'
+        required: false
+        default: 'true'
+        type: boolean
+      run_mib2_tests:
+        description: 'Run MIB-II tests'
+        required: false
+        default: 'true'
+        type: boolean
+      run_trap_tests:
+        description: 'Run Trap/Inform tests'
+        required: false
+        default: 'true'
+        type: boolean
+      run_network_tests:
+        description: 'Run Network Impairment tests'
+        required: false
+        default: 'true'
+        type: boolean
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  INTEGRATION_OUTPUT_DIRECTORY: 'integration-test-results'
+  INTEGRATION_RUN_PRINTER_TESTS: ${{ github.event.inputs.run_printer_tests || 'true' }}
+  INTEGRATION_RUN_MIB2_TESTS: ${{ github.event.inputs.run_mib2_tests || 'true' }}
+  INTEGRATION_RUN_TRAP_TESTS: ${{ github.event.inputs.run_trap_tests || 'true' }}
+  INTEGRATION_RUN_NETWORK_TESTS: ${{ github.event.inputs.run_network_tests || 'true' }}
+
+jobs:
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Verify Docker installation
+      run: |
+        docker version
+        docker-compose version
+
+    - name: Pull required Docker images
+      run: |
+        echo "Pulling SNMP simulator images..."
+        docker pull snmpsim/snmpsim:latest || echo "snmpsim image not available, will build if needed"
+        docker pull gaiaadm/pumba:latest || echo "pumba image not available, will build if needed"
+        echo "Docker images status:"
+        docker images
+
+    - name: Restore dependencies
+      run: |
+        dotnet restore tests.integration/Testbed.sln
+
+    - name: Build integration tests
+      run: |
+        dotnet build tests.integration/Testbed.sln --configuration Release --no-restore
+
+    - name: Validate test scenarios
+      run: |
+        cd tests.integration
+        dotnet run --project nSNMP.Integration.Tests --configuration Release -- validate --scenario-dir ./Scenarios
+
+    - name: List available scenarios
+      run: |
+        cd tests.integration
+        dotnet run --project nSNMP.Integration.Tests --configuration Release -- list --scenario-dir ./Scenarios
+
+    - name: Create output directory
+      run: mkdir -p ${{ env.INTEGRATION_OUTPUT_DIRECTORY }}
+
+    - name: Run integration tests
+      id: integration_tests
+      run: |
+        cd tests.integration
+        dotnet run --project nSNMP.Integration.Tests --configuration Release -- run \
+          --output-dir "../${{ env.INTEGRATION_OUTPUT_DIRECTORY }}" \
+          --scenario-dir ./Scenarios \
+          ${{ env.INTEGRATION_RUN_PRINTER_TESTS == 'false' && '--skip-printer' || '' }} \
+          ${{ env.INTEGRATION_RUN_MIB2_TESTS == 'false' && '--skip-mib2' || '' }} \
+          ${{ env.INTEGRATION_RUN_TRAP_TESTS == 'false' && '--skip-traps' || '' }} \
+          ${{ env.INTEGRATION_RUN_NETWORK_TESTS == 'false' && '--skip-network' || '' }} \
+          --verbose
+      continue-on-error: true
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: integration-test-results
+        path: ${{ env.INTEGRATION_OUTPUT_DIRECTORY }}/
+        retention-days: 30
+
+    - name: Upload container logs
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: container-logs
+        path: ${{ env.INTEGRATION_OUTPUT_DIRECTORY }}/container-logs.txt
+        retention-days: 7
+
+    - name: Publish test results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Integration Test Results
+        path: '${{ env.INTEGRATION_OUTPUT_DIRECTORY }}/TEST-*.xml'
+        reporter: java-junit
+        fail-on-error: true
+
+    - name: Comment test summary on PR
+      uses: actions/github-script@v7
+      if: always() && github.event_name == 'pull_request'
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+
+          const summaryPath = path.join('${{ env.INTEGRATION_OUTPUT_DIRECTORY }}', 'TestSummary.md');
+
+          if (fs.existsSync(summaryPath)) {
+            const summary = fs.readFileSync(summaryPath, 'utf8');
+
+            const comment = `## 🧪 Integration Test Results
+
+            ${summary}
+
+            <details>
+            <summary>📋 Test Configuration</summary>
+
+            - **Printer Tests**: ${{ env.INTEGRATION_RUN_PRINTER_TESTS }}
+            - **MIB-II Tests**: ${{ env.INTEGRATION_RUN_MIB2_TESTS }}
+            - **Trap Tests**: ${{ env.INTEGRATION_RUN_TRAP_TESTS }}
+            - **Network Tests**: ${{ env.INTEGRATION_RUN_NETWORK_TESTS }}
+            - **Runner**: GitHub Actions on \`ubuntu-latest\`
+            - **Commit**: ${{ github.sha }}
+
+            </details>
+
+            📊 [View detailed results in artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+          }
+
+    - name: Cleanup Docker resources
+      if: always()
+      run: |
+        echo "Cleaning up Docker resources..."
+        docker system prune -f --volumes || true
+        docker network prune -f || true
+
+    - name: Check test results
+      if: always()
+      run: |
+        if [ "${{ steps.integration_tests.outcome }}" != "success" ]; then
+          echo "❌ Integration tests failed"
+          echo "Check the test results and logs for details"
+          exit 1
+        else
+          echo "✅ Integration tests passed"
+        fi
+
+  # Optional: Matrix job for testing different configurations
+  integration-tests-matrix:
+    name: Integration Tests (Matrix)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_network_tests == 'true'
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [printer, mib2, traps, network]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build integration tests
+      run: |
+        dotnet build tests.integration/Testbed.sln --configuration Release
+
+    - name: Run specific test suite
+      run: |
+        mkdir -p matrix-results/${{ matrix.suite }}
+        cd tests.integration
+        dotnet run --project nSNMP.Integration.Tests --configuration Release -- run-suite ${{ matrix.suite }} \
+          --output-dir "../matrix-results/${{ matrix.suite }}" \
+          --scenario-dir ./Scenarios \
+          --verbose
+
+    - name: Upload suite results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: suite-results-${{ matrix.suite }}
+        path: matrix-results/${{ matrix.suite }}/
+        retention-days: 7

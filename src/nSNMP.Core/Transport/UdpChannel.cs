@@ -17,7 +17,7 @@ namespace nSNMP.Transport
 
         public UdpChannel()
         {
-            _udpClient = new UdpClient();
+            _udpClient = new UdpClient(0); // Bind to any available port
             _pendingRequests = new ConcurrentDictionary<string, TaskCompletionSource<byte[]>>();
             _cancellationTokenSource = new CancellationTokenSource();
             _receiveTask = ReceiveLoop();

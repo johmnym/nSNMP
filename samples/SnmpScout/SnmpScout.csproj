@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyTitle>SnmpScout - Network Discovery Tool</AssemblyTitle>
+    <AssemblyDescription>Console-based SNMP network discovery and device management tool</AssemblyDescription>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.9" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="Spectre.Console" Version="0.49.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\nSNMP.Core\nSNMP.Core.csproj" />
+    <ProjectReference Include="..\..\src\nSNMP.Abstractions\nSNMP.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\nSNMP.Extensions\nSNMP.Extensions.csproj" />
+  </ItemGroup>
+
+</Project>

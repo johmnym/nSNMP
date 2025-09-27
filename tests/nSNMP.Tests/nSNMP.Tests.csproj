@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\nSNMP\nSNMP.csproj" />
-    <ProjectReference Include="..\nSNMP.SMI\nSNMP.SMI.csproj" />
+    <ProjectReference Include="..\..\src\nSNMP.Core\nSNMP.csproj" />
+    <ProjectReference Include="..\..\src\nSNMP.SMI\nSNMP.SMI.csproj" />
   </ItemGroup>
 
 </Project>

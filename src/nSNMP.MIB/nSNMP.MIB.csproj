@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <Description>MIB parsing and management for nSNMP</Description>
+    <Authors>nSNMP Contributors</Authors>
+    <PackageProjectUrl>https://github.com/your-repo/nSNMP</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/your-repo/nSNMP</RepositoryUrl>
+    <PackageTags>snmp;mib;network;management</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\nSNMP.Abstractions\nSNMP.Abstractions.csproj" />
+    <ProjectReference Include="..\nSNMP.SMI\nSNMP.SMI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\**\*.mib" />
+  </ItemGroup>
+
+</Project>

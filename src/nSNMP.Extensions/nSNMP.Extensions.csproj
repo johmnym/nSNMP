@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <Description>Extension methods and helpers for nSNMP</Description>
+    <Authors>nSNMP Contributors</Authors>
+    <PackageProjectUrl>https://github.com/your-repo/nSNMP</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/your-repo/nSNMP</RepositoryUrl>
+    <PackageTags>snmp;extensions;fluent;helpers</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\nSNMP.Abstractions\nSNMP.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+  </ItemGroup>
+
+</Project>

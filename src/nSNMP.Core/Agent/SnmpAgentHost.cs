@@ -12,7 +12,7 @@ namespace nSNMP.Agent
     /// <summary>
     /// SNMP Agent host that handles incoming requests
     /// </summary>
-    public class SnmpAgentHost : IDisposable
+    public class SnmpAgentHost : IAsyncDisposable, IDisposable
     {
         private readonly IUdpListener _listener;
         private readonly ConcurrentDictionary<ObjectIdentifier, IScalarProvider> _scalarProviders;
@@ -83,7 +83,7 @@ namespace nSNMP.Agent
                 await foreach (var request in _listener.ListenAsync(port, _cancellationTokenSource.Token))
                 {
                     // Process request in background to avoid blocking the listener
-                    _ = Task.Run(async () => await ProcessRequestAsync(request), _cancellationTokenSource.Token);
+                    _ = ProcessRequestAsync(request);
                 }
             }, _cancellationTokenSource.Token);
 
@@ -429,6 +429,25 @@ namespace nSNMP.Agent
             );
         }
 
+        public async ValueTask DisposeAsync()
+        {
+            if (_disposed)
+                return;
+
+            try
+            {
+                await StopAsync().ConfigureAwait(false);
+            }
+            catch
+            {
+                // Ignore errors during disposal
+            }
+
+            _listener?.Dispose();
+            _disposed = true;
+            GC.SuppressFinalize(this);
+        }
+
         public void Dispose()
         {
             Dispose(true);
@@ -442,16 +461,8 @@ namespace nSNMP.Agent
 
             if (disposing)
             {
-                var stopTask = StopAsync();
-                try
-                {
-                    stopTask.GetAwaiter().GetResult();
-                }
-                catch
-                {
-                    // Ignore errors during disposal
-                }
-
+                // For synchronous dispose, cancel and dispose without waiting
+                _cancellationTokenSource?.Cancel();
                 _listener?.Dispose();
             }
 

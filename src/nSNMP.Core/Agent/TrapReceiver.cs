@@ -13,7 +13,7 @@ namespace nSNMP.Agent
     /// <summary>
     /// SNMP Trap receiver for listening to trap and notification messages
     /// </summary>
-    public class TrapReceiver : IDisposable
+    public class TrapReceiver : IAsyncDisposable, IDisposable
     {
         private readonly IUdpListener _listener;
         private readonly List<ITrapHandler> _handlers;
@@ -47,7 +47,7 @@ namespace nSNMP.Agent
                 throw new InvalidOperationException("Trap receiver is already running");
 
             _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            _listenerTask = Task.Run(async () => await ListenAsync(port, _cancellationTokenSource.Token));
+            _listenerTask = ListenAsync(port, _cancellationTokenSource.Token);
             await Task.CompletedTask;
         }
 
@@ -136,7 +136,7 @@ namespace nSNMP.Agent
 
                 var source = request.RemoteEndPoint;
                 var version = message.Version ?? SnmpVersion.V2c;
-                var community = message.CommunityString?.Value ?? string.Empty;
+                var community = message.CommunityString?.Value ?? "";
 
                 // Handle different trap types
                 // For V1, the message contains a TrapV1 as the third element, not a PDU
@@ -347,14 +347,34 @@ namespace nSNMP.Agent
             await request.SendResponseAsync(responseData);
         }
 
+        public async ValueTask DisposeAsync()
+        {
+            if (_disposed)
+                return;
+
+            try
+            {
+                await StopAsync().ConfigureAwait(false);
+            }
+            catch
+            {
+                // Ignore errors during disposal
+            }
+
+            _listener?.Dispose();
+            _disposed = true;
+            GC.SuppressFinalize(this);
+        }
+
         public void Dispose()
         {
-            if (!_disposed)
-            {
-                StopAsync().GetAwaiter().GetResult();
-                _listener?.Dispose();
-                _disposed = true;
-            }
+            if (_disposed)
+                return;
+
+            // For synchronous dispose, cancel and dispose without waiting
+            _cancellationTokenSource?.Cancel();
+            _listener?.Dispose();
+            _disposed = true;
         }
     }
 

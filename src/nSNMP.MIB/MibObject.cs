@@ -127,7 +127,7 @@ namespace nSNMP.MIB
         /// </summary>
         public string GetOidPath()
         {
-            if (Oid == null) return string.Empty;
+            if (Oid == null) return "";
             var oidString = Oid.ToString();
             return oidString.StartsWith(".") ? oidString.Substring(1) : oidString;
         }

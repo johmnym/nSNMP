@@ -42,7 +42,7 @@ namespace nSNMP.Manager
             _version = SnmpVersion.V3;
             _credentials = credentials ?? throw new ArgumentNullException(nameof(credentials));
             _engineParameters = engineParameters;
-            _community = string.Empty;
+            _community = "";
             _channel = channel ?? new UdpChannel();
         }
 

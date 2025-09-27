@@ -21,7 +21,7 @@ namespace nSNMP.SMI.DataTypes.V1.Primitive
             {
                 if (Data == null)
                 {
-                    return string.Empty;
+                    return "";
                 }
 
                 return Encoding.ASCII.GetString(Data, 0, Data.Length);

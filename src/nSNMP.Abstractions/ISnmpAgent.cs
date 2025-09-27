@@ -71,7 +71,7 @@ namespace nSNMP.Abstractions
     {
         public IPEndPoint Source { get; init; } = null!;
         public SnmpVersion Version { get; init; }
-        public string Operation { get; init; } = string.Empty;
+        public string Operation { get; init; } = "";
         public IReadOnlyList<string> Oids { get; init; } = Array.Empty<string>();
     }
 

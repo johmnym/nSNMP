@@ -20,7 +20,7 @@ namespace nSNMP.Transport
             _udpClient = new UdpClient();
             _pendingRequests = new ConcurrentDictionary<string, TaskCompletionSource<byte[]>>();
             _cancellationTokenSource = new CancellationTokenSource();
-            _receiveTask = Task.Run(ReceiveLoop);
+            _receiveTask = ReceiveLoop();
         }
 
         public async Task<byte[]> SendReceiveAsync(byte[] data, IPEndPoint endpoint, TimeSpan timeout, CancellationToken cancellationToken = default)

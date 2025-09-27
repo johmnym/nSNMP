@@ -197,31 +197,26 @@ namespace nSNMP.Extensions
         {
             var stopwatch = Stopwatch.StartNew();
             var results = new Dictionary<string, HealthCheckResult>();
-            var tasks = new List<Task>();
-
-            foreach (var kvp in _healthChecks)
+            var tasks = _healthChecks.Select(async kvp =>
             {
-                tasks.Add(Task.Run(async () =>
+                try
                 {
-                    try
+                    var result = await kvp.Value.CheckHealthAsync(cancellationToken).ConfigureAwait(false);
+                    lock (results)
                     {
-                        var result = await kvp.Value.CheckHealthAsync(cancellationToken);
-                        lock (results)
-                        {
-                            results[kvp.Key] = result;
-                        }
+                        results[kvp.Key] = result;
                     }
-                    catch (Exception ex)
+                }
+                catch (Exception ex)
+                {
+                    lock (results)
                     {
-                        lock (results)
-                        {
-                            results[kvp.Key] = HealthCheckResult.Unhealthy($"Health check failed: {ex.Message}", ex);
-                        }
+                        results[kvp.Key] = HealthCheckResult.Unhealthy($"Health check failed: {ex.Message}", ex);
                     }
-                }, cancellationToken));
-            }
+                }
+            });
 
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks).ConfigureAwait(false);
             stopwatch.Stop();
 
             var overallStatus = DetermineOverallStatus(results.Values);

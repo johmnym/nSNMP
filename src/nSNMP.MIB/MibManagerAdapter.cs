@@ -111,7 +111,7 @@ namespace nSNMP.MIB
             _mibObject = mibObject;
         }
 
-        public string Oid => _mibObject.Oid?.ToString() ?? string.Empty;
+        public string Oid => _mibObject.Oid?.ToString() ?? "";
         public string Name => _mibObject.Name;
         public string? Description => _mibObject.Description;
         public string? Syntax => _mibObject.Syntax;
@@ -138,6 +138,6 @@ namespace nSNMP.MIB
 
         public IReadOnlyList<IMibNode> Children => Array.Empty<IMibNode>(); // Would need children tracking
 
-        public string Module => _mibObject.ModuleName ?? string.Empty;
+        public string Module => _mibObject.ModuleName ?? "";
     }
 }

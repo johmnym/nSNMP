@@ -68,6 +68,6 @@ namespace nSNMP.Abstractions
         /// <param name="oid">Object identifier</param>
         /// <param name="data">Data value</param>
         /// <returns>New variable binding</returns>
-        static IVarBind Create(string oid, IDataType data) => throw new NotImplementedException();
+        static IVarBind Create(string oid, IDataType data) => throw new NotImplementedException("This static interface method must be implemented by a concrete type.");
     }
 }

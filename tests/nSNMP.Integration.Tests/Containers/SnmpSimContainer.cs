@@ -31,7 +31,7 @@ public class SnmpSimContainer : IAsyncDisposable
             .WithImage("snmpsim")
             .WithName($"snmpsim-{deviceName}")
             .WithPortBinding(udpPort, 161)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(161))
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilInternalTcpPortIsAvailable(161))
             .WithResourceMapping("Scenarios", "/usr/share/snmpsim/data")
             .WithCleanUp(true);
 

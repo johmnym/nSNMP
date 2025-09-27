@@ -48,7 +48,7 @@ namespace nSNMP.Message
                 _ => _pdu
             };
 
-            return new SnmpMessage(_version, OctetString.Create(_community ?? string.Empty), pdu);
+            return new SnmpMessage(_version, OctetString.Create(_community ?? ""), pdu);
         }
     }
 

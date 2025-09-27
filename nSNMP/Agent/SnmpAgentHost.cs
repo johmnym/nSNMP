@@ -193,7 +193,7 @@ namespace nSNMP.Agent
         /// <summary>
         /// Process GET request
         /// </summary>
-        private async Task<PDU> ProcessGetRequestAsync(GetRequest request)
+        private Task<PDU> ProcessGetRequestAsync(GetRequest request)
         {
             var responseVarBinds = new List<IDataType>();
 
@@ -210,19 +210,19 @@ namespace nSNMP.Agent
                 }
             }
 
-            return new GetResponse(
+            return Task.FromResult(new GetResponse(
                 null, // Data
                 request.RequestId,
                 Integer.Create(0), // No error
                 Integer.Create(0), // No error index
                 new Sequence(responseVarBinds)
-            );
+            ) as PDU);
         }
 
         /// <summary>
         /// Process GET-NEXT request
         /// </summary>
-        private async Task<PDU> ProcessGetNextRequestAsync(GetNextRequest request)
+        private Task<PDU> ProcessGetNextRequestAsync(GetNextRequest request)
         {
             var responseVarBinds = new List<IDataType>();
 
@@ -248,19 +248,19 @@ namespace nSNMP.Agent
                 }
             }
 
-            return new GetResponse(
+            return Task.FromResult(new GetResponse(
                 null, // Data
                 request.RequestId,
                 Integer.Create(0), // No error
                 Integer.Create(0), // No error index
                 new Sequence(responseVarBinds)
-            );
+            ) as PDU);
         }
 
         /// <summary>
         /// Process SET request
         /// </summary>
-        private async Task<PDU> ProcessSetRequestAsync(SetRequest request)
+        private Task<PDU> ProcessSetRequestAsync(SetRequest request)
         {
             var responseVarBinds = new List<IDataType>();
             var errorIndex = 0;
@@ -288,19 +288,19 @@ namespace nSNMP.Agent
                 }
             }
 
-            return new GetResponse(
+            return Task.FromResult(new GetResponse(
                 null, // Data
                 request.RequestId,
                 Integer.Create((int)errorStatus),
                 Integer.Create(errorIndex),
                 new Sequence(responseVarBinds)
-            );
+            ) as PDU);
         }
 
         /// <summary>
         /// Process GET-BULK request (v2c/v3 only)
         /// </summary>
-        private async Task<PDU> ProcessGetBulkRequestAsync(GetBulkRequest request)
+        private Task<PDU> ProcessGetBulkRequestAsync(GetBulkRequest request)
         {
             var responseVarBinds = new List<IDataType>();
 
@@ -327,13 +327,13 @@ namespace nSNMP.Agent
                 }
             }
 
-            return new GetResponse(
+            return Task.FromResult(new GetResponse(
                 null, // Data
                 request.RequestId,
                 Integer.Create(0), // No error
                 Integer.Create(0), // No error index
                 new Sequence(responseVarBinds)
-            );
+            ) as PDU);
         }
 
         /// <summary>

@@ -19,17 +19,17 @@ namespace nSNMP.Message
         /// <summary>
         /// Authentication flag (bit 0)
         /// </summary>
-        public bool AuthFlag => (Flags.Data[0] & 0x01) != 0;
+        public bool AuthFlag => (Flags.Data?.Length > 0) && (Flags.Data[0] & 0x01) != 0;
 
         /// <summary>
         /// Privacy flag (bit 1)
         /// </summary>
-        public bool PrivFlag => (Flags.Data[0] & 0x02) != 0;
+        public bool PrivFlag => (Flags.Data?.Length > 0) && (Flags.Data[0] & 0x02) != 0;
 
         /// <summary>
         /// Reportable flag (bit 2)
         /// </summary>
-        public bool ReportableFlag => (Flags.Data[0] & 0x04) != 0;
+        public bool ReportableFlag => (Flags.Data?.Length > 0) && (Flags.Data[0] & 0x04) != 0;
 
         /// <summary>
         /// Create SNMPv3 message with default values
@@ -40,8 +40,8 @@ namespace nSNMP.Message
             bool authFlag = false,
             bool privFlag = false,
             bool reportableFlag = true,
-            byte[] securityParameters = null,
-            ScopedPdu scopedPdu = null)
+            byte[]? securityParameters = null,
+            ScopedPdu? scopedPdu = null)
         {
             byte flags = 0;
             if (authFlag) flags |= 0x01;

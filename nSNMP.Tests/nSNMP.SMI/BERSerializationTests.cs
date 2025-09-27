@@ -121,9 +121,9 @@ namespace nSNMP.Tests.nSNMP.SMI
             var encoded = original.ToBytes();
             var decoded = (GetRequest)SMIDataFactory.Create(encoded);
 
-            Assert.Equal(12345, decoded.RequestId.Value);
-            Assert.Equal(0, decoded.Error.Value);
-            Assert.Equal(0, decoded.ErrorIndex.Value);
+            Assert.Equal(12345, decoded.RequestId?.Value ?? 0);
+            Assert.Equal(0, decoded.Error?.Value ?? 0);
+            Assert.Equal(0, decoded.ErrorIndex?.Value ?? 0);
             Assert.NotNull(decoded.VarbindList);
         }
 
@@ -141,9 +141,9 @@ namespace nSNMP.Tests.nSNMP.SMI
             var encoded = original.ToBytes();
             var decoded = (SetRequest)SMIDataFactory.Create(encoded);
 
-            Assert.Equal(54321, decoded.RequestId.Value);
-            Assert.Equal(0, decoded.Error.Value);
-            Assert.Equal(0, decoded.ErrorIndex.Value);
+            Assert.Equal(54321, decoded.RequestId?.Value ?? 0);
+            Assert.Equal(0, decoded.Error?.Value ?? 0);
+            Assert.Equal(0, decoded.ErrorIndex?.Value ?? 0);
             Assert.NotNull(decoded.VarbindList);
         }
 
@@ -161,9 +161,9 @@ namespace nSNMP.Tests.nSNMP.SMI
             var encoded = original.ToBytes();
             var decoded = (GetResponse)SMIDataFactory.Create(encoded);
 
-            Assert.Equal(98765, decoded.RequestId.Value);
-            Assert.Equal(0, decoded.Error.Value);
-            Assert.Equal(0, decoded.ErrorIndex.Value);
+            Assert.Equal(98765, decoded.RequestId?.Value ?? 0);
+            Assert.Equal(0, decoded.Error?.Value ?? 0);
+            Assert.Equal(0, decoded.ErrorIndex?.Value ?? 0);
             Assert.NotNull(decoded.VarbindList);
         }
 
@@ -188,9 +188,9 @@ namespace nSNMP.Tests.nSNMP.SMI
             var decoded = SnmpMessage.Create(encoded);
 
             Assert.Equal(SnmpVersion.V1, decoded.Version);
-            Assert.Equal("public", decoded.CommunityString.Value);
+            Assert.Equal("public", decoded.CommunityString?.Value);
             Assert.IsType<GetRequest>(decoded.PDU);
-            Assert.Equal(1, decoded.PDU.RequestId.Value);
+            Assert.Equal(1, decoded.PDU?.RequestId?.Value ?? 0);
         }
     }
 }

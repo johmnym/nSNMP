@@ -90,8 +90,8 @@ namespace nSNMP.Tests.nSNMP.Agent
             Assert.NotNull(responseMessage);
 
             // Should contain engine ID in security parameters
-            var usmParams = UsmSecurityParameters.Parse(responseMessage.SecurityParameters.Data);
-            Assert.NotEmpty(usmParams.AuthoritativeEngineId.Data);
+            var usmParams = UsmSecurityParameters.Parse(responseMessage.SecurityParameters.Data ?? Array.Empty<byte>());
+            Assert.NotEmpty(usmParams.AuthoritativeEngineId.Data ?? Array.Empty<byte>());
 
             await _agent.StopAsync();
         }

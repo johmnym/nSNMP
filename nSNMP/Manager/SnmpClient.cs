@@ -198,12 +198,12 @@ namespace nSNMP.Manager
                 // Check for SNMP errors
                 if (response.Error?.Value != 0)
                 {
-                    throw SnmpErrorException.FromErrorStatus(response.Error.Value, response.ErrorIndex?.Value ?? 0);
+                    throw SnmpErrorException.FromErrorStatus(response.Error?.Value ?? 0, response.ErrorIndex?.Value ?? 0);
                 }
 
                 return response;
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException)
             {
                 throw new SnmpTimeoutException(_timeout);
             }

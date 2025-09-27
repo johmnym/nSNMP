@@ -93,13 +93,13 @@ namespace nSNMP.Security
             }
 
             // Parse USM security parameters from response
-            var usmParams = UsmSecurityParameters.Parse(response.SecurityParameters.Data);
+            var usmParams = UsmSecurityParameters.Parse(response.SecurityParameters.Data ?? Array.Empty<byte>());
 
             // Check for discovery error (unknown engine ID)
             if (report.Error?.Value == 1) // Unknown engine ID error is expected in discovery
             {
                 return new EngineParameters(
-                    usmParams.AuthoritativeEngineId.Data,
+                    usmParams.AuthoritativeEngineId.Data ?? Array.Empty<byte>(),
                     usmParams.AuthoritativeEngineBoots.Value,
                     usmParams.AuthoritativeEngineTime.Value
                 );
@@ -108,11 +108,11 @@ namespace nSNMP.Security
             // Other errors indicate discovery failure
             if (report.Error?.Value != 0)
             {
-                throw SnmpErrorException.FromErrorStatus(report.Error.Value, report.ErrorIndex?.Value ?? 0);
+                throw SnmpErrorException.FromErrorStatus(report.Error?.Value ?? 0, report.ErrorIndex?.Value ?? 0);
             }
 
             return new EngineParameters(
-                usmParams.AuthoritativeEngineId.Data,
+                usmParams.AuthoritativeEngineId.Data ?? Array.Empty<byte>(),
                 usmParams.AuthoritativeEngineBoots.Value,
                 usmParams.AuthoritativeEngineTime.Value
             );

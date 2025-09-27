@@ -20,7 +20,7 @@ namespace nSNMP.Tests.nSNMP.Message
             Assert.False(message.PrivFlag);
             Assert.True(message.ReportableFlag);
             Assert.Equal(3, message.SecurityModel.Value);
-            Assert.Empty(message.SecurityParameters.Data);
+            Assert.Empty(message.SecurityParameters.Data ?? Array.Empty<byte>());
         }
 
         [Fact]

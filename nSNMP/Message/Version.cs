@@ -3,7 +3,7 @@ using nSNMP.SMI.DataTypes.V1.Primitive;
 
 namespace nSNMP.Message
 {
-    public record Version(byte[]? Data) : Integer(Data)
+    public record Version(byte[]? Data) : Integer(Data ?? Array.Empty<byte>())
     {
         public SnmpVersion SnmpVersion { get { return (SnmpVersion) Value; } }
 

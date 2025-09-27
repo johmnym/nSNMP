@@ -28,7 +28,7 @@ namespace nSNMP.Agent
             {
                 // Parse SNMPv3 message
                 var v3Message = SnmpMessageV3.Parse(messageData);
-                var usmParams = UsmSecurityParameters.Parse(v3Message.SecurityParameters.Data);
+                var usmParams = UsmSecurityParameters.Parse(v3Message.SecurityParameters.Data ?? Array.Empty<byte>());
 
                 // Handle discovery requests
                 if (usmParams.IsDiscovery)
@@ -43,7 +43,7 @@ namespace nSNMP.Agent
                 }
 
                 // Validate engine ID
-                if (!usmParams.AuthoritativeEngineId.Data.SequenceEqual(_engine.EngineId))
+                if (!usmParams.AuthoritativeEngineId.Data?.SequenceEqual(_engine.EngineId) ?? true)
                 {
                     return new UsmProcessResult
                     {
@@ -89,8 +89,8 @@ namespace nSNMP.Agent
                 if (user.HasAuth)
                 {
                     // Validate authentication
-                    var messageForAuth = PrepareMessageForAuth(messageData, usmParams.AuthenticationParameters.Data.Length);
-                    if (!user.ValidateAuth(messageForAuth, usmParams.AuthenticationParameters.Data))
+                    var messageForAuth = PrepareMessageForAuth(messageData, usmParams.AuthenticationParameters.Data?.Length ?? 0);
+                    if (!user.ValidateAuth(messageForAuth, usmParams.AuthenticationParameters.Data ?? Array.Empty<byte>()))
                     {
                         return new UsmProcessResult
                         {
@@ -108,7 +108,7 @@ namespace nSNMP.Agent
                     var decryptedData = PrivacyProvider.Decrypt(
                         scopedPduData,
                         user.PrivKey,
-                        usmParams.PrivacyParameters.Data,
+                        usmParams.PrivacyParameters.Data ?? Array.Empty<byte>(),
                         user.PrivProtocol,
                         usmParams.AuthoritativeEngineBoots.Value,
                         usmParams.AuthoritativeEngineTime.Value);
@@ -170,8 +170,8 @@ namespace nSNMP.Agent
                 _engine.EngineBoots,
                 _engine.EngineTime,
                 "",
-                null,
-                null);
+                Array.Empty<byte>(),
+                Array.Empty<byte>());
 
             var scopedPdu = ScopedPdu.Create(responsePdu, "", "");
             var v3Message = SnmpMessageV3.Create(
@@ -197,8 +197,8 @@ namespace nSNMP.Agent
                 _engine.EngineBoots,
                 _engine.EngineTime,
                 "",
-                null,
-                null);
+                Array.Empty<byte>(),
+                Array.Empty<byte>());
 
             var scopedPdu = ScopedPdu.Create(reportPdu, "", "");
             var v3Message = SnmpMessageV3.Create(
@@ -245,7 +245,7 @@ namespace nSNMP.Agent
                 _engine.EngineBoots,
                 _engine.EngineTime,
                 user.UserName,
-                user.HasAuth ? new byte[12] : null, // Placeholder for auth params
+                user.HasAuth ? new byte[12] : Array.Empty<byte>(), // Placeholder for auth params
                 privacyParams);
 
             // Create message

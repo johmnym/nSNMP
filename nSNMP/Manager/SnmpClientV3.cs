@@ -208,7 +208,7 @@ namespace nSNMP.Manager
                 // Check for SNMP errors
                 if (getResponse.Error?.Value != 0)
                 {
-                    throw SnmpErrorException.FromErrorStatus(getResponse.Error.Value, getResponse.ErrorIndex?.Value ?? 0);
+                    throw SnmpErrorException.FromErrorStatus(getResponse.Error?.Value ?? 0, getResponse.ErrorIndex?.Value ?? 0);
                 }
 
                 return getResponse;
@@ -222,28 +222,28 @@ namespace nSNMP.Manager
         /// <summary>
         /// Process SNMPv3 response (decrypt if needed)
         /// </summary>
-        private async Task<PDU> ProcessV3Response(SnmpMessageV3 response)
+        private Task<PDU> ProcessV3Response(SnmpMessageV3 response)
         {
             // Decrypt scoped PDU if privacy is enabled
             if (response.PrivFlag && _credentials.PrivProtocol != PrivProtocol.None)
             {
-                var usmParams = UsmSecurityParameters.Parse(response.SecurityParameters.Data);
+                var usmParams = UsmSecurityParameters.Parse(response.SecurityParameters.Data ?? Array.Empty<byte>());
                 var privKey = _credentials.GetPrivKey(_engineParameters!.EngineId);
 
                 var decryptedData = PrivacyProvider.Decrypt(
                     response.ScopedPdu.ToBytes(),
                     privKey,
-                    usmParams.PrivacyParameters.Data,
+                    usmParams.PrivacyParameters.Data ?? Array.Empty<byte>(),
                     _credentials.PrivProtocol,
                     usmParams.AuthoritativeEngineBoots.Value,
                     usmParams.AuthoritativeEngineTime.Value
                 );
 
                 var decryptedScopedPdu = ScopedPdu.Parse(decryptedData);
-                return decryptedScopedPdu.Pdu!;
+                return Task.FromResult(decryptedScopedPdu.Pdu!);
             }
 
-            return response.ScopedPdu.Pdu!;
+            return Task.FromResult(response.ScopedPdu.Pdu!);
         }
 
         /// <summary>

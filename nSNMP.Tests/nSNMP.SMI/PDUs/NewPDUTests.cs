@@ -23,9 +23,9 @@ namespace nSNMP.Tests.nSNMP.SMI.PDUs
             var encoded = original.ToBytes();
             var decoded = (GetNextRequest)SMIDataFactory.Create(encoded);
 
-            Assert.Equal(12345, decoded.RequestId.Value);
-            Assert.Equal(0, decoded.Error.Value);
-            Assert.Equal(0, decoded.ErrorIndex.Value);
+            Assert.Equal(12345, decoded.RequestId?.Value ?? 0);
+            Assert.Equal(0, decoded.Error?.Value ?? 0);
+            Assert.Equal(0, decoded.ErrorIndex?.Value ?? 0);
             Assert.NotNull(decoded.VarbindList);
         }
 
@@ -43,9 +43,9 @@ namespace nSNMP.Tests.nSNMP.SMI.PDUs
             var encoded = original.ToBytes();
             var decoded = (GetBulkRequest)SMIDataFactory.Create(encoded);
 
-            Assert.Equal(54321, decoded.RequestId.Value);
-            Assert.Equal(2, decoded.NonRepeaters.Value);
-            Assert.Equal(10, decoded.MaxRepetitions.Value);
+            Assert.Equal(54321, decoded.RequestId?.Value ?? 0);
+            Assert.Equal(2, decoded.NonRepeaters?.Value ?? 0);
+            Assert.Equal(10, decoded.MaxRepetitions?.Value ?? 0);
             Assert.NotNull(decoded.VarbindList);
         }
 
@@ -63,9 +63,9 @@ namespace nSNMP.Tests.nSNMP.SMI.PDUs
             var encoded = original.ToBytes();
             var decoded = (InformRequest)SMIDataFactory.Create(encoded);
 
-            Assert.Equal(98765, decoded.RequestId.Value);
-            Assert.Equal(0, decoded.Error.Value);
-            Assert.Equal(0, decoded.ErrorIndex.Value);
+            Assert.Equal(98765, decoded.RequestId?.Value ?? 0);
+            Assert.Equal(0, decoded.Error?.Value ?? 0);
+            Assert.Equal(0, decoded.ErrorIndex?.Value ?? 0);
             Assert.NotNull(decoded.VarbindList);
         }
 
@@ -83,9 +83,9 @@ namespace nSNMP.Tests.nSNMP.SMI.PDUs
             var encoded = original.ToBytes();
             var decoded = (TrapV2)SMIDataFactory.Create(encoded);
 
-            Assert.Equal(13579, decoded.RequestId.Value);
-            Assert.Equal(0, decoded.Error.Value);
-            Assert.Equal(0, decoded.ErrorIndex.Value);
+            Assert.Equal(13579, decoded.RequestId?.Value ?? 0);
+            Assert.Equal(0, decoded.Error?.Value ?? 0);
+            Assert.Equal(0, decoded.ErrorIndex?.Value ?? 0);
             Assert.NotNull(decoded.VarbindList);
         }
 
@@ -103,9 +103,9 @@ namespace nSNMP.Tests.nSNMP.SMI.PDUs
             var encoded = original.ToBytes();
             var decoded = (Report)SMIDataFactory.Create(encoded);
 
-            Assert.Equal(24680, decoded.RequestId.Value);
-            Assert.Equal(0, decoded.Error.Value);
-            Assert.Equal(0, decoded.ErrorIndex.Value);
+            Assert.Equal(24680, decoded.RequestId?.Value ?? 0);
+            Assert.Equal(0, decoded.Error?.Value ?? 0);
+            Assert.Equal(0, decoded.ErrorIndex?.Value ?? 0);
             Assert.NotNull(decoded.VarbindList);
         }
 
@@ -133,12 +133,12 @@ namespace nSNMP.Tests.nSNMP.SMI.PDUs
             var decoded = (TrapV1)SMIDataFactory.Create(encoded);
 
             Assert.NotNull(decoded.Enterprise);
-            Assert.Equal(enterprise.Value, decoded.Enterprise.Value);
+            Assert.Equal(enterprise.Value, decoded.Enterprise?.Value);
             Assert.NotNull(decoded.AgentAddr);
-            Assert.Equal("192.168.1.100", decoded.AgentAddr.Value.ToString());
-            Assert.Equal(6, decoded.GenericTrap.Value);
-            Assert.Equal(42, decoded.SpecificTrap.Value);
-            Assert.Equal(123456u, decoded.TimeStamp.Value);
+            Assert.Equal("192.168.1.100", decoded.AgentAddr?.Value?.ToString());
+            Assert.Equal(6, decoded.GenericTrap?.Value ?? 0);
+            Assert.Equal(42, decoded.SpecificTrap?.Value ?? 0);
+            Assert.Equal(123456u, decoded.TimeStamp?.Value ?? 0);
             Assert.NotNull(decoded.VarbindList);
         }
 
@@ -152,10 +152,10 @@ namespace nSNMP.Tests.nSNMP.SMI.PDUs
 
             Assert.NotNull(decoded.Enterprise);
             Assert.NotNull(decoded.AgentAddr);
-            Assert.Equal("0.0.0.0", decoded.AgentAddr.Value.ToString());
-            Assert.Equal(6, decoded.GenericTrap.Value); // enterpriseSpecific
-            Assert.Equal(0, decoded.SpecificTrap.Value);
-            Assert.Equal(0u, decoded.TimeStamp.Value);
+            Assert.Equal("0.0.0.0", decoded.AgentAddr?.Value?.ToString());
+            Assert.Equal(6, decoded.GenericTrap?.Value ?? 0); // enterpriseSpecific
+            Assert.Equal(0, decoded.SpecificTrap?.Value ?? 0);
+            Assert.Equal(0u, decoded.TimeStamp?.Value ?? 0);
             Assert.NotNull(decoded.VarbindList);
         }
 
@@ -171,12 +171,12 @@ namespace nSNMP.Tests.nSNMP.SMI.PDUs
             );
 
             // Test that convenience properties map correctly
-            Assert.Equal(3, original.NonRepeaters.Value);
-            Assert.Equal(15, original.MaxRepetitions.Value);
+            Assert.Equal(3, original.NonRepeaters?.Value ?? 0);
+            Assert.Equal(15, original.MaxRepetitions?.Value ?? 0);
 
             // Test that they're the same as base Error/ErrorIndex
-            Assert.Equal(original.Error.Value, original.NonRepeaters.Value);
-            Assert.Equal(original.ErrorIndex.Value, original.MaxRepetitions.Value);
+            Assert.Equal(original.Error?.Value ?? 0, original.NonRepeaters?.Value ?? 0);
+            Assert.Equal(original.ErrorIndex?.Value ?? 0, original.MaxRepetitions?.Value ?? 0);
         }
 
         [Fact]

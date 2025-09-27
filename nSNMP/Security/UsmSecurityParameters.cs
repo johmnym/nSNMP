@@ -23,8 +23,8 @@ namespace nSNMP.Security
             int authoritativeEngineBoots = 0,
             int authoritativeEngineTime = 0,
             string userName = "",
-            byte[] authenticationParameters = null,
-            byte[] privacyParameters = null)
+            byte[]? authenticationParameters = null,
+            byte[]? privacyParameters = null)
         {
             return new UsmSecurityParameters(
                 OctetString.Create(authoritativeEngineId),
@@ -95,16 +95,16 @@ namespace nSNMP.Security
         /// <summary>
         /// Get engine ID as hex string for display
         /// </summary>
-        public string EngineIdHex => Convert.ToHexString(AuthoritativeEngineId.Data);
+        public string EngineIdHex => Convert.ToHexString(AuthoritativeEngineId.Data ?? Array.Empty<byte>());
 
         /// <summary>
         /// Check if authentication parameters are present
         /// </summary>
-        public bool HasAuthParams => AuthenticationParameters.Data.Length > 0;
+        public bool HasAuthParams => AuthenticationParameters.Data?.Length > 0;
 
         /// <summary>
         /// Check if privacy parameters are present
         /// </summary>
-        public bool HasPrivParams => PrivacyParameters.Data.Length > 0;
+        public bool HasPrivParams => PrivacyParameters.Data?.Length > 0;
     }
 }

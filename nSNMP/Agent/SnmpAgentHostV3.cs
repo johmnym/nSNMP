@@ -172,7 +172,7 @@ namespace nSNMP.Agent
         /// <summary>
         /// Check community access using VACM
         /// </summary>
-        private async Task<bool> CheckCommunityAccess(string communityString, VacmAccessType accessType, VacmSecurityModel securityModel)
+        private Task<bool> CheckCommunityAccess(string communityString, VacmAccessType accessType, VacmSecurityModel securityModel)
         {
             // For basic implementation, use the community string as the security name
             var result = _vacmProcessor.CheckAccess(
@@ -183,7 +183,7 @@ namespace nSNMP.Agent
                 accessType,
                 ObjectIdentifier.Create("1.3.6.1")); // Use internet subtree as default check
 
-            return result.IsAllowed;
+            return Task.FromResult(result.IsAllowed);
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace nSNMP.Agent
         /// <summary>
         /// Process PDU with VACM access checks for each OID
         /// </summary>
-        private async Task<PDU> ProcessPduWithVacmChecks(PDU requestPdu, VacmSecurityModel securityModel, string securityName, SecurityLevel securityLevel, string contextName, VacmAccessType accessType)
+        private Task<PDU> ProcessPduWithVacmChecks(PDU requestPdu, VacmSecurityModel securityModel, string securityName, SecurityLevel securityLevel, string contextName, VacmAccessType accessType)
         {
             var responseVarBinds = new List<IDataType>();
             var errorIndex = 0;
@@ -325,13 +325,13 @@ namespace nSNMP.Agent
                 }
             }
 
-            return new GetResponse(
+            return Task.FromResult(new GetResponse(
                 null,
                 requestPdu.RequestId,
                 Integer.Create((int)errorStatus),
                 Integer.Create(errorIndex),
                 new Sequence(responseVarBinds)
-            );
+            ) as PDU);
         }
 
         /// <summary>

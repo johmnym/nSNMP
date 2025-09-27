@@ -1,4 +1,5 @@
 using System.Net;
+using System.Runtime.CompilerServices;
 using nSNMP.Agent;
 using nSNMP.Message;
 using nSNMP.SMI.DataTypes;
@@ -215,7 +216,7 @@ namespace nSNMP.Tests.nSNMP.Agent
 
         public bool IsListening { get; private set; }
 
-        public async IAsyncEnumerable<UdpRequest> ListenAsync(int port, CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<UdpRequest> ListenAsync(int port, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             IsListening = true;
 

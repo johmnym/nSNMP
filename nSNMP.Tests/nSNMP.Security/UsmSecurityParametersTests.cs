@@ -15,8 +15,8 @@ namespace nSNMP.Tests.nSNMP.Security
             Assert.Equal(0, parameters.AuthoritativeEngineBoots.Value);
             Assert.Equal(0, parameters.AuthoritativeEngineTime.Value);
             Assert.Equal("", parameters.UserName.Value);
-            Assert.Empty(parameters.AuthenticationParameters.Data);
-            Assert.Empty(parameters.PrivacyParameters.Data);
+            Assert.Empty(parameters.AuthenticationParameters.Data ?? Array.Empty<byte>());
+            Assert.Empty(parameters.PrivacyParameters.Data ?? Array.Empty<byte>());
         }
 
         [Fact]
@@ -48,8 +48,8 @@ namespace nSNMP.Tests.nSNMP.Security
             Assert.Equal(0, parameters.AuthoritativeEngineBoots.Value);
             Assert.Equal(0, parameters.AuthoritativeEngineTime.Value);
             Assert.Equal("discoveryuser", parameters.UserName.Value);
-            Assert.Empty(parameters.AuthenticationParameters.Data);
-            Assert.Empty(parameters.PrivacyParameters.Data);
+            Assert.Empty(parameters.AuthenticationParameters.Data ?? Array.Empty<byte>());
+            Assert.Empty(parameters.PrivacyParameters.Data ?? Array.Empty<byte>());
             Assert.True(parameters.IsDiscovery);
         }
 
@@ -89,7 +89,7 @@ namespace nSNMP.Tests.nSNMP.Security
         [Fact]
         public void Parse_NullData_ReturnsEmptyParameters()
         {
-            var parameters = UsmSecurityParameters.Parse(null);
+            var parameters = UsmSecurityParameters.Parse(null!);
 
             Assert.True(parameters.IsDiscovery);
             Assert.Equal("", parameters.AuthoritativeEngineId.Value);

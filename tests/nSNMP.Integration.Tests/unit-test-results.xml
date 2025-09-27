@@ -1,0 +1,228 @@
+<testsuites>
+  <testsuite name="nSNMP.Integration.Tests.dll" tests="47" skipped="0" failures="0" errors="0" time="102.5893641" timestamp="2025-09-27T19:48:19" hostname="tigger" id="0" package="nSNMP.Integration.Tests.dll">
+    <properties />
+    <testcase classname="nSNMP.Integration.Tests.SimpleSnmpAgentTests" name="SnmpAgentHost_ShouldMapMultipleScalars" time="0.0053543" />
+    <testcase classname="nSNMP.Integration.Tests.EnhancedApiTests" name="VarBind_ShouldCreateCorrectly" time="0.0056448" />
+    <testcase classname="nSNMP.Integration.Tests.EnhancedApiTests" name="ObjectIdentifier_ShouldCreateAndFormat" time="0.0001881" />
+    <testcase classname="nSNMP.Integration.Tests.SimpleSnmpAgentTests" name="SnmpAgentHost_ShouldHandleInvalidOids" time="0.0006614" />
+    <testcase classname="nSNMP.Integration.Tests.SimpleSnmpAgentTests" name="SnmpAgentHost_ShouldSupportReadOnlyAndWritableOids" time="0.0001577" />
+    <testcase classname="nSNMP.Integration.Tests.SimpleSnmpAgentTests" name="SnmpAgentHost_ShouldCreateSuccessfully" time="0.0000887" />
+    <testcase classname="nSNMP.Integration.Tests.EnhancedApiTests" name="SnmpClient_FactoryMethods_ShouldWork" time="0.0013377" />
+    <testcase classname="nSNMP.Integration.Tests.EnhancedApiTests" name="SnmpClientV3_ShouldCreateWithAuthNoPriv" time="0.0002846" />
+    <testcase classname="nSNMP.Integration.Tests.EnhancedApiTests" name="SnmpClient_ShouldCreateWithProperConstructor" time="0.0003975" />
+    <testcase classname="nSNMP.Integration.Tests.SimpleSnmpAgentTests" name="SnmpAgentHost_StartAndStop_ShouldNotThrow" time="0.2065099" />
+    <testcase classname="nSNMP.Integration.Tests.SimpleSnmpAgentTests" name="SnmpAgentHost_ShouldMapScalarValues" time="0.0001472" />
+    <testcase classname="nSNMP.Integration.Tests.SimpleSnmpAgentTests" name="SnmpAgentHost_ShouldSupportDifferentDataTypes" time="0.0002561" />
+    <testcase classname="nSNMP.Integration.Tests.EnhancedApiTests" name="SnmpClient_TimeoutBehavior_ShouldWork" time="0.5117406" />
+    <testcase classname="nSNMP.Integration.Tests.EnhancedApiTests" name="SnmpClientV3_ShouldCreateWithProperCredentials" time="0.0001978" />
+    <testcase classname="nSNMP.Integration.Tests.EnhancedApiTests" name="SecurityProtocols_ShouldBeAvailable" time="0.0000643" />
+    <testcase classname="nSNMP.Integration.Tests.EnhancedApiTests" name="SnmpDataTypes_ShouldCreateCorrectly" time="0.0001156" />
+    <testcase classname="nSNMP.Integration.Tests.EnhancedApiTests" name="SnmpClient_ShouldHaveCorrectApiMethods" time="0.0012305" />
+    <testcase classname="nSNMP.Integration.Tests.EnhancedApiTests" name="SnmpVersions_ShouldBeAvailable" time="0.0015896" />
+    <testcase classname="nSNMP.Integration.Tests.IntegrationTests" name="ApiValidation_ShouldPass" time="0.5267616" />
+    <testcase classname="nSNMP.Integration.Tests.IntegrationTests" name="ConfigurationValidation_ShouldPass" time="0.0421732" />
+    <testcase classname="nSNMP.Integration.Tests.IntegrationTests" name="ScenarioDataValidation_ShouldPass" time="0.0025715" />
+    <testcase classname="nSNMP.Integration.Tests.IntegrationTests" name="FullIntegrationValidation_ShouldPass" time="0.5347250" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpErrorHandlingTests" name="SnmpClient_NoSuchOid_ShouldHandleGracefully" time="2.0120815" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpErrorHandlingTests" name="SnmpClient_InvalidOidFormat_ShouldThrowException" time="0.0008792" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpErrorHandlingTests" name="SnmpClient_GetBulkOnV1_ShouldThrowException" time="0.0014032" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpCommunicationTests" name="SnmpClient_Walk_ShouldTraverseSubtree" time="5.0137637" />
+    <testcase classname="nSNMP.Integration.Tests.Snmpv3SecurityTests" name="SnmpClientV3_AuthNoPriv_ShouldAuthenticate" time="5.0153192" />
+    <testcase classname="nSNMP.Integration.Tests.Snmpv3SecurityTests" name="SnmpClientV3_SecurityProtocols_ShouldBeAvailable" time="0.0031305" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpErrorHandlingTests" name="SnmpClient_MaxMessageSize_ShouldHandleCorrectly" time="5.0037242" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpCommunicationTests" name="SnmpClient_GetNext_ShouldWalkOidTree" time="2.0048239" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpErrorHandlingTests" name="SnmpClient_VersionMismatch_ShouldHandleCorrectly" time="2.0041249" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpErrorHandlingTests" name="SnmpClient_InvalidConstructorParameters_ShouldThrowException" time="0.0004507" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpCommunicationTests" name="SnmpClient_InvalidCommunity_ShouldHandleAuthFailure" time="2.0044495" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpCommunicationTests" name="SnmpClient_GetBulk_ShouldRetrieveMultipleRows" time="2.0022443" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpCommunicationTests" name="SnmpClient_Timeout_ShouldHandleTimeoutGracefully" time="0.1041004" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpCommunicationTests" name="SnmpClient_GetMultiple_ShouldRetrieveMultipleOids" time="2.0027838" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpErrorHandlingTests" name="SnmpClient_ConcurrentRequests_ShouldHandleCorrectly" time="5.0028250" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpErrorHandlingTests" name="SnmpClient_EmptyOidArray_ShouldThrowException" time="0.0009745" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpCommunicationTests" name="SnmpClient_Get_ShouldRetrieveBasicSystemInfo" time="2.0051975" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpErrorHandlingTests" name="SnmpClient_TooBigResponse_ShouldRetry" time="5.0032683" />
+    <testcase classname="nSNMP.Integration.Tests.SnmpErrorHandlingTests" name="SnmpClient_NetworkErrors_ShouldHandleGracefully" time="1.5088902" />
+    <testcase classname="nSNMP.Integration.Tests.Snmpv3SecurityTests" name="SnmpClientV3_DifferentPrivProtocols_ShouldWork" time="20.0240862" />
+    <testcase classname="nSNMP.Integration.Tests.Snmpv3SecurityTests" name="SnmpClientV3_NoAuthNoPriv_ShouldConnect" time="5.0038047" />
+    <testcase classname="nSNMP.Integration.Tests.Snmpv3SecurityTests" name="SnmpClientV3_EngineDiscovery_ShouldWork" time="5.0037740" />
+    <testcase classname="nSNMP.Integration.Tests.Snmpv3SecurityTests" name="SnmpClientV3_WrongCredentials_ShouldFail" time="5.0058307" />
+    <testcase classname="nSNMP.Integration.Tests.Snmpv3SecurityTests" name="SnmpClientV3_AuthPriv_ShouldEncryptCommunication" time="5.0050938" />
+    <testcase classname="nSNMP.Integration.Tests.Snmpv3SecurityTests" name="SnmpClientV3_DifferentAuthProtocols_ShouldWork" time="20.0101425" />
+    <system-out>✅ Multiple scalar values mapped successfully
+
+✅ VarBind created successfully
+
+✅ OID 1.3.6.1.2.1.1.1.0 created and formatted correctly
+✅ OID 1.3.6.1.2.1.1.2.0 created and formatted correctly
+✅ OID 1.3.6.1.2.1.1.3.0 created and formatted correctly
+✅ OID 1.3.6.1.2.1.2.1.0 created and formatted correctly
+
+✅ Invalid OID '' properly rejected
+✅ Invalid OID 'not.an.oid' properly rejected
+✅ Invalid OID '1.2.3.abc' properly rejected
+
+✅ Read-only and writable OIDs mapped successfully
+
+✅ SnmpAgentHost created successfully
+
+✅ SnmpClient factory method works
+
+✅ SnmpClientV3 with authNoPriv created successfully
+
+✅ SnmpClient created successfully with proper constructor
+
+✅ Agent start/stop lifecycle completed successfully
+
+✅ Scalar value mapped successfully
+
+✅ Mapped OctetString to 1.3.6.1.4.1.99999.2.1.0
+✅ Mapped Integer to 1.3.6.1.4.1.99999.2.2.0
+✅ Mapped Counter32 to 1.3.6.1.4.1.99999.2.3.0
+✅ Mapped Gauge32 to 1.3.6.1.4.1.99999.2.4.0
+✅ Mapped TimeTicks to 1.3.6.1.4.1.99999.2.5.0
+✅ All SNMP data types mapped successfully
+
+✅ Timeout behavior works correctly (504,805ms)
+
+✅ SnmpClientV3 created successfully
+
+✅ All security protocols are available
+
+✅ All SNMP data types created successfully
+
+✅ SnmpClient has all required API methods
+
+✅ All SNMP versions are available
+
+API validation: ApiValidation
+Tests: 4/4
+Duration: 520ms
+
+Configuration validation: ConfigurationValidation
+Tests: 2/2
+Duration: 40ms
+
+Scenario data validation: ScenarioDataValidation
+Tests: 4/4
+Duration: 1ms
+
+=== nSNMP Integration Test Validation Results ===
+\ud83d\udcca Overall Status: ✅ PASSED
+⏱️  Duration: 0,5 seconds
+\ud83d\udccb Test Suites: 3/3 passed
+\ud83e\uddea Total Tests: 10/10 passed
+\ud83d\udcc8 Success Rate: 100,0%
+
+\ud83d\udccb Suite Details:
+  ✅ ConfigurationValidation: 2/2 tests (100%) - 2ms
+  ✅ ScenarioDataValidation: 4/4 tests (100%) - 0ms
+  ✅ ApiValidation: 4/4 tests (100%) - 512ms
+
+\ud83d\udcc1 Reports generated in: /Users/johan/dev/nSNMP/tests/nSNMP.Integration.Tests/bin/Release/net9.0/TestResults
+   - TestSummary.md (human-readable summary)
+   - TestRun_*.md (detailed Markdown report)
+   - TEST-*.xml (JUnit XML for CI/CD)
+
+⚠️ NoSuchOID test result: SNMP request timed out after 00:00:02
+
+✅ Invalid OID '' properly rejected
+✅ Invalid OID 'not.an.oid' properly rejected
+✅ Invalid OID '1.2.3.abc' properly rejected
+✅ Invalid OID '1..2.3' properly rejected
+✅ Invalid OID '.1.2.3.' properly rejected
+✅ Invalid OID '1.2.-3.4' properly rejected
+
+✅ GetBulk on SNMPv1 properly throws NotSupportedException
+
+⚠️ Walk test skipped: SNMP request timed out after 00:00:05
+
+⚠️ SNMPv3 AuthNoPriv test skipped: SNMP request timed out after 00:00:05
+
+✅ All SNMPv3 security protocols are available
+
+⚠️ Max message size test: SNMP request timed out after 00:00:05
+
+⚠️ GETNEXT test skipped: SNMP request timed out after 00:00:02
+
+⚠️ Version mismatch test: SNMP request timed out after 00:00:02
+
+✅ Invalid constructor parameters properly throw exceptions
+
+✅ Invalid community string properly rejected
+
+⚠️ GETBULK test skipped: SNMP request timed out after 00:00:02
+
+✅ Timeout handled correctly in 103,198ms
+
+⚠️ Multiple GET test skipped: SNMP request timed out after 00:00:02
+
+⚠️ Concurrent requests test: SNMP request timed out after 00:00:05
+
+✅ Empty OID arrays properly throw ArgumentException
+
+⚠️ SNMP communication test skipped (no agent available): SNMP request timed out after 00:00:02
+
+⚠️ TooBig test result: SNMP request timed out after 00:00:05
+
+✅ Connection refused: Properly handled - SnmpTimeoutException
+✅ Host unreachable: Properly handled - SnmpTimeoutException
+✅ Invalid IP: Properly handled - SnmpTimeoutException
+
+⚠️ DES test skipped: SNMP request timed out after 00:00:05
+⚠️ AES128 test skipped: SNMP request timed out after 00:00:05
+⚠️ AES192 test skipped: SNMP request timed out after 00:00:05
+⚠️ AES256 test skipped: SNMP request timed out after 00:00:05
+
+⚠️ SNMPv3 NoAuthNoPriv test skipped: SNMP request timed out after 00:00:05
+
+⚠️ SNMPv3 engine discovery test skipped: SNMP request timed out after 00:00:05
+
+✅ SNMPv3 properly rejected wrong credentials
+
+⚠️ SNMPv3 AuthPriv test skipped: SNMP request timed out after 00:00:05
+
+⚠️ SHA1 test skipped: SNMP request timed out after 00:00:05
+⚠️ SHA256 test skipped: SNMP request timed out after 00:00:05
+⚠️ SHA384 test skipped: SNMP request timed out after 00:00:05
+⚠️ SHA512 test skipped: SNMP request timed out after 00:00:05
+
+
+Test Framework Informational Messages:
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 9.0.9)
+[xUnit.net 00:00:00.17]   Discovering: nSNMP.Integration.Tests
+[xUnit.net 00:00:00.19]   Discovered:  nSNMP.Integration.Tests
+[xUnit.net 00:00:00.23]   Starting:    nSNMP.Integration.Tests
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+[xUnit.net 00:01:05.35]   Finished:    nSNMP.Integration.Tests
+</system-out>
+    <system-err></system-err>
+  </testsuite>
+</testsuites>

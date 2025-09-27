@@ -22,6 +22,7 @@
     </PackageReference>
     <PackageReference Include="Docker.DotNet" Version="3.125.15" />
     <PackageReference Include="Testcontainers" Version="3.8.0" />
+    <PackageReference Include="JunitXml.TestLogger" Version="4.0.254" />
   </ItemGroup>
 
   <ItemGroup>

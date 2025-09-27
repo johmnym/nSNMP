@@ -1,0 +1,28 @@
+<testsuites>
+  <testsuite name="nSNMP.MIB.Tests.dll" tests="14" skipped="0" failures="0" errors="0" time="0.0485679" timestamp="2025-09-27T19:48:19" hostname="tigger" id="0" package="nSNMP.MIB.Tests.dll">
+    <properties />
+    <testcase classname="nSNMP.MIB.Tests.MibParserTests" name="ValidateModule_DetectsMissingFields" time="0.0051065" />
+    <testcase classname="nSNMP.MIB.Tests.MibManagerTests" name="OidToName_ResolvesStandardObjects" time="0.0071828" />
+    <testcase classname="nSNMP.MIB.Tests.MibManagerTests" name="NameToOid_ResolvesStandardObjects" time="0.0005197" />
+    <testcase classname="nSNMP.MIB.Tests.MibManagerTests" name="MibManager_InitializesWithStandardObjects" time="0.0005333" />
+    <testcase classname="nSNMP.MIB.Tests.MibManagerTests" name="GetNextOid_ReturnsCorrectNextOid" time="0.0084183" />
+    <testcase classname="nSNMP.MIB.Tests.MibParserTests" name="ParseMibFile_ParsesTableWithIndex" time="0.0100731" />
+    <testcase classname="nSNMP.MIB.Tests.MibParserTests" name="ParseMibFile_ParsesMultipleObjects" time="0.0019859" />
+    <testcase classname="nSNMP.MIB.Tests.MibManagerTests" name="MibObject_PropertiesSetCorrectly" time="0.0028786" />
+    <testcase classname="nSNMP.MIB.Tests.MibParserTests" name="ParseMibFile_ParsesBasicObjectType" time="0.0013515" />
+    <testcase classname="nSNMP.MIB.Tests.MibParserTests" name="ValidateModule_PassesValidObjects" time="0.0002591" />
+    <testcase classname="nSNMP.MIB.Tests.MibManagerTests" name="MibObject_TreeStructure_WorksCorrectly" time="0.0020871" />
+    <testcase classname="nSNMP.MIB.Tests.MibManagerTests" name="SearchObjects_FindsMatchingObjects" time="0.0021239" />
+    <testcase classname="nSNMP.MIB.Tests.MibManagerTests" name="GetSubtree_ReturnsCorrectObjects" time="0.0057019" />
+    <testcase classname="nSNMP.MIB.Tests.MibManagerTests" name="GetStats_ReturnsValidStatistics" time="0.0003462" />
+    <system-out>
+Test Framework Informational Messages:
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 9.0.9)
+[xUnit.net 00:00:00.07]   Discovering: nSNMP.MIB.Tests
+[xUnit.net 00:00:00.12]   Discovered:  nSNMP.MIB.Tests
+[xUnit.net 00:00:00.12]   Starting:    nSNMP.MIB.Tests
+[xUnit.net 00:00:00.31]   Finished:    nSNMP.MIB.Tests
+</system-out>
+    <system-err></system-err>
+  </testsuite>
+</testsuites>

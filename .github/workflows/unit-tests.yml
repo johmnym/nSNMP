@@ -1,0 +1,209 @@
+name: Unit Tests
+
+on:
+  push:
+    branches: [ main, master, develop ]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - '!tests/nSNMP.Integration.Tests/**'
+      - '!tests/nSNMP.Benchmarks/**'
+      - '!tests/nSNMP.Fuzz/**'
+      - '.github/workflows/unit-tests.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - '!tests/nSNMP.Integration.Tests/**'
+      - '!tests/nSNMP.Benchmarks/**'
+      - '!tests/nSNMP.Fuzz/**'
+      - '.github/workflows/unit-tests.yml'
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  TEST_OUTPUT_DIRECTORY: 'unit-test-results'
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore nSNMP.sln
+
+    - name: Build solution
+      run: dotnet build nSNMP.sln --configuration Release --no-restore
+
+    - name: Create output directory
+      run: |
+        if [ "${{ runner.os }}" = "Windows" ]; then
+          mkdir ${{ env.TEST_OUTPUT_DIRECTORY }}
+        else
+          mkdir -p ${{ env.TEST_OUTPUT_DIRECTORY }}
+        fi
+      shell: bash
+
+    - name: Run unit tests
+      id: unit_tests
+      run: |
+        dotnet test nSNMP.sln --configuration Release --no-build \
+          --filter "Category!=Integration" \
+          --logger trx --results-directory ${{ env.TEST_OUTPUT_DIRECTORY }} \
+          --logger "junit;LogFilePath=${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-unit-results.xml" \
+          --collect:"XPlat Code Coverage" \
+          --settings coverlet.runsettings \
+          --verbosity normal
+      continue-on-error: true
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: unit-test-results-${{ matrix.os }}
+        path: ${{ env.TEST_OUTPUT_DIRECTORY }}/
+        retention-days: 7
+
+    - name: Upload code coverage
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-${{ matrix.os }}
+        path: ${{ env.TEST_OUTPUT_DIRECTORY }}/**/coverage.cobertura.xml
+        retention-days: 7
+
+    - name: Publish test results
+      uses: dorny/test-reporter@v1
+      if: always() && matrix.os == 'ubuntu-latest'
+      with:
+        name: Unit Test Results
+        path: '${{ env.TEST_OUTPUT_DIRECTORY }}/TEST-*.xml'
+        reporter: java-junit
+        fail-on-error: true
+
+    - name: Check test results
+      if: always()
+      run: |
+        if [ "${{ steps.unit_tests.outcome }}" != "success" ]; then
+          echo "❌ Unit tests failed on ${{ matrix.os }}"
+          exit 1
+        else
+          echo "✅ Unit tests passed on ${{ matrix.os }}"
+        fi
+      shell: bash
+
+  # Job for code coverage reporting (Linux only for simplicity)
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    if: always()
+    timeout-minutes: 10
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download coverage artifacts
+      uses: actions/download-artifact@v4
+      with:
+        pattern: coverage-*
+        path: coverage-reports/
+
+    - name: Install coverage tools
+      run: |
+        dotnet tool install -g dotnet-reportgenerator-globaltool
+
+    - name: Generate coverage report
+      run: |
+        reportgenerator \
+          -reports:"coverage-reports/**/coverage.cobertura.xml" \
+          -targetdir:"coverage-html" \
+          -reporttypes:"Html;Cobertura;lcov" \
+          -verbosity:Info
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage-html/
+        retention-days: 30
+
+    - name: Comment coverage on PR
+      uses: actions/github-script@v7
+      if: github.event_name == 'pull_request'
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+
+          // Try to read coverage summary (simplified)
+          const comment = `## 📊 Unit Test Coverage Report
+
+          Code coverage report has been generated for this PR.
+
+          📈 [View detailed coverage report in artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+          **Test Summary:**
+          - Platform coverage: Ubuntu, Windows, macOS
+          - Framework: .NET 9.0 with xUnit
+          - Coverage tool: Coverlet + ReportGenerator
+          `;
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+  # Test summary job
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [unit-tests, coverage]
+    if: always()
+
+    steps:
+    - name: Unit Test Summary
+      run: |
+        echo "## 🧪 Unit Test Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Platform | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Ubuntu   | ${{ needs.unit-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Windows  | ${{ needs.unit-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| macOS    | ${{ needs.unit-tests.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Coverage Report:** ${{ needs.coverage.result == 'success' && '✅ Generated' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📊 [View detailed results](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+
+        if [ "${{ needs.unit-tests.result }}" != "success" ]; then
+          echo "❌ Unit tests failed"
+          exit 1
+        fi

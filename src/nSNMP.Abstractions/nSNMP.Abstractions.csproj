@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Description>Core abstractions and interfaces for nSNMP</Description>
     <Authors>nSNMP Contributors</Authors>

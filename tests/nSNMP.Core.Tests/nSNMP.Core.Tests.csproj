@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\nSNMP.Core\nSNMP.csproj" />
+    <ProjectReference Include="..\..\src\nSNMP.Core\nSNMP.Core.csproj" />
   </ItemGroup>
 
 </Project>

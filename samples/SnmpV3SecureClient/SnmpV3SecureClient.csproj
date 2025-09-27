@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\nSNMP.Core\nSNMP.csproj" />
+    <ProjectReference Include="..\..\src\nSNMP.Core\nSNMP.Core.csproj" />
     <ProjectReference Include="..\..\src\nSNMP.Extensions\nSNMP.Extensions.csproj" />
   </ItemGroup>
 

@@ -4,6 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Description>MIB parsing and management for nSNMP</Description>
     <Authors>nSNMP Contributors</Authors>
     <PackageProjectUrl>https://github.com/your-repo/nSNMP</PackageProjectUrl>
@@ -14,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\nSNMP.Abstractions\nSNMP.Abstractions.csproj" />
     <ProjectReference Include="..\nSNMP.SMI\nSNMP.SMI.csproj" />
+    <ProjectReference Include="..\nSNMP.Core\nSNMP.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\nSNMP.Core\nSNMP.csproj" />
+    <ProjectReference Include="..\..\src\nSNMP.Core\nSNMP.Core.csproj" />
     <ProjectReference Include="..\..\src\nSNMP.SMI\nSNMP.SMI.csproj" />
   </ItemGroup>
 

@@ -2,8 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Description>SMI (Structure of Management Information) implementation for nSNMP</Description>
+    <Authors>nSNMP Contributors</Authors>
+    <PackageProjectUrl>https://github.com/your-repo/nSNMP</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/your-repo/nSNMP</RepositoryUrl>
+    <PackageTags>snmp;smi;management;information</PackageTags>
   </PropertyGroup>
 
 </Project>

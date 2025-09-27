@@ -18,7 +18,6 @@
   <ItemGroup>
     <ProjectReference Include="..\nSNMP\nSNMP.csproj" />
     <ProjectReference Include="..\nSNMP.SMI\nSNMP.SMI.csproj" />
-    <ProjectReference Include="..\nMIB\nSNMP.MIB.csproj" />
   </ItemGroup>
 
 </Project>

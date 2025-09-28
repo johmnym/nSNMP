@@ -49,7 +49,7 @@ nSNMP/
 
 ### Prerequisites
 - .NET 9.0 SDK or later
-- Visual Studio 2022 or VS Code (optional)
+- Visual Studio 2022, JetBrains Rider, or VS Code
 
 ### Package Installation
 ```bash
@@ -309,17 +309,9 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
-
-- IETF for SNMP RFC specifications
-- .NET Foundation for the excellent platform
-- All contributors who have helped improve this library
-
 ## 📮 Support
 
 - **Issues**: [GitHub Issues](https://github.com/johmnym/nSNMP/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/johmnym/nSNMP/discussions)
-- **Security**: For security issues, please email security@nsnmp.dev
 
 ## 🗺️ Roadmap
 

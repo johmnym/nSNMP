@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>nSNMP.Benchmarks.SecurityBenchmarks-20250928-120738</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.15.4, macOS Sequoia 15.6.1 (24G90) [Darwin 24.6.0]
+Apple M2, 1 CPU, 8 logical and 8 physical cores
+.NET SDK 9.0.305
+  [Host]   : .NET 9.0.9 (9.0.9, 9.0.925.41916), Arm64 RyuJIT armv8.0-a
+  .NET 9.0 : .NET 9.0.9 (9.0.9, 9.0.925.41916), Arm64 RyuJIT armv8.0-a
+</code></pre>
+<pre><code>Job=.NET 9.0  Runtime=.NET 9.0  InvocationCount=1  
+UnrollFactor=1  
+</code></pre>
+
+<table>
+<thead><tr><th>Method        </th><th>Mean</th><th>Error</th><th>StdDev</th><th>Min</th><th>Max</th><th>Median</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>AuthenticationSHA256</td><td>1.307 &mu;s</td><td>0.0606 &mu;s</td><td>0.1691 &mu;s</td><td>1.020 &mu;s</td><td>1.812 &mu;s</td><td>1.272 &mu;s</td><td>144 B</td>
+</tr></tbody></table>
+</body>
+</html>

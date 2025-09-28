@@ -12,7 +12,8 @@ dotnet build
 dotnet test
 
 # Run tests for a specific project
-dotnet test nSNMP.Tests/nSNMP.Tests.csproj
+dotnet test tests/nSNMP.Core.Tests/nSNMP.Core.Tests.csproj
+dotnet test tests/nSNMP.Agent.Tests/nSNMP.Agent.Tests.csproj
 
 # Run a specific test
 dotnet test --filter "FullyQualifiedName~TestClassName.TestMethodName"
@@ -44,7 +45,10 @@ nSNMP is a C# implementation of the Simple Network Management Protocol (SNMP) ta
 3. **nSNMP.MIB** - Management Information Base functionality
    - Provides MIB parsing and management capabilities
 
-4. **nSNMP.Tests** - Unit tests using xUnit
+4. **Test Projects** - Unit tests using xUnit
+   - `nSNMP.Core.Tests` - Core infrastructure tests
+   - `nSNMP.Agent.Tests` - Agent/server functionality tests
+   - `nSNMP.Manager.Tests` - Manager/client functionality tests (future)
    - Tests organized to mirror the source structure
    - `SnmpMessageFactory` helper for test data creation
 

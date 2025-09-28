@@ -8,7 +8,8 @@ This document outlines a plan to enhance the nSNMP project structure for better 
 nSNMP/
 ├── nSNMP/                     # Core library
 ├── nSNMP.SMI/                 # ASN.1/BER encoding
-├── nSNMP.Tests/               # Unit tests
+├── nSNMP.Core.Tests/          # Core infrastructure unit tests
+├── nSNMP.Agent.Tests/         # Agent/server unit tests
 ├── nSNMP.InteropTests/        # Interoperability tests
 ├── nSNMP.Benchmarks/          # Performance benchmarks
 └── nSNMP.Fuzz/                # Security fuzzing

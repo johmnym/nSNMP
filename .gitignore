@@ -236,3 +236,7 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+# AI Assistant files
+CLAUDE.md
+GEMINI.md

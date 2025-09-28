@@ -9,7 +9,9 @@ nSNMP is a C# implementation of the Simple Network Management Protocol (SNMP). I
 *   **nSNMP**: The core project that handles SNMP message creation and parsing.
 *   **nSNMP.SMI**: Implements the Structure of Management Information (SMI), which defines the data types and structures used in SNMP.
 *   **nSNMP.MIB**:  Provides functionality for working with Management Information Bases (MIBs), which are databases of managed objects.
-*   **nSNMP.Tests**: Contains unit tests for the other projects.
+*   **Test Projects**: Contains unit tests organized by functionality:
+    *   **nSNMP.Core.Tests**: Core infrastructure tests
+    *   **nSNMP.Agent.Tests**: Agent/server functionality tests
 
 ## Technologies and Architecture
 

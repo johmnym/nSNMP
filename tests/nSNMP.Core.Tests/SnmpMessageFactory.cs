@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace nSNMP.Tests
+namespace nSNMP.Core.Tests
 {
     public class SnmpMessageFactory
     {

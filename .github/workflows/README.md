@@ -21,8 +21,7 @@ This directory contains automated CI/CD workflows for the nSNMP project.
 - nSNMP.SMI.Tests
 - nSNMP.Extensions.Tests
 - nSNMP.MIB.Tests
-- nSNMP.Tests
-- nSNMP.InteropTests
+- nSNMP.Agent.Tests
 
 ### 🔄 Integration Tests (`integration-tests.yml`)
 - **Triggers**: Push/PR to main branches, workflow_dispatch

@@ -37,7 +37,8 @@ nSNMP.sln
   │   ├─ nSNMP.Instrumentation/       # OpenTelemetry exporters & meters
   │   └─ nSNMP.Tooling/               # MIB precompiler (optional), sample CLI
   ├─ tests/
-  │   ├─ nSNMP.Tests/                 # Unit tests (codec, USM vectors, interop fixtures)
+  │   ├─ nSNMP.Core.Tests/            # Core infrastructure unit tests
+  │   ├─ nSNMP.Agent.Tests/           # Agent/server unit tests
   │   ├─ nSNMP.IntegrationTests/      # Net‑SNMP/snmpsimd interop via Testcontainers
   │   └─ nSNMP.Fuzz/                  # SharpFuzz harness for codec
   └─ benchmarks/

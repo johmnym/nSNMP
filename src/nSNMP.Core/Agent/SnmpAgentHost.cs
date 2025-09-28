@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Net;
+using nSNMP.Logging;
 using nSNMP.Message;
 using nSNMP.SMI.DataTypes;
 using nSNMP.SMI.DataTypes.V1.Constructed;
@@ -15,19 +16,21 @@ namespace nSNMP.Agent
     public class SnmpAgentHost : IAsyncDisposable, IDisposable
     {
         private readonly IUdpListener _listener;
-        private readonly ConcurrentDictionary<ObjectIdentifier, IScalarProvider> _scalarProviders;
-        private readonly ConcurrentDictionary<ObjectIdentifier, ITableProvider> _tableProviders;
+        protected readonly ConcurrentDictionary<ObjectIdentifier, IScalarProvider> _scalarProviders;
+        protected readonly ConcurrentDictionary<ObjectIdentifier, ITableProvider> _tableProviders;
         private readonly string _readCommunity;
         private readonly string _writeCommunity;
+        private readonly ISnmpLogger _logger;
         private CancellationTokenSource? _cancellationTokenSource;
         private Task? _listenerTask;
         private bool _disposed;
 
-        public SnmpAgentHost(string readCommunity = "public", string writeCommunity = "private", IUdpListener? listener = null)
+        public SnmpAgentHost(string readCommunity = "public", string writeCommunity = "private", IUdpListener? listener = null, ISnmpLogger? logger = null)
         {
             _readCommunity = readCommunity ?? throw new ArgumentNullException(nameof(readCommunity));
             _writeCommunity = writeCommunity ?? throw new ArgumentNullException(nameof(writeCommunity));
             _listener = listener ?? new UdpListener();
+            _logger = logger ?? NullSnmpLogger.Instance;
             _scalarProviders = new ConcurrentDictionary<ObjectIdentifier, IScalarProvider>();
             _tableProviders = new ConcurrentDictionary<ObjectIdentifier, ITableProvider>();
         }
@@ -147,9 +150,20 @@ namespace nSNMP.Agent
                 // Send response
                 await request.SendResponseAsync(responseData);
             }
-            catch (Exception)
+            catch (ArgumentException ex)
             {
-                // Log error in production, for now ignore malformed packets
+                // Expected for malformed packets
+                _logger.LogError("ProcessRequest", ex, "Malformed packet received");
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Expected for protocol violations
+                _logger.LogError("ProcessRequest", ex, "Protocol violation");
+            }
+            catch (Exception ex)
+            {
+                // Unexpected errors should be logged for debugging
+                _logger.LogError("ProcessRequest", ex, "Unexpected error processing SNMP request");
             }
         }
 

@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using nSNMP.Abstractions;
+using nSNMP.Manager;
 
 namespace nSNMP.Extensions
 {
@@ -149,9 +150,21 @@ namespace nSNMP.Extensions
             if (_endpoint == null)
                 throw new InvalidOperationException("Target endpoint must be specified");
 
-            // This would create the actual client implementation
-            // For now, we'll throw as this would require the actual nSNMP.Core project
-            throw new NotImplementedException("Client creation requires nSNMP.Core implementation");
+            // TODO: This will be completed when ISnmpClient implementation is finalized
+            // The current SnmpClient class doesn't implement ISnmpClient interface yet
+            throw new NotImplementedException("ISnmpClient implementation is not yet available. This will be completed in future iterations of the refactoring.");
+
+            /*
+            // Create the actual SNMP client using the Manager.SnmpClient
+            var snmpVersion = _version switch
+            {
+                SnmpVersion.V1 => nSNMP.Message.SnmpVersion.V1,
+                SnmpVersion.V2c => nSNMP.Message.SnmpVersion.V2c,
+                _ => nSNMP.Message.SnmpVersion.V2c
+            };
+
+            return new nSNMP.Manager.SnmpClient(_endpoint, snmpVersion, _community ?? "public", _timeout);
+            */
         }
     }
 

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\nSNMP.Abstractions\nSNMP.Abstractions.csproj" />
+    <ProjectReference Include="..\nSNMP.Core\nSNMP.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

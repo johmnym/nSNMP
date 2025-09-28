@@ -172,8 +172,18 @@ namespace nSNMP.Security
 
             try
             {
-                BitConverter.GetBytes(engineBoots).CopyTo(iv, 0);
-                BitConverter.GetBytes(engineTime).CopyTo(iv, 4);
+                // Use big-endian byte order for network protocols (RFC 3826)
+                var bootsBytes = BitConverter.GetBytes(engineBoots);
+                var timeBytes = BitConverter.GetBytes(engineTime);
+
+                if (BitConverter.IsLittleEndian)
+                {
+                    Array.Reverse(bootsBytes);
+                    Array.Reverse(timeBytes);
+                }
+
+                bootsBytes.CopyTo(iv, 0);
+                timeBytes.CopyTo(iv, 4);
                 salt.CopyTo(iv, 8);
 
                 // Encrypt using AES-CFB
@@ -221,8 +231,18 @@ namespace nSNMP.Security
 
             try
             {
-                BitConverter.GetBytes(engineBoots).CopyTo(iv, 0);
-                BitConverter.GetBytes(engineTime).CopyTo(iv, 4);
+                // Use big-endian byte order for network protocols (RFC 3826)
+                var bootsBytes = BitConverter.GetBytes(engineBoots);
+                var timeBytes = BitConverter.GetBytes(engineTime);
+
+                if (BitConverter.IsLittleEndian)
+                {
+                    Array.Reverse(bootsBytes);
+                    Array.Reverse(timeBytes);
+                }
+
+                bootsBytes.CopyTo(iv, 0);
+                timeBytes.CopyTo(iv, 4);
                 salt.CopyTo(iv, 8);
 
                 using var aes = Aes.Create();

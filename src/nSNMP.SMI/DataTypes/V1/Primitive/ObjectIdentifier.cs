@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -244,7 +245,7 @@ namespace nSNMP.SMI.DataTypes.V1.Primitive
         /// <summary>
         /// Optimized string parsing with caching for common OIDs
         /// </summary>
-        private static readonly Dictionary<string, uint[]> _oidCache = new();
+        private static readonly ConcurrentDictionary<string, uint[]> _oidCache = new();
 
         public static ObjectIdentifier CreateCached(string oid)
         {
@@ -258,7 +259,7 @@ namespace nSNMP.SMI.DataTypes.V1.Primitive
             // Cache frequently used OIDs (limit cache size)
             if (_oidCache.Count < 1000)
             {
-                _oidCache[oid] = array;
+                _oidCache.TryAdd(oid, array);
             }
 
             return Create(array);

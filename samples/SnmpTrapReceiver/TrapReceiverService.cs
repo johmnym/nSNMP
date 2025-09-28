@@ -1,3 +1,25 @@
+/*
+ * ⚠️  SAMPLE APPLICATION NOTICE
+ *
+ * This is a NON-FUNCTIONAL SKELETON/PLACEHOLDER sample application.
+ * It demonstrates the intended API structure and service patterns
+ * for SNMP trap receiver operations, but does not contain working
+ * SNMP functionality.
+ *
+ * This sample is provided for:
+ * - Understanding the proposed service architecture
+ * - Background service implementation patterns
+ * - Trap processing workflow examples
+ * - Logging and event handling patterns
+ *
+ * NOTE: The TrapReceivedEventArgs and TrapVarBind classes defined here
+ * are temporary placeholders. In the final implementation, these will
+ * be replaced with proper abstractions from the nSNMP.Abstractions library.
+ *
+ * TO DEVELOPERS: This sample will be completed in future releases
+ * when the SNMP trap receiver implementation is finalized.
+ */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

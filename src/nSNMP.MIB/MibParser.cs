@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using nSNMP.SMI.DataTypes.V1.Primitive;
+using nSNMP.Logging;
 
 namespace nSNMP.MIB
 {
@@ -24,8 +25,9 @@ namespace nSNMP.MIB
         /// <summary>
         /// Parse a MIB file from text content
         /// </summary>
-        public static MibModule ParseMibFile(string content, string fileName = "")
+        public static MibModule ParseMibFile(string content, string fileName = "", nSNMP.Logging.ISnmpLogger? logger = null)
         {
+            logger ??= NullSnmpLogger.Instance;
             var lines = content.Split('\n').Select(l => l.Trim()).ToArray();
             var cleanContent = PreprocessContent(content);
 
@@ -47,7 +49,7 @@ namespace nSNMP.MIB
 
                     if (objectDef != null)
                     {
-                        var mibObject = ParseObjectDefinition(objectName, objectDef);
+                        var mibObject = ParseObjectDefinition(objectName, objectDef, logger);
                         mibObject.ModuleName = moduleName;
                         module.AddObject(mibObject);
                     }
@@ -55,7 +57,7 @@ namespace nSNMP.MIB
                 catch (Exception ex)
                 {
                     // Continue parsing other objects if one fails
-                    Console.WriteLine($"Warning: Failed to parse object {match.Groups[1].Value}: {ex.Message}");
+                    logger.LogAgent("MibParser", $"Failed to parse object {match.Groups[1].Value}: {ex.Message}");
                 }
             }
 
@@ -111,7 +113,7 @@ namespace nSNMP.MIB
         /// <summary>
         /// Parse an individual object definition
         /// </summary>
-        private static MibObject ParseObjectDefinition(string name, string definition)
+        private static MibObject ParseObjectDefinition(string name, string definition, nSNMP.Logging.ISnmpLogger logger)
         {
             var obj = new MibObject(name);
 
@@ -168,12 +170,12 @@ namespace nSNMP.MIB
                 try
                 {
                     var oidDef = oidMatch.Groups[1].Value.Trim();
-                    var oid = ParseOidDefinition(oidDef);
+                    var oid = ParseOidDefinition(oidDef, logger);
                     obj.Oid = oid;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Warning: Failed to parse OID for {name}: {ex.Message}");
+                    logger.LogAgent("MibParser", $"Failed to parse OID for {name}: {ex.Message}");
                 }
             }
 
@@ -183,7 +185,7 @@ namespace nSNMP.MIB
         /// <summary>
         /// Parse OID definition like "iso org dod internet mgmt mib-2 system 1" or "1 3 6 1 2 1 1 1"
         /// </summary>
-        private static ObjectIdentifier? ParseOidDefinition(string oidDef)
+        private static ObjectIdentifier? ParseOidDefinition(string oidDef, nSNMP.Logging.ISnmpLogger logger)
         {
             // Handle simple numeric OIDs
             if (Regex.IsMatch(oidDef, @"^[\d\s\.]+$"))
@@ -199,21 +201,101 @@ namespace nSNMP.MIB
                 }
             }
 
-            // Handle named OIDs - this would need a more sophisticated parser
-            // For now, return null for complex named OIDs
+            // Handle named OIDs with symbolic references
+            return ResolveSymbolicOid(oidDef, logger);
+        }
+
+        /// <summary>
+        /// Resolve symbolic OID definitions using common standard mappings
+        /// </summary>
+        private static ObjectIdentifier? ResolveSymbolicOid(string oidDef, nSNMP.Logging.ISnmpLogger logger)
+        {
+            // Create mapping of common symbolic names to OID values
+            var symbolicMappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                // Standard ISO/ITU hierarchy
+                { "iso", "1" },
+                { "org", "1.3" },
+                { "dod", "1.3.6" },
+                { "internet", "1.3.6.1" },
+                { "directory", "1.3.6.1.1" },
+                { "mgmt", "1.3.6.1.2" },
+                { "mib-2", "1.3.6.1.2.1" },
+                { "experimental", "1.3.6.1.3" },
+                { "private", "1.3.6.1.4" },
+                { "enterprises", "1.3.6.1.4.1" },
+
+                // Common MIB-II groups
+                { "system", "1.3.6.1.2.1.1" },
+                { "interfaces", "1.3.6.1.2.1.2" },
+                { "at", "1.3.6.1.2.1.3" },
+                { "ip", "1.3.6.1.2.1.4" },
+                { "icmp", "1.3.6.1.2.1.5" },
+                { "tcp", "1.3.6.1.2.1.6" },
+                { "udp", "1.3.6.1.2.1.7" },
+                { "egp", "1.3.6.1.2.1.8" },
+                { "transmission", "1.3.6.1.2.1.10" },
+                { "snmp", "1.3.6.1.2.1.11" }
+            };
+
+            try
+            {
+                // Parse the OID definition
+                var parts = oidDef.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                var resolvedParts = new List<string>();
+
+                foreach (var part in parts)
+                {
+                    var cleanPart = part.Trim().Trim('{', '}', '(', ')');
+
+                    if (symbolicMappings.ContainsKey(cleanPart))
+                    {
+                        // Replace symbolic name with numeric OID
+                        resolvedParts.Add(symbolicMappings[cleanPart]);
+                    }
+                    else if (uint.TryParse(cleanPart, out _))
+                    {
+                        // Keep numeric values as-is
+                        resolvedParts.Add(cleanPart);
+                    }
+                    // Skip unknown symbolic names for now
+                }
+
+                if (resolvedParts.Count > 0)
+                {
+                    // For relative OIDs like "{ system 1 }", concatenate the parts
+                    if (resolvedParts.Count > 1)
+                    {
+                        var baseOid = resolvedParts[0];
+                        var additionalParts = resolvedParts.Skip(1);
+                        var fullOid = baseOid + "." + string.Join(".", additionalParts);
+                        return ObjectIdentifier.Create(fullOid);
+                    }
+                    else
+                    {
+                        return ObjectIdentifier.Create(resolvedParts[0]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log warning but don't crash
+                logger.LogAgent("MibParser", $"Failed to resolve symbolic OID '{oidDef}': {ex.Message}");
+            }
+
             return null;
         }
 
         /// <summary>
         /// Load a MIB file from disk
         /// </summary>
-        public static MibModule LoadMibFile(string filePath)
+        public static MibModule LoadMibFile(string filePath, nSNMP.Logging.ISnmpLogger? logger = null)
         {
             if (!File.Exists(filePath))
                 throw new FileNotFoundException($"MIB file not found: {filePath}");
 
             var content = File.ReadAllText(filePath);
-            return ParseMibFile(content, Path.GetFileName(filePath));
+            return ParseMibFile(content, Path.GetFileName(filePath), logger);
         }
 
         /// <summary>

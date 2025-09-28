@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using nSNMP.Abstractions;
+using nSNMP.Logging;
 using nSNMP.SMI.DataTypes.V1.Primitive;
 
 namespace nSNMP.MIB
@@ -14,16 +15,18 @@ namespace nSNMP.MIB
     {
         private readonly MibTree _tree;
         private readonly Dictionary<string, string> _mibDirectories;
+        private readonly nSNMP.Logging.ISnmpLogger _logger;
 
         /// <summary>
         /// Static instance for global access
         /// </summary>
         public static MibManager Instance { get; } = new MibManager();
 
-        public MibManager()
+        public MibManager(nSNMP.Logging.ISnmpLogger? logger = null)
         {
             _tree = new MibTree();
             _mibDirectories = new Dictionary<string, string>();
+            _logger = logger ?? NullSnmpLogger.Instance;
             LoadStandardMibs();
         }
 
@@ -45,7 +48,7 @@ namespace nSNMP.MIB
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Warning: Failed to load standard MIBs: {ex.Message}");
+                _logger.LogAgent("MibManager", $"Failed to load standard MIBs: {ex.Message}");
             }
         }
 
@@ -169,7 +172,7 @@ namespace nSNMP.MIB
         /// </summary>
         public MibModule LoadMibFile(string filePath)
         {
-            var module = MibParser.LoadMibFile(filePath);
+            var module = MibParser.LoadMibFile(filePath, _logger);
             _tree.LoadModule(module);
 
             // Validate the loaded module

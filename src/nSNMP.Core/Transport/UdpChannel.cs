@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace nSNMP.Transport
 {
@@ -13,6 +14,7 @@ namespace nSNMP.Transport
         private readonly ConcurrentDictionary<string, TaskCompletionSource<byte[]>> _pendingRequests;
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly Task _receiveTask;
+        private static long _requestCounter = 0;
         private bool _disposed;
 
         public UdpChannel()
@@ -28,8 +30,9 @@ namespace nSNMP.Transport
             if (_disposed)
                 throw new ObjectDisposedException(nameof(UdpChannel));
 
-            // Create correlation key for this request
-            var correlationKey = $"{endpoint}:{Environment.TickCount}";
+            // Create correlation key for this request using unique counter
+            var requestId = Interlocked.Increment(ref _requestCounter);
+            var correlationKey = $"{endpoint}:{requestId}";
             var tcs = new TaskCompletionSource<byte[]>();
 
             if (!_pendingRequests.TryAdd(correlationKey, tcs))
@@ -75,16 +78,22 @@ namespace nSNMP.Transport
                 {
                     var result = await _udpClient.ReceiveAsync(_cancellationTokenSource.Token);
 
-                    // Find pending request for this endpoint
-                    var correlationKey = $"{result.RemoteEndPoint}:";
-                    var matchingRequest = _pendingRequests.FirstOrDefault(kvp => kvp.Key.StartsWith(correlationKey));
+                    // Find pending request for this endpoint by iterating through keys
+                    var endpointPrefix = $"{result.RemoteEndPoint}:";
+                    string? matchingKey = null;
 
-                    if (matchingRequest.Key != null)
+                    foreach (var key in _pendingRequests.Keys)
                     {
-                        if (_pendingRequests.TryRemove(matchingRequest.Key, out var tcs))
+                        if (key.StartsWith(endpointPrefix))
                         {
-                            tcs.SetResult(result.Buffer);
+                            matchingKey = key;
+                            break;
                         }
+                    }
+
+                    if (matchingKey != null && _pendingRequests.TryRemove(matchingKey, out var tcs))
+                    {
+                        tcs.SetResult(result.Buffer);
                     }
                 }
             }

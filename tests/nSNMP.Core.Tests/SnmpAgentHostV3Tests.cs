@@ -63,10 +63,10 @@ namespace nSNMP.Core.Tests
         }
 
         [Fact]
-        public void Engine_TimeProgresses()
+        public async Task Engine_TimeProgresses()
         {
             var time1 = _agent.Engine.EngineTime;
-            System.Threading.Thread.Sleep(1100); // Sleep > 1 second
+            await Task.Delay(1100); // Wait > 1 second asynchronously
             var time2 = _agent.Engine.EngineTime;
 
             Assert.True(time2 > time1);

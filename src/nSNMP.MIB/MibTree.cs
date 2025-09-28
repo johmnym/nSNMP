@@ -11,14 +11,14 @@ namespace nSNMP.MIB
     public class MibTree
     {
         private readonly Dictionary<string, MibObject> _objectsByName;
-        private readonly Dictionary<string, MibObject> _objectsByOid;
+        private readonly SortedDictionary<string, MibObject> _objectsByOid;
         private readonly Dictionary<string, MibModule> _modules;
         private MibObject? _root;
 
         public MibTree()
         {
             _objectsByName = new Dictionary<string, MibObject>();
-            _objectsByOid = new Dictionary<string, MibObject>();
+            _objectsByOid = new SortedDictionary<string, MibObject>(new OidComparer());
             _modules = new Dictionary<string, MibModule>();
             InitializeStandardTree();
         }
@@ -177,21 +177,15 @@ namespace nSNMP.MIB
         public ObjectIdentifier? GetNextOid(ObjectIdentifier oid)
         {
             var oidString = oid.ToString();
-            var allOids = _objectsByOid.Keys.OrderBy(o => o, new OidComparer()).ToList();
 
-            var index = allOids.BinarySearch(oidString);
-            if (index < 0)
+            // Since _objectsByOid is now a SortedDictionary, we can efficiently find the next OID
+            // Find the first OID that is greater than the given OID
+            foreach (var kvp in _objectsByOid)
             {
-                index = ~index; // Get insertion point
-            }
-            else
-            {
-                index++; // Move to next
-            }
-
-            if (index < allOids.Count)
-            {
-                return ObjectIdentifier.Create(allOids[index]);
+                if (new OidComparer().Compare(kvp.Key, oidString) > 0)
+                {
+                    return ObjectIdentifier.Create(kvp.Key);
+                }
             }
 
             return null; // End of MIB

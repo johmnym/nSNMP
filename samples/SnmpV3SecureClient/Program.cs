@@ -1,3 +1,20 @@
+/*
+ * ⚠️  SAMPLE APPLICATION NOTICE
+ *
+ * This is a NON-FUNCTIONAL SKELETON/PLACEHOLDER sample application.
+ * It demonstrates the intended API structure and configuration patterns
+ * for SNMPv3 secure client operations, but does not contain working
+ * SNMP functionality.
+ *
+ * This sample is provided for:
+ * - Understanding the proposed API design
+ * - Configuration structure reference
+ * - Logging patterns demonstration
+ *
+ * TO DEVELOPERS: This sample will be completed in future releases
+ * when the SNMPv3 client implementation is finalized.
+ */
+
 using System;
 using System.Collections.Generic;
 using System.IO;

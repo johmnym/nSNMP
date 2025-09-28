@@ -351,14 +351,31 @@ namespace nSNMP.Agent
         private byte[] PrepareMessageForAuth(byte[] messageData, int authParamsLength)
         {
             // For authentication calculation, we need to zero out the auth parameters
-            // This is a simplified implementation - in reality, we'd need to locate and zero
-            // the exact position of auth parameters in the message
             var result = new byte[messageData.Length];
             messageData.CopyTo(result, 0);
 
-            // In a complete implementation, we would parse the message structure
-            // and zero out the 12-byte authentication parameter field
-            // For now, this is a placeholder implementation
+            // Locate and zero out authentication parameters in the USM security parameters
+            // The auth parameters are typically located within the USM parameters OCTET STRING
+            // This is a simplified approach that looks for the auth params pattern
+
+            if (authParamsLength > 0 && authParamsLength <= 48) // Reasonable auth param length
+            {
+                // Search for potential auth parameter locations in the message
+                // This is a heuristic approach - in production, proper ASN.1 parsing should be used
+                for (int i = 0; i <= messageData.Length - authParamsLength; i++)
+                {
+                    // Look for OCTET STRING tag followed by length indicating auth params
+                    if (i + 1 < messageData.Length &&
+                        messageData[i] == 0x04 && // OCTET STRING tag
+                        messageData[i + 1] == authParamsLength)
+                    {
+                        // Zero out the authentication parameters
+                        Array.Fill(result, (byte)0, i + 2, authParamsLength);
+                        break;
+                    }
+                }
+            }
+
             return result;
         }
 

@@ -9,7 +9,7 @@ using nSNMP.SMI.PDUs;
 using nSNMP.Transport;
 using Xunit;
 
-namespace nSNMP.Core.Tests
+namespace nSNMP.Agent.Tests
 {
     public class SnmpAgentHostTests : IDisposable
     {

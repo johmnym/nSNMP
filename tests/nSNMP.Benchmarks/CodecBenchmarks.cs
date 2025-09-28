@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
+using nSNMP.Core;
 using nSNMP.SMI.DataTypes;
 using nSNMP.SMI.DataTypes.V1.Primitive;
 using nSNMP.SMI.DataTypes.V1.Constructed;

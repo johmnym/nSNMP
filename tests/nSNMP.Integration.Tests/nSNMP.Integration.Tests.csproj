@@ -49,6 +49,8 @@
     <ProjectReference Include="..\..\src\nSNMP.Extensions\nSNMP.Extensions.csproj" />
     <ProjectReference Include="..\..\src\nSNMP.MIB\nSNMP.MIB.csproj" />
     <ProjectReference Include="..\..\src\nSNMP.Abstractions\nSNMP.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\nSNMP.Manager\nSNMP.Manager.csproj" />
+    <ProjectReference Include="..\..\src\nSNMP.Agent\nSNMP.Agent.csproj" />
   </ItemGroup>
 
   <ItemGroup>

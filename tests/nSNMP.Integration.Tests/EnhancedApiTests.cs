@@ -1,5 +1,6 @@
 using System.Net;
 using System.Reflection;
+using nSNMP.Core;
 using nSNMP.Manager;
 using nSNMP.Message;
 using nSNMP.SMI;

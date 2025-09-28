@@ -241,15 +241,6 @@ The library is optimized for high performance with:
 - **Minimal boxing** with generic value types
 - **Thread-safe** concurrent operations
 
-Benchmark results (example):
-```
-| Method        | Mean     | Error    | StdDev   | Allocated |
-|-------------- |---------:|---------:|---------:|----------:|
-| SnmpGet       | 1.234 ms | 0.024 ms | 0.021 ms | 4.12 KB   |
-| SnmpGetBulk   | 2.567 ms | 0.051 ms | 0.045 ms | 8.34 KB   |
-| SnmpWalk      | 5.890 ms | 0.117 ms | 0.104 ms | 12.45 KB  |
-```
-
 ## 🔒 Security
 
 ### SNMPv3 Security Features
@@ -289,7 +280,7 @@ Interface Table:
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+We welcome contributions!
 
 ### Development Setup
 1. Fork the repository
@@ -335,4 +326,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ by the nSNMP Team**
+**Built with ❤️**

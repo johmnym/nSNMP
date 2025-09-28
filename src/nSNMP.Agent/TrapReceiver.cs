@@ -1,6 +1,6 @@
 using System.Net;
 using System.Runtime.CompilerServices;
-using nSNMP.Manager;
+using nSNMP.Core;
 using nSNMP.Message;
 using nSNMP.SMI.DataTypes;
 using nSNMP.SMI.DataTypes.V1.Constructed;

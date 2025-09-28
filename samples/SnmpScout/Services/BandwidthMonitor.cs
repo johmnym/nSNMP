@@ -1,3 +1,4 @@
+using nSNMP.Core;
 using nSNMP.Manager;
 using SnmpScout.Models;
 using Spectre.Console;

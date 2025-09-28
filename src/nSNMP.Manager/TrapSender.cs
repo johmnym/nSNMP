@@ -1,4 +1,5 @@
 using System.Net;
+using nSNMP.Core;
 using nSNMP.Message;
 using nSNMP.Security;
 using nSNMP.SMI.DataTypes;

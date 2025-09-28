@@ -1,7 +1,7 @@
 using nSNMP.SMI.DataTypes;
 using nSNMP.SMI.DataTypes.V1.Primitive;
 
-namespace nSNMP.Manager
+namespace nSNMP.Core
 {
     /// <summary>
     /// Represents an SNMP variable binding (OID + Value)

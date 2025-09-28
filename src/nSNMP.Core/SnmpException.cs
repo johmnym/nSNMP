@@ -1,4 +1,4 @@
-namespace nSNMP.Manager
+namespace nSNMP.Core
 {
     /// <summary>
     /// Base exception for SNMP protocol errors

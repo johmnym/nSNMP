@@ -2,7 +2,7 @@ using nSNMP.Agent;
 using nSNMP.Security;
 using Xunit;
 
-namespace nSNMP.Core.Tests
+namespace nSNMP.Agent.Tests
 {
     public class V3UserDatabaseTests
     {

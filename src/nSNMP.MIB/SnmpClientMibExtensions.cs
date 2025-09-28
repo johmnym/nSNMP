@@ -1,3 +1,4 @@
+using nSNMP.Core;
 using nSNMP.Manager;
 using nSNMP.SMI;
 using nSNMP.SMI.DataTypes.V1.Primitive;

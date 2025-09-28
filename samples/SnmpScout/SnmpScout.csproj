@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\nSNMP.Core\nSNMP.Core.csproj" />
+    <ProjectReference Include="..\..\src\nSNMP.Manager\nSNMP.Manager.csproj" />
     <ProjectReference Include="..\..\src\nSNMP.Abstractions\nSNMP.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\nSNMP.Extensions\nSNMP.Extensions.csproj" />
   </ItemGroup>

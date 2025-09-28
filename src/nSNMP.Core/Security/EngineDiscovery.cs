@@ -1,4 +1,4 @@
-using nSNMP.Manager;
+using nSNMP.Core;
 using nSNMP.Message;
 using nSNMP.SMI.DataTypes.V1.Constructed;
 using nSNMP.SMI.DataTypes.V1.Primitive;

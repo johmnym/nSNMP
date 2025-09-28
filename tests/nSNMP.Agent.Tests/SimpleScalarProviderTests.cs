@@ -2,7 +2,7 @@ using nSNMP.Agent;
 using nSNMP.SMI.DataTypes.V1.Primitive;
 using Xunit;
 
-namespace nSNMP.Core.Tests
+namespace nSNMP.Agent.Tests
 {
     public class SimpleScalarProviderTests
     {

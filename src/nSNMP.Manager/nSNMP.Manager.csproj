@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Description>SNMP Manager/Client functionality for nSNMP</Description>
+    <Authors>nSNMP Contributors</Authors>
+    <PackageProjectUrl>https://github.com/johmnym/nSNMP</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/johmnym/nSNMP</RepositoryUrl>
+    <PackageTags>snmp;manager;client;network;monitoring</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\nSNMP.Core\nSNMP.Core.csproj" />
+    <ProjectReference Include="..\nSNMP.SMI\nSNMP.SMI.csproj" />
+    <ProjectReference Include="..\nSNMP.Abstractions\nSNMP.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

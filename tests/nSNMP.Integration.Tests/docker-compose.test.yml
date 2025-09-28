@@ -1,0 +1,144 @@
+version: '3.8'
+
+# Standalone Docker Compose setup for manual testing
+# This allows running SNMP simulators independently for development
+
+services:
+  # Basic MIB-II device
+  snmp-mib2-basic:
+    image: tandrup/snmpsim:latest
+    container_name: snmp-mib2-basic
+    ports:
+      - "1161:161/udp"
+    volumes:
+      - ./Scenarios:/usr/share/snmpsim/data:ro
+    command: >
+      snmpsim.py
+      --data-dir=/usr/share/snmpsim/data
+      --agent-udpv4-endpoint=0.0.0.0:161
+      --v2c-arch
+      --community=public
+      --device-dir=/usr/share/snmpsim/data/mib2-basic.snmprec
+      --logging-method=stderr:info
+    healthcheck:
+      test: ["CMD", "snmpget", "-v2c", "-c", "public", "localhost", "1.3.6.1.2.1.1.1.0"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - snmp-test
+
+  # Monochrome printer
+  snmp-printer-mono:
+    image: tandrup/snmpsim:latest
+    container_name: snmp-printer-mono
+    ports:
+      - "1162:161/udp"
+    volumes:
+      - ./Scenarios:/usr/share/snmpsim/data:ro
+    command: >
+      snmpsim.py
+      --data-dir=/usr/share/snmpsim/data
+      --agent-udpv4-endpoint=0.0.0.0:161
+      --v2c-arch
+      --community=public
+      --device-dir=/usr/share/snmpsim/data/printers-mono.snmprec
+      --logging-method=stderr:info
+    healthcheck:
+      test: ["CMD", "snmpget", "-v2c", "-c", "public", "localhost", "1.3.6.1.2.1.1.1.0"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - snmp-test
+
+  # Color printer with SNMPv3
+  snmp-printer-color:
+    image: tandrup/snmpsim:latest
+    container_name: snmp-printer-color
+    ports:
+      - "1163:161/udp"
+    volumes:
+      - ./Scenarios:/usr/share/snmpsim/data:ro
+    command: >
+      snmpsim.py
+      --data-dir=/usr/share/snmpsim/data
+      --agent-udpv4-endpoint=0.0.0.0:161
+      --v3-arch
+      --v3-user=monitor
+      --v3-auth-key=monitorauth123456
+      --v3-auth-proto=SHA256
+      --v3-priv-key=monitorpriv123456
+      --v3-priv-proto=AES128
+      --v3-engine-id=8000000001020304
+      --device-dir=/usr/share/snmpsim/data/printers-color.snmprec
+      --logging-method=stderr:info
+    healthcheck:
+      test: ["CMD", "snmpget", "-v3", "-u", "monitor", "-l", "authPriv", "-a", "SHA", "-A", "monitorauth123456", "-x", "AES", "-X", "monitorpriv123456", "localhost", "1.3.6.1.2.1.1.1.0"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - snmp-test
+
+  # Device with oversized responses
+  snmp-too-big:
+    image: tandrup/snmpsim:latest
+    container_name: snmp-too-big
+    ports:
+      - "1164:161/udp"
+    volumes:
+      - ./Scenarios:/usr/share/snmpsim/data:ro
+    command: >
+      snmpsim.py
+      --data-dir=/usr/share/snmpsim/data
+      --agent-udpv4-endpoint=0.0.0.0:161
+      --v2c-arch
+      --community=public
+      --device-dir=/usr/share/snmpsim/data/oversized.snmprec
+      --logging-method=stderr:info
+    healthcheck:
+      test: ["CMD", "snmpget", "-v2c", "-c", "public", "localhost", "1.3.6.1.2.1.1.1.0"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - snmp-test
+
+  # NET-SNMP tools for trap testing
+  net-snmp-tools:
+    image: weldpua2008/net-snmp:latest
+    container_name: net-snmp-tools
+    command: ["tail", "-f", "/dev/null"]
+    volumes:
+      - ./Scenarios:/data:ro
+    networks:
+      - snmp-test
+    profiles:
+      - tools
+
+  # Network impairment tool (Linux only)
+  pumba-netem:
+    image: gaiaadm/pumba:latest
+    container_name: pumba-netem
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["sleep", "infinity"]
+    networks:
+      - snmp-test
+    profiles:
+      - impairment
+
+networks:
+  snmp-test:
+    driver: bridge
+    name: snmp-integration-test
+
+volumes:
+  snmp-data:
+    driver: local

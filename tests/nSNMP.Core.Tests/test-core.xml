@@ -1,0 +1,168 @@
+<testsuites>
+  <testsuite name="nSNMP.Core.Tests.dll" tests="154" skipped="0" failures="0" errors="0" time="4.843949000000001" timestamp="2025-09-27T19:57:28" hostname="tigger" id="0" package="nSNMP.Core.Tests.dll">
+    <properties />
+    <testcase classname="nSNMP.Core.Tests.SnmpEngineTests" name="Constructor_WithCustomEngineId_UsesProvidedId" time="0.0021042" />
+    <testcase classname="nSNMP.Core.Tests.V3CredentialsTests" name="Validate_PassesForValidCredentials" time="0.0014262" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="HasUser_WithNonExistentUser_ReturnsFalse" time="0.0005137" />
+    <testcase classname="nSNMP.Core.Tests.SimpleScalarProviderTests" name="GetNextOid_WithLargerOid_ReturnsNull" time="0.0043193" />
+    <testcase classname="nSNMP.Core.Tests.V3CredentialsTests" name="Validate_ThrowsForPrivWithoutAuth" time="0.0002016" />
+    <testcase classname="nSNMP.Core.Tests.CryptographicHelpersTests" name="SecureCopy_ShouldCopyAndClearOriginal" time="0.0048553" />
+    <testcase classname="nSNMP.Core.Tests.SimpleScalarProviderTests" name="SetValue_WithNonMatchingOid_ReturnsFalse" time="0.0005477" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostTests" name="MapScalar_WithOidAndValue_RegistersProvider" time="0.0060800" />
+    <testcase classname="nSNMP.Core.Tests.SnmpEngineTests" name="EngineBoots_DefaultsToZero" time="0.0004529" />
+    <testcase classname="nSNMP.Core.Tests.SnmpEngineTests" name="IsTimeValid_WithMatchingBootsAndValidTime_ReturnsTrue" time="0.0001906" />
+    <testcase classname="nSNMP.Core.Tests.SnmpEngineTests" name="IsTimeValid_WithNonMatchingBoots_ReturnsFalse" time="0.0000836" />
+    <testcase classname="nSNMP.Core.Tests.CryptographicHelpersTests" name="SecureByteArray_AccessAfterDispose_ShouldThrow" time="0.0005599" />
+    <testcase classname="nSNMP.Core.Tests.V3CredentialsTests" name="GetAuthKey_ReturnsEmptyForNoAuth" time="0.0012412" />
+    <testcase classname="nSNMP.Core.Tests.SnmpEngineTests" name="GetParameters_ReturnsCurrentState" time="0.0006114" />
+    <testcase classname="nSNMP.Core.Tests.CryptographicHelpersTests" name="SecureByteArray_DisposeShouldClearData" time="0.0008275" />
+    <testcase classname="nSNMP.Core.Tests.CryptographicHelpersTests" name="SecureClear_WithSpan_ShouldZeroData" time="0.0000719" />
+    <testcase classname="nSNMP.Core.Tests.CryptographicHelpersTests" name="ConstantTimeHashEquals_ShouldWorkCorrectly" time="0.0001272" />
+    <testcase classname="nSNMP.Core.Tests.CryptographicHelpersTests" name="SecureStringToBytes_ShouldConvertAndWrapSecurely" time="0.0000590" />
+    <testcase classname="nSNMP.Core.Tests.SimpleScalarProviderTests" name="SetValue_WithWritableProvider_ReturnsTrue" time="0.0016640" />
+    <testcase classname="nSNMP.Core.Tests.SimpleScalarProviderTests" name="Constructor_WithValidOid_CreatesProvider" time="0.0000334" />
+    <testcase classname="nSNMP.Core.Tests.SimpleScalarProviderTests" name="GetNextOid_WithSmallerOid_ReturnsProviderOid" time="0.0000530" />
+    <testcase classname="nSNMP.Core.Tests.CryptographicHelpersTests" name="SecureClear_ShouldZeroByteArray" time="0.0001327" />
+    <testcase classname="nSNMP.Core.Tests.SimpleScalarProviderTests" name="Constructor_WithNullOid_ThrowsException" time="0.0001118" />
+    <testcase classname="nSNMP.Core.Tests.SimpleScalarProviderTests" name="GetNextOid_WithExactMatch_ReturnsNull" time="0.0000260" />
+    <testcase classname="nSNMP.Core.Tests.CryptographicHelpersTests" name="ConstantTimeEquals_ShouldWorkCorrectly" time="0.0001383" />
+    <testcase classname="nSNMP.Core.Tests.SimpleScalarProviderTests" name="GetValue_WithNonMatchingOid_ReturnsNull" time="0.0000318" />
+    <testcase classname="nSNMP.Core.Tests.SimpleScalarProviderTests" name="CanHandle_WithNonMatchingOid_ReturnsFalse" time="0.0000269" />
+    <testcase classname="nSNMP.Core.Tests.SimpleScalarProviderTests" name="CanHandle_WithMatchingOid_ReturnsTrue" time="0.0000216" />
+    <testcase classname="nSNMP.Core.Tests.SimpleScalarProviderTests" name="SetValue_WithReadOnlyProvider_ReturnsFalse" time="0.0000455" />
+    <testcase classname="nSNMP.Core.Tests.SimpleScalarProviderTests" name="GetValue_WithMatchingOid_ReturnsValue" time="0.0000360" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="V3User_AuthenticationMethods_Work" time="0.0061707" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="HasUser_WithExistingUser_ReturnsTrue" time="0.0000338" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="Flags_ParseCorrectly(flagsByte: 4, expectedAuth: False, expectedPriv: False, expectedReportable: True)" time="0.0029516" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="Flags_ParseCorrectly(flagsByte: 0, expectedAuth: False, expectedPriv: False, expectedReportable: False)" time="0.0003377" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="Flags_ParseCorrectly(flagsByte: 3, expectedAuth: True, expectedPriv: True, expectedReportable: False)" time="0.0000188" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="Flags_ParseCorrectly(flagsByte: 5, expectedAuth: True, expectedPriv: False, expectedReportable: True)" time="0.0000065" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="Flags_ParseCorrectly(flagsByte: 2, expectedAuth: False, expectedPriv: True, expectedReportable: False)" time="0.0000608" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="Flags_ParseCorrectly(flagsByte: 1, expectedAuth: True, expectedPriv: False, expectedReportable: False)" time="0.0000078" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="Flags_ParseCorrectly(flagsByte: 7, expectedAuth: True, expectedPriv: True, expectedReportable: True)" time="0.0000092" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="StartActivity_ShouldCreateActivityWithCorrectTags" time="0.0034389" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="PrivFlag_ReadsCorrectly" time="0.0002725" />
+    <testcase classname="nSNMP.Core.Tests.V3CredentialsTests" name="NoAuthNoPriv_CreatesCorrectSecurityLevel" time="0.0068107" />
+    <testcase classname="nSNMP.Core.Tests.V3CredentialsTests" name="Validate_ThrowsForPrivWithoutPassword" time="0.0001161" />
+    <testcase classname="nSNMP.Core.Tests.V3CredentialsTests" name="Validate_ThrowsForEmptyUsername" time="0.0000715" />
+    <testcase classname="nSNMP.Core.Tests.V3CredentialsTests" name="AuthPriv_CreatesCorrectSecurityLevel" time="0.0000715" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="Create_WithDefaults_CreatesCorrectMessage" time="0.0009453" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="RecordError_ShouldNotThrow" time="0.0054116" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="RecordSecurityOperation_ShouldNotThrow" time="0.0000942" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="TelemetryExtensions_StartTimer_ShouldWork" time="0.0001342" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="Meter_Name_ShouldBeCorrect" time="0.0000254" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="RecordTransportOperation_ShouldNotThrow" time="0.0000950" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="RecordRequest_ShouldNotThrow" time="0.0000843" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="SetActivityError_ShouldSetCorrectTags" time="0.0002001" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="SnmpTelemetry_Initialization_ShouldWork" time="0.0000216" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="SnmpTelemetry_Metrics_ShouldBeCreated" time="0.0000388" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="ActivitySource_Name_ShouldBeCorrect" time="0.0000741" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="ActivityTags_ShouldSupportNullValues" time="0.0001444" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="SetActivitySuccess_ShouldSetCorrectTags" time="0.0001261" />
+    <testcase classname="nSNMP.Core.Tests.SnmpTelemetryTests" name="StartActivity_WithUserName_ShouldIncludeUserTag" time="0.0002072" />
+    <testcase classname="nSNMP.Core.Tests.V3CredentialsTests" name="GetPrivKey_ReturnsKeyForPriv" time="0.0072414" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="Parse_InvalidVersion_ThrowsException" time="0.0078871" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="Create_WithFlags_SetsCorrectFlags" time="0.0000303" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="ToBytes_RoundTrip_WorksCorrectly" time="0.0007517" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="ReportableFlag_ReadsCorrectly" time="0.0000295" />
+    <testcase classname="nSNMP.Core.Tests.V3CredentialsTests" name="GetAuthKey_ReturnsKeyForAuth" time="0.0021574" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="Create_WithSecurityParameters_IncludesParameters" time="0.0000362" />
+    <testcase classname="nSNMP.Core.Tests.SnmpErrorTests" name="Dispose_CalledMultipleTimes_DoesNotThrow" time="0.0029668" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="Create_WithScopedPdu_IncludesPdu" time="0.0002067" />
+    <testcase classname="nSNMP.Core.Tests.V3CredentialsTests" name="Validate_ThrowsForShortPasswords" time="0.0002634" />
+    <testcase classname="nSNMP.Core.Tests.SnmpMessageV3Tests" name="AuthFlag_ReadsCorrectly" time="0.0000847" />
+    <testcase classname="nSNMP.Core.Tests.V3CredentialsTests" name="AuthNoPriv_CreatesCorrectSecurityLevel" time="0.0002046" />
+    <testcase classname="nSNMP.Core.Tests.V3CredentialsTests" name="Validate_ThrowsForAuthWithoutPassword" time="0.0001659" />
+    <testcase classname="nSNMP.Core.Tests.V3CredentialsTests" name="GetPrivKey_ReturnsEmptyForNoPriv" time="0.0000919" />
+    <testcase classname="nSNMP.Core.Tests.SnmpLoggerTests" name="SnmpLogger_LoggingMethods_ShouldWork" time="0.0254017" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="GetUserNames_ReturnsAllUsernames" time="0.0158553" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="LocalizeKey_SupportedProtocols_WorkWithoutException(protocol: MD5)" time="0.0042704" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="AddUser_WithValidCredentials_AddsUser" time="0.0036519" />
+    <testcase classname="nSNMP.Core.Tests.SnmpErrorTests" name="GetAsync_AfterDispose_ThrowsObjectDisposedException" time="0.0078272" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="LocalizeKey_SupportedProtocols_WorkWithoutException(protocol: SHA512)" time="0.0040362" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="LocalizeKey_SupportedProtocols_WorkWithoutException(protocol: SHA1)" time="0.0026736" />
+    <testcase classname="nSNMP.Core.Tests.SnmpClientTests" name="CreateCommunity_CreatesClientWithCorrectSettings" time="0.0350607" />
+    <testcase classname="nSNMP.Core.Tests.SnmpErrorTests" name="GetAsync_Timeout_ThrowsSnmpTimeoutException" time="0.0056758" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="LocalizeKey_SupportedProtocols_WorkWithoutException(protocol: SHA384)" time="0.0039738" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="LocalizeKey_SupportedProtocols_WorkWithoutException(protocol: SHA256)" time="0.0021124" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="V3User_SecurityLevels_CalculatedCorrectly" time="0.0118466" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostV3Tests" name="AddUser_WithValidCredentials_AddsUser" time="0.0210014" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="LocalizeKey_SameInputs_ProduceSameKey" time="0.0079601" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="AddUser_LocalizesKeysCorrectly" time="0.0072144" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="RemoveUser_WithExistingUser_RemovesUser" time="0.0000878" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="AddUser_WithInvalidCredentials_ThrowsException" time="0.0000971" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="Clear_RemovesAllUsers" time="0.0003304" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="LocalizeKey_SHA256_ProducesCorrectLength" time="0.0022497" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="LocalizeKey_ReturnsEmptyForNoAuth" time="0.0066875" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="V3User_ToString_ReturnsUserInfo" time="0.0125872" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="GetUser_WithNonExistentUser_ReturnsNull" time="0.0000263" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="RemoveUser_WithNonExistentUser_ReturnsFalse" time="0.0000205" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="Constructor_WithNullEngine_ThrowsException" time="0.0001641" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="LocalizeKey_DifferentEngineIds_ProduceDifferentKeys" time="0.0087200" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="CalculateDigest_ReturnsEmptyForNoAuth" time="0.0001281" />
+    <testcase classname="nSNMP.Core.Tests.SnmpClientTests" name="WalkAsync_StopsAtEndOfSubtree" time="0.0305108" />
+    <testcase classname="nSNMP.Core.Tests.SnmpErrorTests" name="GetAsync_SnmpError_ThrowsSnmpErrorException" time="0.0299632" />
+    <testcase classname="nSNMP.Core.Tests.SnmpClientTests" name="VarBind_CreationMethods_WorkCorrectly" time="0.0001549" />
+    <testcase classname="nSNMP.Core.Tests.SnmpErrorTests" name="SnmpErrorException_FromErrorStatus_CreatesCorrectMessages" time="0.0002496" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="LocalizeKey_SHA1_ProducesCorrectLength" time="0.0021703" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="CalculateDigest_ProducesCorrectLength" time="0.0000392" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="VerifyDigest_ValidatesCorrectly" time="0.0001009" />
+    <testcase classname="nSNMP.Core.Tests.SnmpClientTests" name="GetBulkAsync_V1_ThrowsNotSupportedException" time="0.0008136" />
+    <testcase classname="nSNMP.Core.Tests.UsmSecurityParametersTests" name="Create_WithValues_CreatesCorrectParameters" time="0.0001539" />
+    <testcase classname="nSNMP.Core.Tests.UsmSecurityParametersTests" name="Parse_EmptyData_ReturnsEmptyParameters" time="0.0001373" />
+    <testcase classname="nSNMP.Core.Tests.UsmSecurityParametersTests" name="CreateDiscovery_CreatesDiscoveryParameters" time="0.0000930" />
+    <testcase classname="nSNMP.Core.Tests.UsmSecurityParametersTests" name="IsDiscovery_DetectsDiscoveryCorrectly" time="0.0000275" />
+    <testcase classname="nSNMP.Core.Tests.UsmSecurityParametersTests" name="Create_WithDefaults_CreatesEmptyParameters" time="0.0000698" />
+    <testcase classname="nSNMP.Core.Tests.UsmSecurityParametersTests" name="HasAuthParams_DetectsCorrectly" time="0.0000626" />
+    <testcase classname="nSNMP.Core.Tests.UsmSecurityParametersTests" name="ToBytes_RoundTrip_WorksCorrectly" time="0.0001126" />
+    <testcase classname="nSNMP.Core.Tests.UsmSecurityParametersTests" name="EngineIdHex_FormatsCorrectly" time="0.0000841" />
+    <testcase classname="nSNMP.Core.Tests.UsmSecurityParametersTests" name="Parse_NullData_ReturnsEmptyParameters" time="0.0000290" />
+    <testcase classname="nSNMP.Core.Tests.UsmSecurityParametersTests" name="HasPrivParams_DetectsCorrectly" time="0.0000555" />
+    <testcase classname="nSNMP.Core.Tests.V3UserDatabaseTests" name="GetUser_WithExistingUser_ReturnsUser" time="0.0079956" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="LocalizeKey_MD5_ProducesCorrectLength" time="0.0033361" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="VerifyDigest_RejectsIncorrectDigest" time="0.0000427" />
+    <testcase classname="nSNMP.Core.Tests.KeyLocalizationTests" name="GetDigestLength_ReturnsCorrectLengths" time="0.0001013" />
+    <testcase classname="nSNMP.Core.Tests.SnmpClientTests" name="GetBulkAsync_V2c_SendsGetBulkRequest" time="0.0122136" />
+    <testcase classname="nSNMP.Core.Tests.SnmpLoggerTests" name="SnmpLogger_Creation_ShouldWork" time="0.0568075" />
+    <testcase classname="nSNMP.Core.Tests.SnmpLoggerTests" name="SnmpClient_WithLogger_ShouldWork" time="0.0014808" />
+    <testcase classname="nSNMP.Core.Tests.SnmpLoggerTests" name="NullSnmpLogger_ShouldNotThrow" time="0.0001458" />
+    <testcase classname="nSNMP.Core.Tests.SnmpLoggerTests" name="SnmpLogger_IsEnabled_ShouldWork" time="0.0000492" />
+    <testcase classname="nSNMP.Core.Tests.SnmpClientTests" name="SetAsync_SingleVarBind_SendsCorrectRequest" time="0.0108110" />
+    <testcase classname="nSNMP.Core.Tests.SnmpClientTests" name="GetAsync_SingleOid_ReturnsCorrectResult" time="0.0112848" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostTests" name="ProcessGetRequest_WithValidOid_ReturnsValue" time="0.1100275" />
+    <testcase classname="nSNMP.Core.Tests.SnmpClientTests" name="GetNextAsync_ReturnsNextOid" time="0.0121961" />
+    <testcase classname="nSNMP.Core.Tests.SnmpClientTests" name="GetAsync_MultipleOids_ReturnsAllResults" time="0.0113916" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostV3Tests" name="ProcessV3Request_WithAuthRequest_HandlesAuthentication" time="0.1244792" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostTests" name="StartAsync_StartsListening" time="0.1018322" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostTests" name="MapScalar_WithStringOid_RegistersProvider" time="0.0000494" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostV3Tests" name="ProcessV3Request_WithInvalidUser_ReturnsReport" time="0.1173131" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostTests" name="ProcessRequest_WithInvalidCommunity_IgnoresRequest" time="0.1016201" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostTests" name="ProcessSetRequest_WithReadOnlyOid_ReturnsError" time="0.1107811" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostTests" name="ProcessGetRequest_WithInvalidOid_ReturnsNoSuchObject" time="0.1088251" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostTests" name="Constructor_WithDefaults_CreatesAgent" time="0.0001797" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostTests" name="ProcessSetRequest_WithValidOid_UpdatesValue" time="0.1110958" />
+    <testcase classname="nSNMP.Core.Tests.SnmpEngineTests" name="IncrementBoots_IncrementsBootsAndResetsTime" time="1.1016322" />
+    <testcase classname="nSNMP.Core.Tests.SnmpEngineTests" name="IsTimeValid_WithCustomWindow_RespectsWindow" time="0.0003835" />
+    <testcase classname="nSNMP.Core.Tests.SnmpEngineTests" name="EngineIdHex_ReturnsValidHexString" time="0.0007996" />
+    <testcase classname="nSNMP.Core.Tests.SnmpEngineTests" name="Constructor_GeneratesValidEngineId" time="0.0001945" />
+    <testcase classname="nSNMP.Core.Tests.SnmpEngineTests" name="ToString_ReturnsEngineInfo" time="0.0023420" />
+    <testcase classname="nSNMP.Core.Tests.SnmpEngineTests" name="IsTimeValid_WithTimeOutsideWindow_ReturnsFalse" time="0.0003259" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostV3Tests" name="Engine_TimeProgresses" time="1.1128702" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostV3Tests" name="ProcessV3DiscoveryRequest_ReturnsEngineParameters" time="0.1212894" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostV3Tests" name="GetEngineInfo_ReturnsValidInfo" time="0.0130226" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostV3Tests" name="AddUser_WithFactoryMethod_AddsUser" time="0.0147027" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostV3Tests" name="Constructor_WithDefaults_CreatesV3Agent" time="0.0095620" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostV3Tests" name="UserDatabase_SupportsUserManagement" time="0.0123334" />
+    <testcase classname="nSNMP.Core.Tests.SnmpAgentHostV3Tests" name="Engine_HasValidEngineId" time="0.0080533" />
+    <testcase classname="nSNMP.Core.Tests.SnmpEngineTests" name="EngineTime_ProgressesOverTime" time="1.1011982" />
+    <system-out>
+Test Framework Informational Messages:
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 9.0.9)
+[xUnit.net 00:00:00.03]   Discovering: nSNMP.Core.Tests
+[xUnit.net 00:00:00.05]   Discovered:  nSNMP.Core.Tests
+[xUnit.net 00:00:00.06]   Starting:    nSNMP.Core.Tests
+[xUnit.net 00:00:02.29]   Finished:    nSNMP.Core.Tests
+</system-out>
+    <system-err></system-err>
+  </testsuite>
+</testsuites>

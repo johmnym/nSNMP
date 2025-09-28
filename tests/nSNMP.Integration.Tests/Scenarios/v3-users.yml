@@ -1,0 +1,29 @@
+# SNMPv3 user configurations for snmpsim
+users:
+  - username: monitor
+    auth_protocol: SHA256
+    auth_key: monitorauth123456
+    priv_protocol: AES128
+    priv_key: monitorpriv123456
+    engine_id: "8000000001020304"
+
+  - username: testuser
+    auth_protocol: SHA256
+    auth_key: correctauth123456
+    priv_protocol: AES128
+    priv_key: correctpriv123456
+    engine_id: "8000000001020305"
+
+  - username: trapuser
+    auth_protocol: SHA256
+    auth_key: trapauth123456789
+    priv_protocol: AES128
+    priv_key: trappriv123456789
+    engine_id: "8000000001020306"
+
+  - username: wronguser
+    auth_protocol: SHA256
+    auth_key: wrongauth123456789
+    priv_protocol: AES128
+    priv_key: wrongpriv123456789
+    engine_id: "8000000001020307"

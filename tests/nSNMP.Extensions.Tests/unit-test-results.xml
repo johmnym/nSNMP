@@ -1,0 +1,18 @@
+<testsuites>
+  <testsuite name="nSNMP.Extensions.Tests.dll" tests="4" skipped="0" failures="0" errors="0" time="0.0176326" timestamp="2025-09-27T19:55:09" hostname="tigger" id="0" package="nSNMP.Extensions.Tests.dll">
+    <properties />
+    <testcase classname="nSNMP.Extensions.Tests.RetryPolicyTests" name="RetryPolicy_ShouldNotRetryNonRetryableExceptions" time="0.0121974" />
+    <testcase classname="nSNMP.Extensions.Tests.RetryPolicyTests" name="RetryPolicy_ShouldRetryTimeoutExceptions" time="0.0001575" />
+    <testcase classname="nSNMP.Extensions.Tests.RetryPolicyTests" name="LinearRetryPolicy_ShouldRetryWithFixedDelay" time="0.0048464" />
+    <testcase classname="nSNMP.Extensions.Tests.RetryPolicyTests" name="ExponentialBackoffRetryPolicy_ShouldIncreaseDelay" time="0.0004313" />
+    <system-out>
+Test Framework Informational Messages:
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 9.0.9)
+[xUnit.net 00:00:00.05]   Discovering: nSNMP.Extensions.Tests
+[xUnit.net 00:00:00.07]   Discovered:  nSNMP.Extensions.Tests
+[xUnit.net 00:00:00.08]   Starting:    nSNMP.Extensions.Tests
+[xUnit.net 00:00:00.15]   Finished:    nSNMP.Extensions.Tests
+</system-out>
+    <system-err></system-err>
+  </testsuite>
+</testsuites>

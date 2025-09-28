@@ -1,0 +1,167 @@
+# Large response data for testing tooBig error handling
+# Format: OID|TYPE|VALUE
+
+# System group
+1.3.6.1.2.1.1.1.0|4|Oversized Device - nSNMP tooBig Test Simulator
+1.3.6.1.2.1.1.2.0|6|1.3.6.1.4.1.99999.1.1
+1.3.6.1.2.1.1.3.0|67|87654321
+1.3.6.1.2.1.1.4.0|4|oversized-admin@testbed.local
+1.3.6.1.2.1.1.5.0|4|oversized-device
+1.3.6.1.2.1.1.6.0|4|Test Lab - Oversized Response Station
+
+# Large interface table to trigger tooBig (50 interfaces)
+1.3.6.1.2.1.2.1.0|2|50
+1.3.6.1.2.1.2.2.1.1.1|2|1
+1.3.6.1.2.1.2.2.1.1.2|2|2
+1.3.6.1.2.1.2.2.1.1.3|2|3
+1.3.6.1.2.1.2.2.1.1.4|2|4
+1.3.6.1.2.1.2.2.1.1.5|2|5
+1.3.6.1.2.1.2.2.1.1.6|2|6
+1.3.6.1.2.1.2.2.1.1.7|2|7
+1.3.6.1.2.1.2.2.1.1.8|2|8
+1.3.6.1.2.1.2.2.1.1.9|2|9
+1.3.6.1.2.1.2.2.1.1.10|2|10
+1.3.6.1.2.1.2.2.1.1.11|2|11
+1.3.6.1.2.1.2.2.1.1.12|2|12
+1.3.6.1.2.1.2.2.1.1.13|2|13
+1.3.6.1.2.1.2.2.1.1.14|2|14
+1.3.6.1.2.1.2.2.1.1.15|2|15
+1.3.6.1.2.1.2.2.1.1.16|2|16
+1.3.6.1.2.1.2.2.1.1.17|2|17
+1.3.6.1.2.1.2.2.1.1.18|2|18
+1.3.6.1.2.1.2.2.1.1.19|2|19
+1.3.6.1.2.1.2.2.1.1.20|2|20
+1.3.6.1.2.1.2.2.1.1.21|2|21
+1.3.6.1.2.1.2.2.1.1.22|2|22
+1.3.6.1.2.1.2.2.1.1.23|2|23
+1.3.6.1.2.1.2.2.1.1.24|2|24
+1.3.6.1.2.1.2.2.1.1.25|2|25
+1.3.6.1.2.1.2.2.1.1.26|2|26
+1.3.6.1.2.1.2.2.1.1.27|2|27
+1.3.6.1.2.1.2.2.1.1.28|2|28
+1.3.6.1.2.1.2.2.1.1.29|2|29
+1.3.6.1.2.1.2.2.1.1.30|2|30
+1.3.6.1.2.1.2.2.1.1.31|2|31
+1.3.6.1.2.1.2.2.1.1.32|2|32
+1.3.6.1.2.1.2.2.1.1.33|2|33
+1.3.6.1.2.1.2.2.1.1.34|2|34
+1.3.6.1.2.1.2.2.1.1.35|2|35
+1.3.6.1.2.1.2.2.1.1.36|2|36
+1.3.6.1.2.1.2.2.1.1.37|2|37
+1.3.6.1.2.1.2.2.1.1.38|2|38
+1.3.6.1.2.1.2.2.1.1.39|2|39
+1.3.6.1.2.1.2.2.1.1.40|2|40
+1.3.6.1.2.1.2.2.1.1.41|2|41
+1.3.6.1.2.1.2.2.1.1.42|2|42
+1.3.6.1.2.1.2.2.1.1.43|2|43
+1.3.6.1.2.1.2.2.1.1.44|2|44
+1.3.6.1.2.1.2.2.1.1.45|2|45
+1.3.6.1.2.1.2.2.1.1.46|2|46
+1.3.6.1.2.1.2.2.1.1.47|2|47
+1.3.6.1.2.1.2.2.1.1.48|2|48
+1.3.6.1.2.1.2.2.1.1.49|2|49
+1.3.6.1.2.1.2.2.1.1.50|2|50
+
+# Interface descriptions (long names to increase response size)
+1.3.6.1.2.1.2.2.1.2.1|4|Virtual Ethernet Interface Number One - Management Port
+1.3.6.1.2.1.2.2.1.2.2|4|Virtual Ethernet Interface Number Two - Data Port Primary
+1.3.6.1.2.1.2.2.1.2.3|4|Virtual Ethernet Interface Number Three - Data Port Secondary
+1.3.6.1.2.1.2.2.1.2.4|4|Virtual Ethernet Interface Number Four - Backup Port
+1.3.6.1.2.1.2.2.1.2.5|4|Virtual Ethernet Interface Number Five - Testing Port
+1.3.6.1.2.1.2.2.1.2.6|4|Virtual Ethernet Interface Number Six - Monitoring Port
+1.3.6.1.2.1.2.2.1.2.7|4|Virtual Ethernet Interface Number Seven - Debug Port
+1.3.6.1.2.1.2.2.1.2.8|4|Virtual Ethernet Interface Number Eight - Logging Port
+1.3.6.1.2.1.2.2.1.2.9|4|Virtual Ethernet Interface Number Nine - Admin Port
+1.3.6.1.2.1.2.2.1.2.10|4|Virtual Ethernet Interface Number Ten - Cluster Port
+1.3.6.1.2.1.2.2.1.2.11|4|Virtual Ethernet Interface Number Eleven - Redundant Port
+1.3.6.1.2.1.2.2.1.2.12|4|Virtual Ethernet Interface Number Twelve - Load Balancer Port
+1.3.6.1.2.1.2.2.1.2.13|4|Virtual Ethernet Interface Number Thirteen - Failover Port
+1.3.6.1.2.1.2.2.1.2.14|4|Virtual Ethernet Interface Number Fourteen - Analytics Port
+1.3.6.1.2.1.2.2.1.2.15|4|Virtual Ethernet Interface Number Fifteen - Metrics Port
+1.3.6.1.2.1.2.2.1.2.16|4|Virtual Ethernet Interface Number Sixteen - Telemetry Port
+1.3.6.1.2.1.2.2.1.2.17|4|Virtual Ethernet Interface Number Seventeen - Diagnostics Port
+1.3.6.1.2.1.2.2.1.2.18|4|Virtual Ethernet Interface Number Eighteen - Health Check Port
+1.3.6.1.2.1.2.2.1.2.19|4|Virtual Ethernet Interface Number Nineteen - Status Port
+1.3.6.1.2.1.2.2.1.2.20|4|Virtual Ethernet Interface Number Twenty - Alerting Port
+1.3.6.1.2.1.2.2.1.2.21|4|Virtual Ethernet Interface Number Twenty-One - Notification Port
+1.3.6.1.2.1.2.2.1.2.22|4|Virtual Ethernet Interface Number Twenty-Two - Event Port
+1.3.6.1.2.1.2.2.1.2.23|4|Virtual Ethernet Interface Number Twenty-Three - Audit Port
+1.3.6.1.2.1.2.2.1.2.24|4|Virtual Ethernet Interface Number Twenty-Four - Security Port
+1.3.6.1.2.1.2.2.1.2.25|4|Virtual Ethernet Interface Number Twenty-Five - Authentication Port
+1.3.6.1.2.1.2.2.1.2.26|4|Virtual Ethernet Interface Number Twenty-Six - Authorization Port
+1.3.6.1.2.1.2.2.1.2.27|4|Virtual Ethernet Interface Number Twenty-Seven - Encryption Port
+1.3.6.1.2.1.2.2.1.2.28|4|Virtual Ethernet Interface Number Twenty-Eight - Certificate Port
+1.3.6.1.2.1.2.2.1.2.29|4|Virtual Ethernet Interface Number Twenty-Nine - Key Management Port
+1.3.6.1.2.1.2.2.1.2.30|4|Virtual Ethernet Interface Number Thirty - Certificate Authority Port
+1.3.6.1.2.1.2.2.1.2.31|4|Virtual Ethernet Interface Number Thirty-One - Trust Store Port
+1.3.6.1.2.1.2.2.1.2.32|4|Virtual Ethernet Interface Number Thirty-Two - PKI Infrastructure Port
+1.3.6.1.2.1.2.2.1.2.33|4|Virtual Ethernet Interface Number Thirty-Three - Policy Engine Port
+1.3.6.1.2.1.2.2.1.2.34|4|Virtual Ethernet Interface Number Thirty-Four - Rule Engine Port
+1.3.6.1.2.1.2.2.1.2.35|4|Virtual Ethernet Interface Number Thirty-Five - Workflow Engine Port
+1.3.6.1.2.1.2.2.1.2.36|4|Virtual Ethernet Interface Number Thirty-Six - Business Logic Port
+1.3.6.1.2.1.2.2.1.2.37|4|Virtual Ethernet Interface Number Thirty-Seven - Data Processing Port
+1.3.6.1.2.1.2.2.1.2.38|4|Virtual Ethernet Interface Number Thirty-Eight - Message Queue Port
+1.3.6.1.2.1.2.2.1.2.39|4|Virtual Ethernet Interface Number Thirty-Nine - Event Stream Port
+1.3.6.1.2.1.2.2.1.2.40|4|Virtual Ethernet Interface Number Forty - Real-time Processing Port
+1.3.6.1.2.1.2.2.1.2.41|4|Virtual Ethernet Interface Number Forty-One - Batch Processing Port
+1.3.6.1.2.1.2.2.1.2.42|4|Virtual Ethernet Interface Number Forty-Two - Background Tasks Port
+1.3.6.1.2.1.2.2.1.2.43|4|Virtual Ethernet Interface Number Forty-Three - Scheduled Jobs Port
+1.3.6.1.2.1.2.2.1.2.44|4|Virtual Ethernet Interface Number Forty-Four - Maintenance Port
+1.3.6.1.2.1.2.2.1.2.45|4|Virtual Ethernet Interface Number Forty-Five - Backup Service Port
+1.3.6.1.2.1.2.2.1.2.46|4|Virtual Ethernet Interface Number Forty-Six - Disaster Recovery Port
+1.3.6.1.2.1.2.2.1.2.47|4|Virtual Ethernet Interface Number Forty-Seven - High Availability Port
+1.3.6.1.2.1.2.2.1.2.48|4|Virtual Ethernet Interface Number Forty-Eight - Scalability Port
+1.3.6.1.2.1.2.2.1.2.49|4|Virtual Ethernet Interface Number Forty-Nine - Performance Port
+1.3.6.1.2.1.2.2.1.2.50|4|Virtual Ethernet Interface Number Fifty - Optimization Port
+
+# Interface types (all Ethernet)
+1.3.6.1.2.1.2.2.1.3.1|2|6
+1.3.6.1.2.1.2.2.1.3.2|2|6
+1.3.6.1.2.1.2.2.1.3.3|2|6
+1.3.6.1.2.1.2.2.1.3.4|2|6
+1.3.6.1.2.1.2.2.1.3.5|2|6
+1.3.6.1.2.1.2.2.1.3.6|2|6
+1.3.6.1.2.1.2.2.1.3.7|2|6
+1.3.6.1.2.1.2.2.1.3.8|2|6
+1.3.6.1.2.1.2.2.1.3.9|2|6
+1.3.6.1.2.1.2.2.1.3.10|2|6
+1.3.6.1.2.1.2.2.1.3.11|2|6
+1.3.6.1.2.1.2.2.1.3.12|2|6
+1.3.6.1.2.1.2.2.1.3.13|2|6
+1.3.6.1.2.1.2.2.1.3.14|2|6
+1.3.6.1.2.1.2.2.1.3.15|2|6
+1.3.6.1.2.1.2.2.1.3.16|2|6
+1.3.6.1.2.1.2.2.1.3.17|2|6
+1.3.6.1.2.1.2.2.1.3.18|2|6
+1.3.6.1.2.1.2.2.1.3.19|2|6
+1.3.6.1.2.1.2.2.1.3.20|2|6
+1.3.6.1.2.1.2.2.1.3.21|2|6
+1.3.6.1.2.1.2.2.1.3.22|2|6
+1.3.6.1.2.1.2.2.1.3.23|2|6
+1.3.6.1.2.1.2.2.1.3.24|2|6
+1.3.6.1.2.1.2.2.1.3.25|2|6
+1.3.6.1.2.1.2.2.1.3.26|2|6
+1.3.6.1.2.1.2.2.1.3.27|2|6
+1.3.6.1.2.1.2.2.1.3.28|2|6
+1.3.6.1.2.1.2.2.1.3.29|2|6
+1.3.6.1.2.1.2.2.1.3.30|2|6
+1.3.6.1.2.1.2.2.1.3.31|2|6
+1.3.6.1.2.1.2.2.1.3.32|2|6
+1.3.6.1.2.1.2.2.1.3.33|2|6
+1.3.6.1.2.1.2.2.1.3.34|2|6
+1.3.6.1.2.1.2.2.1.3.35|2|6
+1.3.6.1.2.1.2.2.1.3.36|2|6
+1.3.6.1.2.1.2.2.1.3.37|2|6
+1.3.6.1.2.1.2.2.1.3.38|2|6
+1.3.6.1.2.1.2.2.1.3.39|2|6
+1.3.6.1.2.1.2.2.1.3.40|2|6
+1.3.6.1.2.1.2.2.1.3.41|2|6
+1.3.6.1.2.1.2.2.1.3.42|2|6
+1.3.6.1.2.1.2.2.1.3.43|2|6
+1.3.6.1.2.1.2.2.1.3.44|2|6
+1.3.6.1.2.1.2.2.1.3.45|2|6
+1.3.6.1.2.1.2.2.1.3.46|2|6
+1.3.6.1.2.1.2.2.1.3.47|2|6
+1.3.6.1.2.1.2.2.1.3.48|2|6
+1.3.6.1.2.1.2.2.1.3.49|2|6
+1.3.6.1.2.1.2.2.1.3.50|2|6

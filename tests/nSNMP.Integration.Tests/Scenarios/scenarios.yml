@@ -1,0 +1,84 @@
+devices:
+  - name: mib2-basic
+    image: snmpsim
+    udpPort: 1161
+    v2c:
+      community: public
+    data: mib2-basic.snmprec
+    description: "Basic MIB-II agent with system and interface tables"
+
+  - name: printer-mono
+    image: snmpsim
+    udpPort: 1162
+    v2c:
+      community: public
+    data: printers-mono.snmprec
+    description: "Monochrome printer with toner supplies"
+
+  - name: printer-color
+    image: snmpsim
+    udpPort: 1163
+    v3:
+      username: monitor
+      auth: SHA256
+      authKey: monitorauth123456
+      priv: AES128
+      privKey: monitorpriv123456
+      engineId: "8000000001020304"
+    data: printers-color.snmprec
+    alerts: true
+    description: "Color printer with CMYK supplies and alerts"
+
+  - name: too-big-device
+    image: snmpsim
+    udpPort: 1164
+    v2c:
+      community: public
+    data: oversized.snmprec
+    description: "Device that triggers tooBig responses for large GETBULK"
+
+  - name: auth-error-device
+    image: snmpsim
+    udpPort: 1165
+    v3:
+      username: testuser
+      auth: SHA256
+      authKey: correctauth123456
+      priv: AES128
+      privKey: correctpriv123456
+      engineId: "8000000001020305"
+    data: mib2-basic.snmprec
+    description: "V3 device for testing authentication failures"
+
+# Trap sender configuration
+trap_sender:
+  image: net-snmp-tools
+  endpoints:
+    - name: v2c-traps
+      version: v2c
+      community: public
+      description: "SNMPv2c trap sender"
+    - name: v3-informs
+      version: v3
+      username: trapuser
+      auth: SHA256
+      authKey: trapauth123456789
+      priv: AES128
+      privKey: trappriv123456789
+      engineId: "8000000001020306"
+      description: "SNMPv3 INFORM sender with authPriv"
+
+# Network impairment scenarios
+network_impairment:
+  - name: high-latency
+    delay: 200ms
+    jitter: 50ms
+    description: "High latency network simulation"
+  - name: packet-loss
+    loss: 5%
+    description: "Packet loss simulation"
+  - name: jittery-network
+    delay: 100ms
+    jitter: 100ms
+    loss: 2%
+    description: "Combined latency, jitter, and loss"

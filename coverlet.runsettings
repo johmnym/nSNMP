@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <Exclude>
+            <!-- Exclude test projects -->
+            [*.Tests]*
+            [*Tests]*
+            [*.Benchmarks]*
+            [*.Fuzz]*
+            <!-- Exclude generated files -->
+            [*]*Generated*
+            [*]*Designer*
+            [*]*AssemblyInfo*
+            <!-- Exclude specific patterns -->
+            [*]*Program*
+            [*]*Startup*
+          </Exclude>
+          <ExcludeByAttribute>
+            <Attribute>System.Diagnostics.DebuggerNonUserCodeAttribute</Attribute>
+            <Attribute>System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute</Attribute>
+            <Attribute>System.CodeDom.Compiler.GeneratedCodeAttribute</Attribute>
+            <Attribute>System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage</Attribute>
+          </ExcludeByAttribute>
+          <ExcludeByFile>
+            <!-- Exclude files by path patterns -->
+            <Path>**/bin/**</Path>
+            <Path>**/obj/**</Path>
+            <Path>**/*Designer.cs</Path>
+            <Path>**/*.g.cs</Path>
+            <Path>**/*.generated.cs</Path>
+          </ExcludeByFile>
+          <IncludeDirectory>
+            <Directory>../../src/</Directory>
+          </IncludeDirectory>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

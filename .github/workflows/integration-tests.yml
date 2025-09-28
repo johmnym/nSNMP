@@ -1,0 +1,210 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [ main, master, develop ]
+    paths:
+      - 'src/**'
+      - 'tests/nSNMP.Integration.Tests/**'
+      - 'tests/nSNMP.InteropTests/**'
+      - '.github/workflows/integration-tests.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'src/**'
+      - 'tests/nSNMP.Integration.Tests/**'
+      - 'tests/nSNMP.InteropTests/**'
+      - '.github/workflows/integration-tests.yml'
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  INTEGRATION_OUTPUT_DIRECTORY: 'integration-test-results'
+
+jobs:
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Install docker-compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+
+    - name: Verify Docker installation
+      run: |
+        docker version
+        docker-compose version
+
+    - name: Pull required Docker images
+      run: |
+        echo "Pulling SNMP simulator images..."
+        docker pull tandrup/snmpsim:latest || echo "snmpsim image not available, will build if needed"
+        docker pull weldpua2008/net-snmp:latest || echo "net-snmp image not available, will build if needed"
+        docker pull gaiaadm/pumba:latest || echo "pumba image not available, will build if needed"
+        echo "Docker images status:"
+        docker images
+
+    - name: Restore dependencies
+      run: |
+        dotnet restore tests/nSNMP.Integration.Tests/Testbed.sln
+
+    - name: Build integration tests
+      run: |
+        dotnet build tests/nSNMP.Integration.Tests/Testbed.sln --configuration Release --no-restore
+
+    - name: Create output directory
+      run: mkdir -p ${{ env.INTEGRATION_OUTPUT_DIRECTORY }}
+
+    - name: Run integration tests
+      id: integration_tests
+      run: |
+        cd tests/nSNMP.Integration.Tests
+        dotnet test nSNMP.Integration.Tests.csproj --configuration Release \
+          --logger trx --results-directory "../../${{ env.INTEGRATION_OUTPUT_DIRECTORY }}" \
+          --logger "junit;LogFilePath=../../${{ env.INTEGRATION_OUTPUT_DIRECTORY }}/TEST-integration-results.xml" \
+          --verbosity normal
+      continue-on-error: true
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: integration-test-results
+        path: ${{ env.INTEGRATION_OUTPUT_DIRECTORY }}/
+        retention-days: 30
+
+    - name: Upload container logs
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: container-logs
+        path: ${{ env.INTEGRATION_OUTPUT_DIRECTORY }}/container-logs.txt
+        retention-days: 7
+
+    - name: Publish test results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Integration Test Results
+        path: '${{ env.INTEGRATION_OUTPUT_DIRECTORY }}/TEST-*.xml'
+        reporter: java-junit
+        fail-on-error: true
+
+    - name: Comment test summary on PR
+      uses: actions/github-script@v7
+      if: always() && github.event_name == 'pull_request'
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const comment = `## 🧪 Integration Test Results
+
+          Integration tests have completed. Check the workflow results and artifacts for detailed information.
+
+          <details>
+          <summary>📋 Test Configuration</summary>
+
+          - **Framework**: .NET 9.0 with xUnit
+          - **Runner**: GitHub Actions on \`ubuntu-latest\`
+          - **Commit**: ${{ github.sha }}
+          - **Test Status**: ${{ steps.integration_tests.outcome }}
+
+          </details>
+
+          📊 [View detailed results in artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+    - name: Cleanup Docker resources
+      if: always()
+      run: |
+        echo "Cleaning up Docker resources..."
+        docker system prune -f --volumes || true
+        docker network prune -f || true
+
+    - name: Check test results
+      if: always()
+      run: |
+        if [ "${{ steps.integration_tests.outcome }}" != "success" ]; then
+          echo "❌ Integration tests failed"
+          echo "Check the test results and logs for details"
+          exit 1
+        else
+          echo "✅ Integration tests passed"
+        fi
+
+  # Optional: Matrix job for testing different configurations
+  integration-tests-matrix:
+    name: Integration Tests (Matrix)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [SnmpCommunication, SnmpErrorHandling, Snmpv3Security, SimpleSnmpAgent]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Install docker-compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose
+
+    - name: Build integration tests
+      run: |
+        dotnet build tests/nSNMP.Integration.Tests/Testbed.sln --configuration Release
+
+    - name: Run specific test suite
+      run: |
+        mkdir -p matrix-results/${{ matrix.suite }}
+        cd tests/nSNMP.Integration.Tests
+        dotnet test nSNMP.Integration.Tests.csproj --configuration Release \
+          --filter "FullyQualifiedName~${{ matrix.suite }}" \
+          --logger trx --results-directory "../../matrix-results/${{ matrix.suite }}" \
+          --logger "junit;LogFilePath=../../matrix-results/${{ matrix.suite }}/TEST-${{ matrix.suite }}-results.xml" \
+          --verbosity normal
+
+    - name: Upload suite results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: suite-results-${{ matrix.suite }}
+        path: matrix-results/${{ matrix.suite }}/
+        retention-days: 7

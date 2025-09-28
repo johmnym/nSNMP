@@ -1,0 +1,31 @@
+<testsuites>
+  <testsuite name="nSNMP.InteropTests.dll" tests="13" skipped="0" failures="0" errors="0" time="1.0295674000000001" timestamp="2025-09-27T19:55:09" hostname="tigger" id="0" package="nSNMP.InteropTests.dll">
+    <properties />
+    <testcase classname="nSNMP.InteropTests.BasicInteropTests" name="ErrorHandling_ShouldBeGraceful" time="0.0027147" />
+    <testcase classname="nSNMP.InteropTests.BasicInteropTests" name="CommunityStrings_ShouldBeHandled" time="0.0078494" />
+    <testcase classname="nSNMP.InteropTests.BasicInteropTests" name="SnmpRequest_Timeout_ShouldWork" time="1.0145876" />
+    <testcase classname="nSNMP.InteropTests.BasicInteropTests" name="OidValidation_ShouldFollowStandards" time="0.0002119" />
+    <testcase classname="nSNMP.InteropTests.BasicInteropTests" name="SnmpDataTypes_Creation_ShouldWork" time="0.0033437" />
+    <testcase classname="nSNMP.InteropTests.BasicInteropTests" name="StandardMibOids_ShouldBeValid" time="0.0001125" />
+    <testcase classname="nSNMP.InteropTests.BasicInteropTests" name="SnmpVersions_ShouldBeSupported" time="0.0001887" />
+    <testcase classname="nSNMP.InteropTests.BasicInteropTests" name="SnmpClient_Creation_ShouldWork" time="0.0000649" />
+    <testcase classname="nSNMP.InteropTests.BasicInteropTests" name="ClientEndpoints_ShouldBeConfigurable(address: &quot;::1&quot;, port: 161)" time="0.0001140" />
+    <testcase classname="nSNMP.InteropTests.BasicInteropTests" name="ClientEndpoints_ShouldBeConfigurable(address: &quot;127.0.0.1&quot;, port: 161)" time="0.0001338" />
+    <testcase classname="nSNMP.InteropTests.BasicInteropTests" name="ClientEndpoints_ShouldBeConfigurable(address: &quot;192.168.1.1&quot;, port: 161)" time="0.0000160" />
+    <testcase classname="nSNMP.InteropTests.BasicInteropTests" name="DataTypeEncoding_ShouldProduceValidAsn1" time="0.0001845" />
+    <testcase classname="nSNMP.InteropTests.BasicInteropTests" name="ObjectIdentifier_StandardFormats_ShouldBeValid" time="0.0000457" />
+    <system-out>
+Test Framework Informational Messages:
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 9.0.9)
+[xUnit.net 00:00:00.04]   Discovering: nSNMP.InteropTests
+[xUnit.net 00:00:00.08]   Discovered:  nSNMP.InteropTests
+[xUnit.net 00:00:00.08]   Starting:    nSNMP.InteropTests
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+UDP receive error: You must call the Bind method before performing this operation.
+[xUnit.net 00:00:01.15]   Finished:    nSNMP.InteropTests
+</system-out>
+    <system-err></system-err>
+  </testsuite>
+</testsuites>

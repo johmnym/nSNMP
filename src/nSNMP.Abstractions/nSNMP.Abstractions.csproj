@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Description>Core abstractions and interfaces for nSNMP</Description>
+    <Authors>nSNMP Contributors</Authors>
+    <PackageProjectUrl>https://github.com/your-repo/nSNMP</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/your-repo/nSNMP</RepositoryUrl>
+    <PackageTags>snmp;network;management;abstractions</PackageTags>
+  </PropertyGroup>
+
+</Project>

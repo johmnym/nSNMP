@@ -77,7 +77,7 @@ public class SnmpScoutApp
             return;
         }
 
-        AnsiConsole.MarkupLine($"🔍 [cyan]Scanning network: {network}[/]");
+        AnsiConsole.MarkupLine($"{EmojiHelper.Search} [cyan]Scanning network: {network}[/]");
 
         var devices = await _scanner.ScanNetworkAsync(network);
         _deviceManager.AddDevices(devices);
@@ -85,7 +85,7 @@ public class SnmpScoutApp
         if (!string.IsNullOrEmpty(outputFile))
         {
             await _deviceManager.ExportDevicesAsync(outputFile);
-            AnsiConsole.MarkupLine($"📄 [green]Results exported to: {outputFile}[/]");
+            AnsiConsole.MarkupLine($"{EmojiHelper.Document} [green]Results exported to: {outputFile}[/]");
         }
         else
         {
@@ -96,7 +96,7 @@ public class SnmpScoutApp
     private async Task PerformQuickScanAsync()
     {
         var localNetwork = NetworkUtils.GetLocalNetworkRange();
-        AnsiConsole.MarkupLine($"🔍 [cyan]Quick scanning local network: {localNetwork}[/]");
+        AnsiConsole.MarkupLine($"{EmojiHelper.Search} [cyan]Quick scanning local network: {localNetwork}[/]");
 
         var devices = await _scanner.ScanNetworkAsync(localNetwork);
         _deviceManager.AddDevices(devices);
@@ -128,7 +128,7 @@ public class SnmpScoutApp
         }
         else
         {
-            AnsiConsole.MarkupLine("[red]❌ Device not found or not responding to SNMP[/]");
+            AnsiConsole.MarkupLine($"[red]{EmojiHelper.Cross} Device not found or not responding to SNMP[/]");
         }
     }
 
@@ -137,7 +137,7 @@ public class SnmpScoutApp
         var devices = _deviceManager.GetAllDevices();
         if (!devices.Any())
         {
-            AnsiConsole.MarkupLine("[yellow]⚠️  No devices discovered yet. Run a scan first.[/]");
+            AnsiConsole.MarkupLine($"[yellow]{EmojiHelper.ExclamationMark}  No devices discovered yet. Run a scan first.[/]");
             return;
         }
 
@@ -153,7 +153,7 @@ public class SnmpScoutApp
         var devices = _deviceManager.GetAllDevices();
         if (!devices.Any())
         {
-            AnsiConsole.MarkupLine("[yellow]⚠️  No devices to export. Run a scan first.[/]");
+            AnsiConsole.MarkupLine($"[yellow]{EmojiHelper.ExclamationMark}  No devices to export. Run a scan first.[/]");
             return;
         }
 
@@ -161,7 +161,7 @@ public class SnmpScoutApp
         if (!string.IsNullOrEmpty(filename))
         {
             await _deviceManager.ExportDevicesAsync(filename);
-            AnsiConsole.MarkupLine($"📄 [green]Exported {devices.Count()} devices to {filename}[/]");
+            AnsiConsole.MarkupLine($"{EmojiHelper.Document} [green]Exported {devices.Count()} devices to {filename}[/]");
         }
     }
 }

@@ -72,9 +72,9 @@ namespace nSNMP.Transport
 
         private async Task ReceiveLoop()
         {
-            try
+            while (!_cancellationTokenSource.Token.IsCancellationRequested && !_disposed)
             {
-                while (!_cancellationTokenSource.Token.IsCancellationRequested)
+                try
                 {
                     var result = await _udpClient.ReceiveAsync(_cancellationTokenSource.Token);
 
@@ -96,15 +96,35 @@ namespace nSNMP.Transport
                         tcs.SetResult(result.Buffer);
                     }
                 }
-            }
-            catch (OperationCanceledException)
-            {
-                // Expected when shutting down
-            }
-            catch (Exception ex)
-            {
-                // Log error but don't crash
-                Console.WriteLine($"UDP receive error: {ex.Message}");
+                catch (OperationCanceledException)
+                {
+                    // Expected when shutting down
+                    break;
+                }
+                catch (ObjectDisposedException)
+                {
+                    // Socket was disposed, exit loop
+                    break;
+                }
+                catch (SocketException ex) when (ex.SocketErrorCode == SocketError.ConnectionReset)
+                {
+                    // Windows-specific: ICMP port unreachable translates to ConnectionReset
+                    // This is normal when scanning - the target host/port is unreachable
+                    // Continue listening for other responses
+                }
+                catch (Exception ex)
+                {
+                    // Log unexpected errors but continue receiving
+                    // Only break if we're disposed or cancelled
+                    if (!_disposed && !_cancellationTokenSource.Token.IsCancellationRequested)
+                    {
+                        Console.WriteLine($"UDP receive error: {ex.Message}");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
             }
         }
 

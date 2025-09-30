@@ -14,7 +14,7 @@ public class UserInterface
         var grid = new Grid();
         grid.AddColumn();
         grid.AddRow(new FigletText("SnmpScout").Centered().Color(Color.Cyan1));
-        grid.AddRow(Align.Center(new Panel("[bold cyan1]🔍 Network Discovery & SNMP Management Tool[/]")
+        grid.AddRow(Align.Center(new Panel($"[bold cyan1]{EmojiHelper.Search} Network Discovery & SNMP Management Tool[/]")
             .BorderColor(Color.Cyan1)));
 
         AnsiConsole.Write(grid);
@@ -29,7 +29,7 @@ public class UserInterface
         AnsiConsole.Clear();
 
         var panel = new Panel(
-            "[bold cyan1]🔍 SnmpScout - Main Menu[/]\n\n" +
+            $"[bold cyan1]{EmojiHelper.Search} SnmpScout - Main Menu[/]\n\n" +
             "Discover and manage SNMP-enabled devices on your network\n\n" +
             "[dim]Use arrow keys to navigate, Enter to select[/]"
         ).BorderColor(Color.Cyan1);
@@ -43,24 +43,24 @@ public class UserInterface
                 .PageSize(10)
                 .AddChoices(new[]
                 {
-                    "🔍 Quick Scan (Local Network)",
-                    "🎯 Custom Network Scan",
-                    "🖥️  Single Device Details",
-                    "📋 View Discovered Devices",
-                    "📄 Export Results",
-                    "⚙️  Settings",
-                    "🚪 Exit"
+                    $"{EmojiHelper.Search} Quick Scan (Local Network)",
+                    $"{EmojiHelper.Target} Custom Network Scan",
+                    $"{EmojiHelper.Computer}  Single Device Details",
+                    $"{EmojiHelper.List} View Discovered Devices",
+                    $"{EmojiHelper.Document} Export Results",
+                    $"{EmojiHelper.Settings}  Settings",
+                    $"{EmojiHelper.Exit} Exit"
                 }));
 
         return choice switch
         {
-            "🔍 Quick Scan (Local Network)" => MainMenuChoice.QuickScan,
-            "🎯 Custom Network Scan" => MainMenuChoice.CustomScan,
-            "🖥️  Single Device Details" => MainMenuChoice.SingleDevice,
-            "📋 View Discovered Devices" => MainMenuChoice.ViewDevices,
-            "📄 Export Results" => MainMenuChoice.ExportResults,
-            "⚙️  Settings" => MainMenuChoice.Settings,
-            "🚪 Exit" => MainMenuChoice.Exit,
+            var s when s.Contains("Quick Scan") => MainMenuChoice.QuickScan,
+            var s when s.Contains("Custom Network Scan") => MainMenuChoice.CustomScan,
+            var s when s.Contains("Single Device Details") => MainMenuChoice.SingleDevice,
+            var s when s.Contains("View Discovered Devices") => MainMenuChoice.ViewDevices,
+            var s when s.Contains("Export Results") => MainMenuChoice.ExportResults,
+            var s when s.Contains("Settings") => MainMenuChoice.Settings,
+            var s when s.Contains("Exit") => MainMenuChoice.Exit,
             _ => MainMenuChoice.Exit
         };
     }
@@ -70,7 +70,7 @@ public class UserInterface
         var deviceList = devices.ToList();
 
         AnsiConsole.WriteLine();
-        AnsiConsole.MarkupLine($"[bold green]✅ Scan completed! Found {deviceList.Count} devices[/]");
+        AnsiConsole.MarkupLine($"[bold green]{EmojiHelper.CheckMark} Scan completed! Found {deviceList.Count} devices[/]");
 
         if (deviceList.Any())
         {
@@ -78,7 +78,7 @@ public class UserInterface
         }
         else
         {
-            AnsiConsole.MarkupLine("[yellow]⚠️  No SNMP-enabled devices found.[/]");
+            AnsiConsole.MarkupLine($"[yellow]{EmojiHelper.ExclamationMark}  No SNMP-enabled devices found.[/]");
         }
 
         AnsiConsole.WriteLine();
@@ -95,8 +95,10 @@ public class UserInterface
         table.AddColumn("[bold]Status[/]");
         table.AddColumn("[bold]IP Address[/]");
         table.AddColumn("[bold]Device Name[/]");
+        table.AddColumn("[bold]Vendor[/]");
+        table.AddColumn("[bold]Model[/]");
         table.AddColumn("[bold]Type[/]");
-        table.AddColumn("[bold]SNMP Ver[/]");
+        table.AddColumn("[bold]Ver[/]");
         table.AddColumn("[bold]Uptime[/]");
 
         foreach (var device in devices.OrderBy(d => d.IpAddress.ToString()))
@@ -105,13 +107,17 @@ public class UserInterface
                 $"[green]{device.StatusEmoji}[/]" :
                 $"[red]{device.StatusEmoji}[/]";
 
-            var deviceType = $"{device.TypeEmoji} [cyan]{device.DeviceType}[/]";
+            var deviceType = $"{device.TypeEmoji} {device.DeviceType}";
             var uptime = NetworkUtils.FormatUptime(device.SystemUptime);
+            var vendor = !string.IsNullOrEmpty(device.Vendor) ? device.Vendor : "[dim]Unknown[/]";
+            var model = !string.IsNullOrEmpty(device.Model) ? device.Model : "[dim]Unknown[/]";
 
             table.AddRow(
                 status,
                 $"[bold]{device.IpAddress}[/]",
                 $"[yellow]{device.DisplayName}[/]",
+                $"[cyan]{vendor}[/]",
+                $"[cyan]{model}[/]",
                 deviceType,
                 $"[dim]{device.SnmpVersion}[/]",
                 $"[dim]{uptime}[/]"
@@ -137,17 +143,20 @@ public class UserInterface
         var systemTable = new Table();
         systemTable.Border(TableBorder.Rounded);
         systemTable.BorderColor(Color.Green);
-        systemTable.Title("[bold green]📊 System Information[/]");
+        systemTable.Title($"[bold green]{EmojiHelper.Chart} System Information[/]");
         systemTable.AddColumn("[bold]Property[/]");
         systemTable.AddColumn("[bold]Value[/]");
 
         systemTable.AddRow("IP Address", device.IpAddress.ToString());
         systemTable.AddRow("Hostname", device.HostName ?? "[dim]Not available[/]");
         systemTable.AddRow("System Name", device.SystemName ?? "[dim]Not available[/]");
+        systemTable.AddRow("Vendor", device.Vendor ?? "[dim]Unknown[/]");
+        systemTable.AddRow("Model", device.Model ?? "[dim]Unknown[/]");
         systemTable.AddRow("Device Type", $"{device.TypeEmoji} {device.DeviceType}");
         systemTable.AddRow("Status", $"{device.StatusEmoji} {device.Status}");
         systemTable.AddRow("SNMP Version", device.SnmpVersion.ToString());
         systemTable.AddRow("Community", device.Community ?? "[dim]Not available[/]");
+        systemTable.AddRow("System OID", device.SystemObjectID ?? "[dim]Not available[/]");
         systemTable.AddRow("System Uptime", NetworkUtils.FormatUptime(device.SystemUptime));
         systemTable.AddRow("Location", device.SystemLocation ?? "[dim]Not specified[/]");
         systemTable.AddRow("Contact", device.SystemContact ?? "[dim]Not specified[/]");
@@ -160,7 +169,7 @@ public class UserInterface
         if (!string.IsNullOrEmpty(device.SystemDescription))
         {
             var descPanel = new Panel(device.SystemDescription)
-                .Header("[bold yellow]📝 System Description[/]")
+                .Header($"[bold yellow]{EmojiHelper.Info} System Description[/]")
                 .BorderColor(Color.Yellow);
             AnsiConsole.Write(descPanel);
             AnsiConsole.WriteLine();
@@ -172,7 +181,7 @@ public class UserInterface
             var interfaceTable = new Table();
             interfaceTable.Border(TableBorder.Rounded);
             interfaceTable.BorderColor(Color.Blue);
-            interfaceTable.Title("[bold blue]🔗 Network Interfaces[/]");
+            interfaceTable.Title($"[bold blue]{EmojiHelper.Network} Network Interfaces[/]");
             interfaceTable.AddColumn("[bold]Index[/]");
             interfaceTable.AddColumn("[bold]Description[/]");
             interfaceTable.AddColumn("[bold]Status[/]");
@@ -199,29 +208,28 @@ public class UserInterface
                 .Title("[cyan1]What would you like to do?[/]")
                 .AddChoices(new[]
                 {
-                    "🔄 Refresh Device Info",
-                    "📊 Bandwidth Monitor",
-                    "🔍 SNMP Walk (Advanced)",
-                    "🔙 Back to Device List",
-                    "🏠 Main Menu"
+                    $"{EmojiHelper.Refresh} Refresh Device Info",
+                    $"{EmojiHelper.Chart} Bandwidth Monitor",
+                    $"{EmojiHelper.Search} SNMP Walk (Advanced)",
+                    $"{EmojiHelper.Back} Back to Device List",
+                    $"{EmojiHelper.Home} Main Menu"
                 }));
 
         switch (action)
         {
-            case "🔄 Refresh Device Info":
+            case var a when a.Contains("Refresh"):
                 await RefreshDeviceAsync(device);
                 await ShowDeviceDetailsAsync(device);
                 break;
-            case "📊 Bandwidth Monitor":
+            case var a when a.Contains("Bandwidth"):
                 await ShowBandwidthMonitorAsync(device);
                 await ShowDeviceDetailsAsync(device);
                 break;
-            case "🔍 SNMP Walk (Advanced)":
+            case var a when a.Contains("SNMP Walk"):
                 await ShowSnmpWalkAsync(device);
-                await ShowDeviceDetailsAsync(device); // Return to device details after SNMP walk
+                await ShowDeviceDetailsAsync(device);
                 break;
-            case "🔙 Back to Device List":
-            case "🏠 Main Menu":
+            case var a when a.Contains("Back") || a.Contains("Main Menu"):
                 break;
         }
     }
@@ -256,7 +264,7 @@ public class UserInterface
     private async Task ShowSnmpWalkAsync(NetworkDevice device)
     {
         AnsiConsole.Clear();
-        AnsiConsole.MarkupLine($"[bold yellow]🔍 SNMP Walk: {device.DisplayName}[/]");
+        AnsiConsole.MarkupLine($"[bold yellow]{EmojiHelper.Search} SNMP Walk: {device.DisplayName}[/]");
         AnsiConsole.WriteLine();
         AnsiConsole.MarkupLine("[dim]Leave empty and press Enter to cancel[/]");
 
@@ -313,7 +321,7 @@ public class UserInterface
                     }
 
                     AnsiConsole.Clear();
-                    AnsiConsole.MarkupLine($"[bold yellow]🔍 SNMP Walk Results: {device.DisplayName}[/]");
+                    AnsiConsole.MarkupLine($"[bold yellow]{EmojiHelper.Search} SNMP Walk Results: {device.DisplayName}[/]");
                     AnsiConsole.MarkupLine($"[dim]Base OID: {oid}[/]");
                     AnsiConsole.WriteLine();
 
@@ -357,14 +365,14 @@ public class UserInterface
             return null;
 
         AnsiConsole.Clear();
-        AnsiConsole.MarkupLine("[bold cyan1]📋 Discovered Devices[/]");
+        AnsiConsole.MarkupLine($"[bold cyan1]{EmojiHelper.List} Discovered Devices[/]");
         AnsiConsole.MarkupLine("[dim]Select a device to view details or go back[/]");
         AnsiConsole.WriteLine();
 
         var choices = deviceList.Select(d =>
             $"{d.StatusEmoji} {d.IpAddress} - {d.DisplayName} ({d.TypeEmoji} {d.DeviceType})"
         ).ToList();
-        choices.Add("🔙 Back to Main Menu");
+        choices.Add($"{EmojiHelper.Back} Back to Main Menu");
 
         var choice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -372,7 +380,7 @@ public class UserInterface
                 .PageSize(15)
                 .AddChoices(choices));
 
-        if (choice == "🔙 Back to Main Menu")
+        if (choice.Contains("Back to Main Menu"))
             return null;
 
         var selectedIndex = choices.IndexOf(choice);
@@ -444,7 +452,7 @@ public class UserInterface
     {
         AnsiConsole.Clear();
         var panel = new Panel(
-            "[bold yellow]⚙️  Settings[/]\n\n" +
+            $"[bold yellow]{EmojiHelper.Settings}  Settings[/]\n\n" +
             "• SNMP Timeout: 2 seconds\n" +
             "• Max Concurrent Scans: 20\n" +
             "• Supported SNMP Versions: v1, v2c\n" +
@@ -464,8 +472,8 @@ public class UserInterface
         AnsiConsole.Clear();
 
         var panel = new Panel(
-            "[bold cyan1]Thank you for using SnmpScout![/]\n\n" +
-            "🔍 Happy network discovery! 🚀"
+            $"[bold cyan1]Thank you for using SnmpScout![/]\n\n" +
+            $"{EmojiHelper.Search} Happy network discovery! {EmojiHelper.Rocket}"
         ).BorderColor(Color.Cyan1);
 
         AnsiConsole.Write(Align.Center(panel));
@@ -479,7 +487,7 @@ public class UserInterface
         var updateCount = 0;
 
         AnsiConsole.Clear();
-        AnsiConsole.MarkupLine($"[bold blue]📊 Bandwidth Monitor: {device.DisplayName}[/]");
+        AnsiConsole.MarkupLine($"[bold blue]{EmojiHelper.Chart} Bandwidth Monitor: {device.DisplayName}[/]");
         AnsiConsole.MarkupLine("[dim]Real-time network interface monitoring - Press any key to stop[/]");
         AnsiConsole.WriteLine();
 
@@ -513,7 +521,7 @@ public class UserInterface
         await monitoringTask;
 
         AnsiConsole.Clear();
-        AnsiConsole.MarkupLine("[green]📊 Bandwidth monitoring stopped.[/]");
+        AnsiConsole.MarkupLine($"[green]{EmojiHelper.Chart} Bandwidth monitoring stopped.[/]");
         AnsiConsole.MarkupLine("[dim]Press any key to return to device details...[/]");
         Console.ReadKey();
     }
@@ -521,14 +529,14 @@ public class UserInterface
     private void DisplayBandwidthStats(List<NetworkInterfaceStats> stats, int updateCount)
     {
         AnsiConsole.Clear();
-        AnsiConsole.MarkupLine($"[bold blue]📊 Bandwidth Monitor - Update #{updateCount}[/]");
+        AnsiConsole.MarkupLine($"[bold blue]{EmojiHelper.Chart} Bandwidth Monitor - Update #{updateCount}[/]");
         AnsiConsole.MarkupLine($"[dim]Last updated: {DateTime.Now:HH:mm:ss} - Press any key to stop[/]");
         AnsiConsole.WriteLine();
 
         var table = new Table();
         table.Border(TableBorder.Rounded);
         table.BorderColor(Color.Blue);
-        table.Title("[bold blue]📊 Interface Statistics[/]");
+        table.Title($"[bold blue]{EmojiHelper.Chart} Interface Statistics[/]");
 
         table.AddColumn("[bold]Interface[/]");
         table.AddColumn("[bold]Throughput In[/]");
@@ -555,8 +563,8 @@ public class UserInterface
             var inThroughput = BandwidthMonitor.FormatThroughput(stat.InThroughputBps);
             var outThroughput = BandwidthMonitor.FormatThroughput(stat.OutThroughputBps);
             var utilization = $"[{utilizationColor}]{stat.TotalUtilizationPercent:F1}%[/]";
-            var packetsPerSec = $"{stat.InPacketsPerSecond:F0}↓ / {stat.OutPacketsPerSecond:F0}↑";
-            var errorsPerSec = $"{stat.InErrorRate:F2}↓ / {stat.OutErrorRate:F2}↑";
+            var packetsPerSec = $"{stat.InPacketsPerSecond:F0}{EmojiHelper.Down} / {stat.OutPacketsPerSecond:F0}{EmojiHelper.Up}";
+            var errorsPerSec = $"{stat.InErrorRate:F2}{EmojiHelper.Down} / {stat.OutErrorRate:F2}{EmojiHelper.Up}";
 
             table.AddRow(
                 $"eth{interfaceIndex}",
@@ -577,10 +585,10 @@ public class UserInterface
 
         AnsiConsole.WriteLine();
         var summaryPanel = new Panel(
-            $"[bold]Total Throughput:[/] [green]{BandwidthMonitor.FormatThroughput(totalInThroughput)}[/] ↓ / [cyan]{BandwidthMonitor.FormatThroughput(totalOutThroughput)}[/] ↑\n" +
+            $"[bold]Total Throughput:[/] [green]{BandwidthMonitor.FormatThroughput(totalInThroughput)}[/] {EmojiHelper.Down} / [cyan]{BandwidthMonitor.FormatThroughput(totalOutThroughput)}[/] {EmojiHelper.Up}\n" +
             $"[bold]Average Utilization:[/] {avgUtilization:F1}%\n" +
             $"[bold]Active Interfaces:[/] {stats.Count}"
-        ).Header("[bold yellow]📈 Summary[/]").BorderColor(Color.Yellow);
+        ).Header($"[bold yellow]{EmojiHelper.Summary} Summary[/]").BorderColor(Color.Yellow);
 
         AnsiConsole.Write(summaryPanel);
     }

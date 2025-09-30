@@ -1,6 +1,7 @@
 using nSNMP.Manager;
 using nSNMP.SMI.DataTypes.V1.Primitive;
 using SnmpScout.Models;
+using SnmpScout.UI;
 using Spectre.Console;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -29,7 +30,7 @@ public class NetworkScanner
             })
             .StartAsync(async ctx =>
             {
-                var scanTask = ctx.AddTask($"🔍 Scanning {ipRange.Count} addresses", maxValue: ipRange.Count);
+                var scanTask = ctx.AddTask($"{EmojiHelper.Search} Scanning {ipRange.Count} addresses", maxValue: ipRange.Count);
 
                 var semaphore = new SemaphoreSlim(20); // Limit concurrent scans
                 var tasks = ipRange.Select(async ip =>
@@ -41,7 +42,7 @@ public class NetworkScanner
                         if (device != null)
                         {
                             devices.Add(device);
-                            AnsiConsole.MarkupLine($"✅ [green]Found: {device.DisplayName} ({ip})[/]");
+                            AnsiConsole.MarkupLine($"{EmojiHelper.CheckMark} [green]Found: {device.DisplayName} ({ip})[/]");
                         }
                         scanTask.Increment(1);
                     }
@@ -151,10 +152,11 @@ public class NetworkScanner
             var systemOids = new Dictionary<string, string>
             {
                 ["1.3.6.1.2.1.1.1.0"] = "sysDescr",     // System Description
-                ["1.3.6.1.2.1.1.5.0"] = "sysName",      // System Name
-                ["1.3.6.1.2.1.1.6.0"] = "sysLocation",  // System Location
+                ["1.3.6.1.2.1.1.2.0"] = "sysObjectID",  // System Object ID
+                ["1.3.6.1.2.1.1.3.0"] = "sysUpTime",    // System Uptime
                 ["1.3.6.1.2.1.1.4.0"] = "sysContact",   // System Contact
-                ["1.3.6.1.2.1.1.3.0"] = "sysUpTime"     // System Uptime
+                ["1.3.6.1.2.1.1.5.0"] = "sysName",      // System Name
+                ["1.3.6.1.2.1.1.6.0"] = "sysLocation"   // System Location
             };
 
             foreach (var kvp in systemOids)
@@ -170,6 +172,11 @@ public class NetworkScanner
                             case "sysDescr":
                                 device.SystemDescription = value;
                                 device.DeviceType = DetermineDeviceType(value ?? "");
+                                ExtractVendorAndModel(device, value ?? "");
+                                break;
+                            case "sysObjectID":
+                                device.SystemObjectID = value;
+                                ExtractVendorFromOID(device, value ?? "");
                                 break;
                             case "sysName":
                                 device.SystemName = value;
@@ -266,6 +273,134 @@ public class NetworkScanner
             var d when d.Contains("load balancer") => DeviceType.LoadBalancer,
             _ => DeviceType.Unknown
         };
+    }
+
+    private static void ExtractVendorAndModel(NetworkDevice device, string sysDescr)
+    {
+        if (string.IsNullOrWhiteSpace(sysDescr)) return;
+
+        // Common vendor patterns in sysDescr
+        var vendorPatterns = new Dictionary<string, string[]>
+        {
+            ["Cisco"] = new[] { "cisco", "ios" },
+            ["HP"] = new[] { "hp ", "hewlett", "hewlett-packard", "hpe" },
+            ["Dell"] = new[] { "dell" },
+            ["Juniper"] = new[] { "juniper", "junos" },
+            ["Arista"] = new[] { "arista" },
+            ["Ubiquiti"] = new[] { "ubiquiti", "unifi" },
+            ["MikroTik"] = new[] { "mikrotik", "routeros" },
+            ["Netgear"] = new[] { "netgear" },
+            ["TP-Link"] = new[] { "tp-link", "tplink" },
+            ["D-Link"] = new[] { "d-link", "dlink" },
+            ["Synology"] = new[] { "synology" },
+            ["QNAP"] = new[] { "qnap" },
+            ["Brother"] = new[] { "brother" },
+            ["Canon"] = new[] { "canon" },
+            ["Epson"] = new[] { "epson" },
+            ["Xerox"] = new[] { "xerox" },
+            ["Lexmark"] = new[] { "lexmark" },
+            ["APC"] = new[] { "apc ", "american power" },
+            ["Eaton"] = new[] { "eaton" },
+            ["VMware"] = new[] { "vmware", "esxi" },
+            ["Linux"] = new[] { "linux", "ubuntu", "debian", "centos", "redhat" },
+            ["Windows"] = new[] { "windows", "microsoft" },
+            ["FreeBSD"] = new[] { "freebsd" },
+            ["Fortinet"] = new[] { "fortinet", "fortigate" },
+            ["Palo Alto"] = new[] { "palo alto" },
+            ["SonicWall"] = new[] { "sonicwall" },
+        };
+
+        var descLower = sysDescr.ToLowerInvariant();
+
+        foreach (var (vendor, patterns) in vendorPatterns)
+        {
+            if (patterns.Any(p => descLower.Contains(p)))
+            {
+                device.Vendor = vendor;
+                break;
+            }
+        }
+
+        // Try to extract model - usually after vendor name or in parentheses
+        // For your TS9500 series, try to find series/model patterns
+        var modelPatterns = new[]
+        {
+            @"([A-Z]{2,}\d{4,}[\w\-]*\s+series)",  // TS9500 series pattern
+            @"([A-Z]{2,}\-\d{4,}[\w\-]*)",         // Model like WS-C2960
+            @"(C\d{4,}[\w\-]*)",                   // Cisco pattern like C2960
+            @"(\d{4,}[A-Za-z][\w\-]*)",            // Like 2960G
+        };
+
+        foreach (var pattern in modelPatterns)
+        {
+            var match = System.Text.RegularExpressions.Regex.Match(sysDescr, pattern,
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                device.Model = match.Groups[1].Value.Trim();
+                break;
+            }
+        }
+
+        // If no model found but we have a short description, use the first meaningful part
+        if (string.IsNullOrEmpty(device.Model) && sysDescr.Length < 50)
+        {
+            var parts = sysDescr.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length > 0)
+            {
+                // Take first part that looks like a model (has alphanumeric)
+                device.Model = parts.FirstOrDefault(p =>
+                    p.Length > 2 && p.Any(char.IsLetterOrDigit)) ?? sysDescr;
+            }
+        }
+    }
+
+    private static void ExtractVendorFromOID(NetworkDevice device, string sysObjectID)
+    {
+        if (string.IsNullOrWhiteSpace(sysObjectID) || !string.IsNullOrEmpty(device.Vendor))
+            return;
+
+        // Enterprise OID mappings (1.3.6.1.4.1.xxx where xxx is enterprise number)
+        var oidVendors = new Dictionary<string, string>
+        {
+            ["9"] = "Cisco",
+            ["11"] = "HP",
+            ["674"] = "Dell",
+            ["2636"] = "Juniper",
+            ["30065"] = "Arista",
+            ["41112"] = "Ubiquiti",
+            ["14988"] = "MikroTik",
+            ["4526"] = "Netgear",
+            ["11863"] = "TP-Link",
+            ["171"] = "D-Link",
+            ["6574"] = "Synology",
+            ["24681"] = "QNAP",
+            ["2435"] = "Brother",
+            ["1602"] = "Canon",
+            ["1248"] = "Epson",
+            ["253"] = "Xerox",
+            ["641"] = "Lexmark",
+            ["318"] = "APC",
+            ["534"] = "Eaton",
+            ["6876"] = "VMware",
+            ["8072"] = "Linux/Net-SNMP",
+            ["1751"] = "Fortinet",
+            ["25461"] = "Palo Alto",
+            ["8741"] = "SonicWall",
+        };
+
+        // Extract enterprise number from OID
+        // Format: 1.3.6.1.4.1.<enterprise>...
+        var oidParts = sysObjectID.Split('.');
+        if (oidParts.Length >= 7 && oidParts[0] == "1" && oidParts[1] == "3" &&
+            oidParts[2] == "6" && oidParts[3] == "1" && oidParts[4] == "4" && oidParts[5] == "1")
+        {
+            var enterpriseNumber = oidParts[6];
+            if (oidVendors.TryGetValue(enterpriseNumber, out var vendor))
+            {
+                device.Vendor = vendor;
+            }
+        }
     }
 
     private static List<IPAddress> ParseNetworkRange(string networkRange)

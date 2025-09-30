@@ -18,7 +18,6 @@ namespace nSNMP.Extensions
         /// <param name="exception">Exception that occurred</param>
         /// <returns>Delay before retry, or null if no retry should be attempted</returns>
         public abstract TimeSpan? ShouldRetry(int attempt, Exception exception);
-
         /// <summary>
         /// Creates a linear retry policy
         /// </summary>

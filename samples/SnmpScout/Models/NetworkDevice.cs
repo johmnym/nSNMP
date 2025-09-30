@@ -1,4 +1,5 @@
 using System.Net;
+using SnmpScout.UI;
 
 namespace SnmpScout.Models;
 
@@ -10,6 +11,9 @@ public class NetworkDevice
     public string? SystemDescription { get; set; }
     public string? SystemLocation { get; set; }
     public string? SystemContact { get; set; }
+    public string? SystemObjectID { get; set; }
+    public string? Vendor { get; set; }
+    public string? Model { get; set; }
     public TimeSpan? SystemUptime { get; set; }
     public DeviceType DeviceType { get; set; } = DeviceType.Unknown;
     public SnmpVersion SnmpVersion { get; set; }
@@ -24,24 +28,24 @@ public class NetworkDevice
 
     public string StatusEmoji => Status switch
     {
-        DeviceStatus.Online => "🟢",
-        DeviceStatus.Offline => "🔴",
-        DeviceStatus.Warning => "🟡",
-        _ => "⚪"
+        DeviceStatus.Online => EmojiHelper.Online,
+        DeviceStatus.Offline => EmojiHelper.Offline,
+        DeviceStatus.Warning => EmojiHelper.Warning,
+        _ => EmojiHelper.Unknown
     };
 
     public string TypeEmoji => DeviceType switch
     {
-        DeviceType.Router => "🔀",
-        DeviceType.Switch => "🔗",
-        DeviceType.AccessPoint => "📶",
-        DeviceType.Printer => "🖨️",
-        DeviceType.Server => "🖥️",
-        DeviceType.UPS => "🔋",
-        DeviceType.Camera => "📹",
-        DeviceType.Phone => "📞",
-        DeviceType.Storage => "💾",
-        _ => "❓"
+        DeviceType.Router => EmojiHelper.Router,
+        DeviceType.Switch => EmojiHelper.Switch,
+        DeviceType.AccessPoint => EmojiHelper.AccessPoint,
+        DeviceType.Printer => EmojiHelper.Printer,
+        DeviceType.Server => EmojiHelper.Server,
+        DeviceType.UPS => EmojiHelper.UPS,
+        DeviceType.Camera => EmojiHelper.Camera,
+        DeviceType.Phone => EmojiHelper.Phone,
+        DeviceType.Storage => EmojiHelper.Storage,
+        _ => EmojiHelper.QuestionMark
     };
 }
 

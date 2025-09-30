@@ -1,10 +1,11 @@
 using SnmpScout;
 using SnmpScout.Services;
+using SnmpScout.UI;
 using Spectre.Console;
 using System.CommandLine;
 
 // Create the root command with options
-var rootCommand = new RootCommand("🔍 SnmpScout - Network Discovery Tool");
+var rootCommand = new RootCommand($"{EmojiHelper.Search} SnmpScout - Network Discovery Tool");
 
 var interactiveOption = new Option<bool>(
     "--interactive",
